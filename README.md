@@ -22,11 +22,11 @@
 
 ### v1.2.0 更新
 
-791 仪表采用 **40 fps 声明、导航居中、每接收 5 帧请求一次真实 IDR**。只更新 MU1102/791、MU1367/791 及通用 MQB 包内对应核心；790、MU1440 斯柯达滑轮、navigation 前置补丁和安装入口保持不变。
+本次加入 **791 仪表 40 FPS 显示优化**，保持导航居中。只更新 MU1102/791、MU1367/791 及通用 MQB 包内对应核心；790、MU1440 斯柯达滑轮、navigation 前置补丁和安装入口保持不变。
 
-40 fps 是协商声明，IDR5 是请求节奏，不保证实际显示帧率或相邻 IDR 严格间隔 5 帧。旧 791 核心本已声明 40 fps，本次同步修正过时的主页标注。
+40 fps 是协商声明，实际显示帧率取决于手机、地图内容和仪表消费能力。旧 791 核心本已声明 40 fps，本次同步修正过时的主页标注。
 
-[下载 v1.2.0 完整工具箱与校验文件](https://github.com/omonob/MHI2-Carplay-Maps/releases/tag/toolbox-plaintext-v1.2.0) · [更新说明](./releases/toolbox-plaintext-v1.2.0.md) · [参数变更与验证](./src/display-791-idr5/)
+[下载 v1.2.0 完整工具箱与校验文件](https://github.com/omonob/MHI2-Carplay-Maps/releases/tag/toolbox-plaintext-v1.2.0) · [更新说明](./releases/toolbox-plaintext-v1.2.0.md)
 
 ### v1.1.0 更新
 
@@ -41,7 +41,7 @@
 
 CarPlay Maps VC 是一个面向大众与斯柯达 MHI2 车机的免费开源项目。它把 CarPlay 的地图视频画面送到原厂液晶仪表，并提供方向盘地图控制。
 
-当前公开版本以经过验证的 V70 显示与控制逻辑为基线，791 采用本次 40 fps/IDR5 参数，提供两种完整工具箱：
+当前公开版本以经过验证的 V70 显示与控制逻辑为基线，加入 791 40 FPS 显示优化，提供两种完整工具箱：
 
 - **MQB Toolbox 交互安装版**：工具箱自动识别 MU 固件，用户只需选择仪表型号。
 - **M.I.B. Toolbox 自动安装版**：每个压缩包固定对应一个 MU 与仪表组合，插卡后通过 SWDL 自动执行。
@@ -71,7 +71,7 @@ CarPlay Maps VC 是一个面向大众与斯柯达 MHI2 车机的免费开源项�
 
 | 仪表 | 显示基线 | 方向盘控制 |
 | --- | --- | --- |
-| 791 AID 12.3 | 40 fps 声明，每 5 帧请求 IDR，导航居中 | 短按缩放，长按切换地图 |
+| 791 AID 12.3 | 40 fps 声明，导航居中 | 短按缩放，长按切换地图 |
 | 790 AID 10.5 | 沿用 v1.1.0 参数，未导航居中、导航偏右 | 短按缩放，长按切换地图 |
 
 ### 支持矩阵
@@ -249,11 +249,11 @@ MQB 菜单还提供：
 
 ### v1.2.0 update
 
-The 791 profiles now use a **40 fps declaration, navigation-centered layout and one genuine IDR request per five received frames**. Only MU1102/791, MU1367/791 and their cores in the universal MQB toolbox change. The 790 profiles, MU1440 Skoda roller control, navigation prerequisite and entry points remain unchanged.
+This release adds **791 40 FPS display optimization** while retaining the navigation-centered layout. Only MU1102/791, MU1367/791 and their cores in the universal MQB toolbox change. The 790 profiles, MU1440 Skoda roller control, navigation prerequisite and entry points remain unchanged.
 
-40 fps is a negotiated ceiling, and IDR5 is a request interval, not a guarantee of measured FPS or exactly five frames between received IDRs. The earlier 791 native core already advertised 40 fps; stale top-level documentation is corrected.
+40 fps is a negotiated ceiling; actual frame delivery and display consumption depend on the phone, content and cluster. The earlier 791 native core already advertised 40 fps; stale top-level documentation is corrected.
 
-[Download v1.2.0 full toolboxes and checksums](https://github.com/omonob/MHI2-Carplay-Maps/releases/tag/toolbox-plaintext-v1.2.0) · [Release notes](./releases/toolbox-plaintext-v1.2.0.md) · [Parameter transformation and validation](./src/display-791-idr5/)
+[Download v1.2.0 full toolboxes and checksums](https://github.com/omonob/MHI2-Carplay-Maps/releases/tag/toolbox-plaintext-v1.2.0) · [Release notes](./releases/toolbox-plaintext-v1.2.0.md)
 
 ### v1.1.0 update
 
@@ -268,7 +268,7 @@ Only the following two changes are included. Display parameters, compatibility, 
 
 CarPlay Maps VC is a free and open-source community project for Volkswagen and Skoda MHI2 systems. It sends the CarPlay map video to the factory virtual cockpit and adds steering-wheel map controls.
 
-The public release uses the validated V70 display/control baseline, adds the 791 40 fps/IDR5 parameters, and provides two complete installation routes:
+The public release uses the validated V70 display/control baseline, adds the 791 40 FPS display optimization, and provides two complete installation routes:
 
 - **MQB Toolbox interactive package**: detects the MU firmware automatically; the user selects the cluster type.
 - **M.I.B. Toolbox automatic package**: each archive is locked to one MU/cluster profile and runs through the SWDL workflow.
@@ -294,7 +294,7 @@ The public release uses the validated V70 display/control baseline, adds the 791
 
 | Cluster | Fixed display behavior | Steering-wheel control |
 | --- | --- | --- |
-| 791/794 AID 12.3 | 40 fps declaration, IDR request every 5 frames, navigation centered | Short press zoom; long press map switch |
+| 791/794 AID 12.3 | 40 fps declaration, navigation centered | Short press zoom; long press map switch |
 | 790 AID 10.5 | Unchanged v1.1.0 profile, non-navigation centered, navigation right | Short press zoom; long press map switch |
 
 ### Compatibility

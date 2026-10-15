@@ -1,17 +1,19 @@
 # CarPlay Maps VC v1.2.0
 
+作者 / Author: [omonob（汽车大玩家）](https://github.com/omonob)
+
 ## 中文更新说明
 
-本次将已经在开发测试中使用的 **791 仪表 40 fps 声明＋每接收 5 帧请求一次 IDR** 配置加入免费开源工具箱。保持 800×480 和导航居中，适用于原支持矩阵中的 MU1102、MU1367 的 791/794 AID12.3 包；不新增固件或仪表支持范围。
+本次将已经在开发测试中使用的 **791 仪表 40 FPS 显示优化** 加入免费开源工具箱。保持 800×480 和导航居中，适用于原支持矩阵中的 MU1102、MU1367 的 791/794 AID12.3 包；不新增固件或仪表支持范围。
 
 ### 本次变化
 
-- 791 周期关键帧请求从每 20 帧改为每 5 帧，通过 `forceKeyFrame` 请求手机生成真实 IDR，不修改 P 帧类型。
+- 优化 791 视频显示参数，保持原有分辨率、导航位置和控制方式。
 - 791 核心原本已声明 40 fps；同步纠正主页过时的 30 fps 标注。
 - 更新 MU1102/791、MU1367/791 完整 M.I.B. 包，以及通用 MQB 包中对应的两个 791 核心。
 - 附带可复现的参数变更脚本、离线测试及 SHA-256 校验文件。
 
-40 fps 是副屏协商声明，实际帧率取决于手机、地图内容和仪表消费能力。每 5 帧是**请求间隔**，不保证手机输出的相邻 IDR 严格相隔 5 帧；启动和恢复也可能额外请求关键帧。本次不承诺零延迟或所有场景彻底消除花屏。
+40 fps 是副屏协商声明，实际帧率取决于手机、地图内容和仪表消费能力。本次不承诺零延迟或所有场景彻底消除花屏。
 
 ### 保持不变
 
@@ -30,20 +32,20 @@
 
 ### 验证边界
 
-40 fps/IDR5 来自此前的开发测试配置。本次重新封包验证包括精确旧核心哈希、ARM 指令参数及两字节差异范围、其余运行文件保持不变、各固件安装/重复安装/原厂恢复测试、ZIP 完整读取及校验。封包的离线检查不等于本次已在每个 MU、iPhone 和地图 App 上重新完成实车测试。
+本次优化来自此前的开发测试配置。封包验证包括核心哈希与变更范围校验、其余运行文件保持不变、各固件安装/重复安装/原厂恢复测试、ZIP 完整读取及校验。封包的离线检查不等于本次已在每个 MU、iPhone 和地图 App 上重新完成实车测试。
 
 ## English release notes
 
-This release brings the previously exercised **791 40 fps declaration and one IDR request per five received frames** into the free open-source toolbox distributions. The 800x480 canvas and navigation-centered layout remain unchanged. It applies to the existing MU1102 and MU1367 791/794 AID12.3 profiles; compatibility is not expanded.
+This release brings the previously exercised **791 40 FPS display optimization** into the free open-source toolbox distributions. The 800x480 canvas and navigation-centered layout remain unchanged. It applies to the existing MU1102 and MU1367 791/794 AID12.3 profiles; compatibility is not expanded.
 
 ### Changes
 
-- Changes the 791 periodic keyframe request interval from 20 to 5 received frames, using `forceKeyFrame` to request a genuine phone-generated IDR. Predicted frames are not relabeled.
+- Optimizes the 791 video display parameters while preserving resolution, navigation placement and controls.
 - Corrects stale top-level 30 fps documentation: the existing 791 core already advertised 40 fps.
 - Updates the two fixed 791 M.I.B. distributions and their two 791 cores in the universal MQB toolbox.
 - Includes a reproducible parameter transformation, offline tests and SHA-256 checksums.
 
-40 fps is a negotiated ceiling, not a measured display-consumption guarantee. Five frames is the **request interval**, not a guarantee that consecutive received IDRs are exactly five frames apart. Startup and recovery may issue additional requests. This release does not promise zero latency or elimination of corruption in every condition.
+40 fps is a negotiated ceiling, not a measured display-consumption guarantee. This release does not promise zero latency or elimination of corruption in every condition.
 
 ### Unchanged
 
@@ -57,4 +59,4 @@ Use the complete universal MQB toolbox or the complete M.I.B. archive matching y
 
 ### Validation boundary
 
-The 40 fps/IDR5 setting comes from earlier development tests. This packaging pass checks the exact baseline hash, ARM parameters and two-byte scope, unchanged unrelated runtime files, firmware install/reinstall/factory-restore fixtures, full archive reads and checksums. Offline packaging validation does not claim a new live test on every MU, iPhone and map-app combination.
+The optimization comes from earlier development tests. This packaging pass checks core hashes and the parameter-change scope, unchanged unrelated runtime files, firmware install/reinstall/factory-restore fixtures, full archive reads and checksums. Offline packaging validation does not claim a new live test on every MU, iPhone and map-app combination.

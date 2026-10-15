@@ -2,7 +2,6 @@
 
 - Firmware gate: `/ifs/lsd.jxe` = **55,915,411 bytes**
 - Display: **40 fps declaration, navigation centered**
-- IDR request: **every 5 received frames** (`forceKeyFrame`; actual IDR arrival is asynchronous)
 - Steering controls: short press zoom; long press map switch
 - Profile core: `payload/profiles/MU1102/791/core.so`
 

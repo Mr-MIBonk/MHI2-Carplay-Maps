@@ -1,5 +1,128 @@
 <div align="center">
 
+# CarPlay Maps VC for MHI2 (mathsls fork)
+
+**Turn-by-turn card on the virtual cockpit, no more freezes after 20 minutes, MU1161 support.**<br>
+**Cartão de manobra no painel digital, sem travamentos depois de 20 minutos, suporte à MU1161.**
+
+[English](#english-fork) · [Português](#português-fork) · [Upstream README (omonob)](#upstream-readme-omonob)
+
+</div>
+
+This is a fork of [omonob/MHI2-Carplay-Maps](https://github.com/omonob/MHI2-Carplay-Maps) v1.2.2. All credit for the project goes to omonob; this fork only adds the changes below, under the same GPL-3.0 licence.
+
+## English (fork)
+
+### What changes
+
+| Change | Result | Clusters |
+| --- | --- | --- |
+| CarPlay Maps logs no longer written to the RAM disk | The cockpit stream no longer freezes after about 20 minutes of driving | All |
+| Cluster URL `maps:/car/instrumentcluster` instead of `…/map` | Waze, Google Maps and Apple Maps draw their turn card (arrow, distance, street) on the cockpit map | 791 |
+| New safe area and physical size | Card centred at the top, below the clock bar; car marker centred near the bottom | 791 |
+| `libcardshim` | Translucent "liquid glass" card style; the cluster is announced to iOS as an instrument cluster | 791 |
+| diasdio's MOST bridge fix, keyframe every 5 frames, 40 fps | No lag or pixelation | 791 |
+| MU1161 firmware (`lsd.jxe` 55,830,309 bytes) | Install on MU1161 units | 791 |
+
+Why the freezes happened: the project writes three diagnostic logs to `/ramdisk`, a 20 MB RAM disk that also holds the 16 MB video ring. With a keyframe every 5 frames the video log grows about 4 KB/s and the MOST bridge log about 1 KB/s, so the RAM disk was 98 % full after about 20 minutes. Details and offsets: [`src/fork/README.md`](./src/fork/README.md).
+
+### Compatibility
+
+| Firmware | `lsd.jxe` size | 791 AID 12.3 | 790 AID 10.5 |
+| --- | ---: | :---: | :---: |
+| MU1102 | 55,915,411 bytes | ✅ all changes | ✅ log fix only |
+| MU1161 | 55,830,309 bytes | ✅ all changes, tested in the car | ❌ |
+| MU1367 | 55,840,541 bytes | ✅ all changes | ✅ log fix only |
+| MU1440 Skoda | 55,840,933 bytes | ❌ | ✅ log fix only |
+
+Tested by me only on MU1161/791: VW Passat B8 2018, Discover Pro, iPhone over USB, Waze and Google Maps. MU1102 and MU1367 use the same 791 files, but I have not tested them myself. Reports are welcome in the issues.
+
+### Known limitations
+
+- Waze does not show the ETA bar on the cluster; iOS hides it.
+- The card size is fixed by iOS; a smaller safe area does not make it smaller.
+- Waze locks the cluster map zoom (steering-wheel zoom works in Google Maps and Apple Maps).
+- The maneuver is not shown in the cockpit's own VW graphics; the card is part of the CarPlay video.
+- Declaring 60 fps did not help in my test (slight lag in turns). tomasz-twardzicki measured 25 to 27 frames per second delivered by the iPhone with 40 declared.
+
+### Install
+
+1. Download the full MQB Toolbox ZIP from this fork's [Releases](https://github.com/mathsls/MHI2-Carplay-Maps/releases) and extract it to the root of a FAT32 SD card.
+2. Install or update the MQB Toolbox from this card through the unit's software update (hold MENU, then Update → SD card). MU1161 needs this step: the Toolbox scripts on the unit are what detect the firmware. On MU1102 or MU1367 with omonob's v1.2.x Toolbox already installed you can skip it.
+3. In the Green Engineering Menu: **mqbcoding → Customization → CarPlay Maps VC → Install 791 AID 12.3 (AUTO MU)** (or 790).
+4. Wait for `CPMAP_INSTALL_OK`, then do a full reboot (hold the power button until the VW logo).
+5. Connect the iPhone, start a route and check the cockpit.
+
+If you already run omonob's version, just install this one over it. **Restore factory files** in the same menu removes everything.
+
+### Credits
+
+- [omonob](https://github.com/omonob): CarPlay Maps VC, the whole project.
+- diasdio: MOST bridge queue fix (omonob/MHI2-Carplay-Maps issue 1); offsets as published by [ramasauskas](https://github.com/ramasauskas/MHI2-Carplay-Maps).
+- [tomasz-twardzicki](https://github.com/tomasz-twardzicki/MHI2-Carplay-Maps): found the same cluster URL independently for MU1427.
+- [jilleb/mib2-toolbox](https://github.com/jilleb/mib2-toolbox): MQB Toolbox and the navigation-active patch.
+- [luka-dev/qnx65-armv7-toolchain](https://github.com/luka-dev/qnx65-armv7-toolchain): linker used for `libcardshim`.
+
+## Português (fork)
+
+### O que muda
+
+| Mudança | Resultado | Telas |
+| --- | --- | --- |
+| Logs do CarPlay Maps fora do RAM disk | O painel não trava mais depois de uns 20 minutos de uso | Todas |
+| URL do painel `maps:/car/instrumentcluster` em vez de `…/map` | Waze, Google Maps e Apple Maps desenham o cartão de manobra (seta, distância, rua) no mapa do painel | 791 |
+| Nova área útil e tamanho físico | Cartão centralizado no topo, abaixo do relógio; seta de posição centralizada embaixo | 791 |
+| `libcardshim` | Cartão no estilo translúcido "liquid glass"; o painel é anunciado ao iOS como painel de instrumentos | 791 |
+| Correção da ponte MOST do diasdio, keyframe a cada 5 quadros, 40 fps | Sem lag nem pixelização | 791 |
+| Firmware MU1161 (`lsd.jxe` com 55.830.309 bytes) | Instalação em centrais MU1161 | 791 |
+
+Por que travava: o projeto grava três logs de diagnóstico em `/ramdisk`, um disco em RAM de 20 MB que também guarda os 16 MB do buffer de vídeo. Com keyframe a cada 5 quadros, o log de vídeo cresce cerca de 4 KB/s e o da ponte MOST cerca de 1 KB/s, e o disco chegava a 98 % em uns 20 minutos. Detalhes e offsets: [`src/fork/README.md`](./src/fork/README.md).
+
+### Compatibilidade
+
+| Firmware | Tamanho do `lsd.jxe` | 791 AID 12.3 | 790 AID 10.5 |
+| --- | ---: | :---: | :---: |
+| MU1102 | 55.915.411 bytes | ✅ todas as mudanças | ✅ só a correção dos logs |
+| MU1161 | 55.830.309 bytes | ✅ todas as mudanças, testado no carro | ❌ |
+| MU1367 | 55.840.541 bytes | ✅ todas as mudanças | ✅ só a correção dos logs |
+| MU1440 Skoda | 55.840.933 bytes | ❌ | ✅ só a correção dos logs |
+
+Testei só na MU1161/791: VW Passat B8 2018, Discover Pro, iPhone no cabo, Waze e Google Maps. MU1102 e MU1367 usam os mesmos arquivos da 791, mas não testei pessoalmente. Relatos são bem-vindos nas issues.
+
+### Limitações conhecidas
+
+- O Waze não mostra a barra de horário de chegada no painel; o iOS esconde.
+- O tamanho do cartão é definido pelo iOS; diminuir a área útil não diminui o cartão.
+- O Waze trava o zoom do mapa do painel (o zoom pelo volante funciona no Google Maps e no Apple Maps).
+- A manobra não aparece nos gráficos próprios do painel VW; o cartão faz parte do vídeo do CarPlay.
+- Anunciar 60 fps não ajudou no meu teste (pequeno lag nas curvas). O tomasz-twardzicki mediu 25 a 27 quadros por segundo vindos do iPhone com 40 anunciados.
+
+### Instalação
+
+1. Baixe o ZIP completo da MQB Toolbox nas [Releases](https://github.com/mathsls/MHI2-Carplay-Maps/releases) deste fork e extraia na raiz de um cartão SD em FAT32.
+2. Instale ou atualize a MQB Toolbox a partir desse cartão pela atualização de software da central (segure MENU, depois Atualizar → Cartão SD). Na MU1161 esse passo é obrigatório, porque são os scripts da toolbox na central que identificam o firmware. Na MU1102 ou MU1367 com a toolbox v1.2.x do omonob já instalada, dá para pular.
+3. No Green Engineering Menu: **mqbcoding → Customization → CarPlay Maps VC → Install 791 AID 12.3 (AUTO MU)** (ou 790).
+4. Espere aparecer `CPMAP_INSTALL_OK` e reinicie a central segurando o botão de ligar até aparecer o logo da VW.
+5. Conecte o iPhone, inicie uma rota e confira o painel.
+
+Se você já usa a versão do omonob, é só instalar esta por cima. **Restore factory files**, no mesmo menu, remove tudo.
+
+### Créditos
+
+- [omonob](https://github.com/omonob): CarPlay Maps VC, o projeto inteiro.
+- diasdio: correção da fila da ponte MOST (issue 1 do omonob/MHI2-Carplay-Maps); offsets publicados por [ramasauskas](https://github.com/ramasauskas/MHI2-Carplay-Maps).
+- [tomasz-twardzicki](https://github.com/tomasz-twardzicki/MHI2-Carplay-Maps): achou a mesma URL do painel de forma independente na MU1427.
+- [jilleb/mib2-toolbox](https://github.com/jilleb/mib2-toolbox): MQB Toolbox e o patch de navegação ativa.
+- [luka-dev/qnx65-armv7-toolchain](https://github.com/luka-dev/qnx65-armv7-toolchain): linker usado no `libcardshim`.
+
+---
+
+<div align="center">
+
+## Upstream README (omonob)
+
+The original README follows unchanged, including the author's notices. Its download links point to omonob's releases.
+
 # CarPlay Maps VC for MHI2
 
 **Bring the factory CarPlay map video to Volkswagen and Skoda virtual cockpits.**<br>

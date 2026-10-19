@@ -56,6 +56,11 @@ if test -r "$SEC"; then
     fi
 fi
 
+if test -r "$ROOT/libcardshim.so"; then
+    PRELOAD="$ROOT/libcardshim.so:$PRELOAD"
+    log_line "cardshim=preloaded"
+fi
+
 export LD_PRELOAD="$PRELOAD"
 log_line "launch=carplay-maps-video-only"
 exec "$REAL" "$@"

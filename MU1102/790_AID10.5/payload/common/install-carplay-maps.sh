@@ -3,7 +3,7 @@
 PAYLOAD="$1"
 EXPECTED_MU="$2"
 INSTRUMENT="$3"
-VERSION="V70-PLAINTEXT-TOOLBOX-1.2.2"
+VERSION="V70-PLAINTEXT-TOOLBOX-1.2.2-MATHSLS-1"
 
 fail() {
     echo "CPMAP_INSTALL_FAIL=$1"
@@ -15,7 +15,7 @@ if [ -z "$PAYLOAD" ] || [ -z "$EXPECTED_MU" ] || [ -z "$INSTRUMENT" ]; then
 fi
 
 case "$EXPECTED_MU:$INSTRUMENT" in
-    MU1102:791|MU1102:790|MU1367:791|MU1367:790|MU1440:790) ;;
+    MU1102:791|MU1102:790|MU1161:791|MU1367:791|MU1367:790|MU1440:790) ;;
     *) fail "UNSUPPORTED_PROFILE" ;;
 esac
 
@@ -52,6 +52,7 @@ set -- $line
 JXE_SIZE="$5"
 case "$JXE_SIZE" in
     55915411) DETECTED_MU="MU1102" ;;
+    55830309) DETECTED_MU="MU1161" ;;
     55840541) DETECTED_MU="MU1367" ;;
     55840933) DETECTED_MU="MU1440" ;;
     *) fail "UNSUPPORTED_JXE_SIZE_$JXE_SIZE" ;;
@@ -64,7 +65,8 @@ if [ "$DETECTED_MU" = "MU1440" ] && [ "$INSTRUMENT" != "790" ]; then
     fail "MU1440_REQUIRES_790"
 fi
 
-CORE="$PAYLOAD/profiles/$EXPECTED_MU/$INSTRUMENT/core.so"
+PROFILE_DIR="$PAYLOAD/profiles/$EXPECTED_MU/$INSTRUMENT"
+CORE="$PROFILE_DIR/core.so"
 WRAPPER="$PAYLOAD/common/dio_manager.wrapper.sh"
 CONTROL_JAR="$PAYLOAD/common/CarPlayClusterControls.jar"
 if [ "$EXPECTED_MU" = "MU1440" ] && [ -s "$PAYLOAD/profiles/MU1440/790/CarPlayClusterControls.jar" ]; then
@@ -74,6 +76,9 @@ NAV_JAR="$PAYLOAD/common/CarPlayNavigationPatch.jar"
 NAV_TARGET="$JARS/CarPlayNavigationPatch.jar"
 NAV_CHECK="$PAYLOAD/common/cpmap-nav-check"
 BRIDGE="$PAYLOAD/common/altscreen-most-bridge"
+if [ -s "$PROFILE_DIR/altscreen-most-bridge" ]; then
+    BRIDGE="$PROFILE_DIR/altscreen-most-bridge"
+fi
 SUPERVISOR="$PAYLOAD/common/carplay-cluster-supervisor"
 SEC="$PAYLOAD/common/libcarplay-security-bridge.so"
 PAIR_HELPER="$PAYLOAD/common/carplay-pairing-helper"
@@ -156,6 +161,7 @@ fi
 
 echo "CarPlay Maps VC"
 echo "Free open-source project by omonob (QCDWJ)"
+echo "Fork by mathsls: RAM log fix, cluster turn card, MU1161"
 echo "Detected firmware: $DETECTED_MU (lsd.jxe $JXE_SIZE bytes)"
 echo "Selected cluster: $INSTRUMENT"
 echo "Scope: CarPlay map video and steering-wheel map controls only"
@@ -301,6 +307,15 @@ cp "$SUPERVISOR" "$NEW/carplay-cluster-supervisor" || fail "SUPERVISOR_COPY_FAIL
 cp "$SEC" "$NEW/libcarplay-security-bridge.so" || fail "SESSION_BRIDGE_COPY_FAILED"
 cp "$PAIR_HELPER" "$NEW/security_bridge/carplay-pairing-helper" || fail "PAIR_HELPER_COPY_FAILED"
 cp "$PAIR_CORE" "$NEW/security_bridge/libCarPlayPairingCore.so" || fail "PAIR_CORE_COPY_FAILED"
+# Optional turn-card files, shipped only in the 791 profiles.
+if [ -s "$PROFILE_DIR/libcardshim.so" ]; then
+    cp "$PROFILE_DIR/libcardshim.so" "$NEW/libcardshim.so" || fail "CARDSHIM_COPY_FAILED"
+    chmod 644 "$NEW/libcardshim.so"
+fi
+if [ -s "$PROFILE_DIR/CLUSTER_ZOOM" ]; then
+    cp "$PROFILE_DIR/CLUSTER_ZOOM" "$NEW/CLUSTER_ZOOM" || fail "CLUSTER_ZOOM_COPY_FAILED"
+    chmod 644 "$NEW/CLUSTER_ZOOM"
+fi
 echo "$VERSION" > "$NEW/VERSION"
 echo "$DETECTED_MU/$INSTRUMENT" > "$NEW/PROFILE"
 touch "$NEW/CLUSTER_AUTO_ENABLE"

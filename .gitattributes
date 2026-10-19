@@ -7,6 +7,11 @@
 MU1102/**/payload/common/altscreen-most-bridge binary
 MU1102/**/payload/common/carplay-cluster-supervisor binary
 MU1102/**/payload/common/carplay-pairing-helper binary
+MU1161/**/payload/common/altscreen-most-bridge binary
+MU1161/**/payload/common/carplay-cluster-supervisor binary
+MU1161/**/payload/common/carplay-pairing-helper binary
+**/payload/profiles/**/altscreen-most-bridge binary
+**/payload/profiles/**/CLUSTER_ZOOM text eol=lf
 MU1367/**/payload/common/altscreen-most-bridge binary
 MU1367/**/payload/common/carplay-cluster-supervisor binary
 MU1367/**/payload/common/carplay-pairing-helper binary

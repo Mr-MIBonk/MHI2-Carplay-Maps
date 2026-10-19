@@ -1,4 +1,5 @@
 src/steering-mu1440/build/
 src/toolbox/build/
+src/cardshim/build/
 release-assets/
 __pycache__/

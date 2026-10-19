@@ -8,6 +8,7 @@ import zipfile
 
 REPO = Path(__file__).resolve().parents[1]
 PROFILES = [("MU1102", "791", 55915411), ("MU1102", "790", 55915411),
+            ("MU1161", "791", 55830309),
             ("MU1367", "791", 55840541), ("MU1367", "790", 55840541),
             ("MU1440", "790", 55840933)]
 _CHECKER_DIR = tempfile.TemporaryDirectory(prefix="cpmap-host-checker-")
@@ -99,6 +100,12 @@ def main():
                     continue
                 output = run(pkg / "install.sh", root, payload, mu, cluster)
                 assert "CPMAP_INSTALL_OK" in output
+                runtime = root / "mnt/app/carplaymaps"
+                for name in ("libcardshim.so", "CLUSTER_ZOOM"):
+                    assert (runtime / name).exists() == (cluster == "791"), name
+                profile_bridge = payload / "profiles" / mu / cluster / "altscreen-most-bridge"
+                expected_bridge = profile_bridge if cluster == "791" else payload / "common/altscreen-most-bridge"
+                assert digest(runtime / "altscreen-most-bridge") == digest(expected_bridge)
                 installed_nav = jars / "CarPlayNavigationPatch.jar"
                 if mode in ("existing", "merged"):
                     assert "KEEP_EXISTING" in output and not installed_nav.exists()

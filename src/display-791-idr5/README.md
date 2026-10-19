@@ -35,5 +35,3 @@ python tests/test_791_idr5.py
 No QNX compiler, licence change, device access or installation is performed. Unknown binaries, 790 cores, damaged inputs and an already-updated core are rejected as transformation inputs. Tests additionally compare all unchanged profile files against the previous public commit.
 
 The display optimization was previously exercised in the author's test series. Packaging checks for this release are offline; they do not claim a new live test on every MU/phone combination. 790 and MU1440 Skoda remain unchanged.
-
-中文：791 保持已有的 800×480、40 fps 声明和导航居中，不导入私有加密版或低延迟探针。工具先核对整个旧文件哈希，再进行限定范围的参数调整，其他内容保持不变。实现代码和校验记录继续保留，便于复现与审查。

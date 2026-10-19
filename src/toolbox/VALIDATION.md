@@ -1,4 +1,33 @@
-# MQB navigation installer validation for v1.2.1
+# MQB navigation installer validation for v1.2.2
+
+Date: 2026-10-19. No head-unit connection, deployment or reboot in this pass.
+
+## Reproduced root cause
+
+The exact published v1.2.1 ZIP, SHA-256 `f72d14a82518c1a27754c842d362fc29c9df1e8c355ed4b6acd4e8bb73b0dd21`, rejects its intact navigation JAR on all five profiles when `cksum` is unavailable: `NAVIGATION_PAYLOAD_CHECKSUM_MISMATCH_REEXTRACT_SD`. Target-tool absence was previously misclassified as SD corruption. The older text-only binary-grep failure remains covered by the reproduction test. The old installer also checked the SD patch before inspecting an existing complete patch and blocked incomplete custom overrides rather than completing the prerequisite.
+
+## Passed v1.2.2 checks
+
+- `tests/test_nav_checker.py`: native source compiled on the host both normally and with undefined-behavior/bounds sanitizers; valid payload, complete/partial/duplicate entries, text masquerading as ZIP, truncated/malformed offsets and lengths, corruption, byte comparison, and deterministic invalid-input cases pass.
+- `tests/test_toolbox_install.py`: five supported profiles; install/reinstall/restore, complete/merged/partial/missing navigation patch, wrong-firmware and unsupported-startup rejection, and activation-failure rollback.
+- `tests/test_navigation_repair.py`: all five profiles; an installed complete patch works with missing/damaged unused SD patch, partial patch completion leaves foreign JAR bytes unchanged, comments/duplicate standard classpath assignments normalize to one active prepend, a stale owned reference is repaired/removed as appropriate, first backup survives repeat install, and the RCC path dispatches the checker to MMX in the fixture. A missing genuinely required SD patch still fails without changing factory files.
+- `tests/test_qnx_navigation.py --baseline-archive <v1.2.1.zip>`: reproduces the old failure and passes new installation/reinstallation/restoration with text-only grep and unavailable `cksum`, `tr`, `strings`, `unzip`; rejects same-size/truncated required SD payloads before activation.
+- `tests/test_qnx_navigation.py --release-archive <v1.2.2.zip>`: all five profiles and seven states pass using the installer actually extracted from the final MQB archive.
+- `tests/test_mqb_release.py`: 326-file ZIP, CRC/read checks, no duplicate entries; exactly one existing installer changed and one checker added. All 324 other existing files, including cores, bridge, supervisor, control/navigation JARs and toolbox files, remain byte-identical to v1.2.1. All standalone installer/helper copies match the archive.
+- `tests/test_mqb_docs.py`: author attribution and all six paid-support/license/safety sections unchanged; MQB-only distribution and public description policy preserved.
+- PowerShell scripts parse under Windows PowerShell 5.1; MQB archive construction succeeds there. Shell fixture syntax checks pass. `git diff --check` passes.
+
+## ARM checker and final artifact
+
+Built with approved open GCC 4.9.4 in `qnx65-armv7:4.9`, without original SDK compiler/activation tools. Verified ELF32 little-endian ARM, EABI5, interpreter `/usr/lib/ldqnx.so.2`, only `libc.so.3` needed. Checker size: 9,977 bytes; SHA-256 `06609d9e533ea44a3a2be6ee15db20a48d277926d15f0d6fcc5f37a73a0c7b02`.
+
+Final `VW_SKODA_ALL_CarPlay_Maps_VC_FULL_MQB_Toolbox_V4.2A_v1.2.2.zip` SHA-256: `06955ade05e461b26ec2fdb78631378b690fefb64b1ffa672b802caf55061ab5`.
+
+The navigation JAR is unchanged: SHA-256 `a4803f7fd008152aca19d4e00b8b45789ac18dccf4cf405d129ce02297982ffe`, 27,179 bytes, standard CRC32 `b6c892dc`. The helper checks existing class directory entries, not third-party bytecode semantics or runtime HMI behavior. Host fixtures and cross-build ABI inspection do not claim fresh QNX or live-vehicle execution. Actual missing/corrupt files, unsupported firmware, unsupported startup layouts and write failures are deliberately not suppressed.
+
+---
+
+# Historical validation for v1.2.1 (superseded)
 
 Date: 2026-10-16. Scope: MQB installation only; no head-unit connection, deployment or reboot was performed in this packaging pass.
 

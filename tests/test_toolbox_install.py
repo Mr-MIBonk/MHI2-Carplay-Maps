@@ -10,6 +10,15 @@ REPO = Path(__file__).resolve().parents[1]
 PROFILES = [("MU1102", "791", 55915411), ("MU1102", "790", 55915411),
             ("MU1367", "791", 55840541), ("MU1367", "790", 55840541),
             ("MU1440", "790", 55840933)]
+_CHECKER_DIR = tempfile.TemporaryDirectory(prefix="cpmap-host-checker-")
+_CHECKER = Path(_CHECKER_DIR.name) / "cpmap-nav-check"
+
+
+def host_checker():
+    if not _CHECKER.exists():
+        subprocess.run(["/usr/bin/gcc", "-std=c99", "-O2", "-Wall", "-Wextra", "-Werror",
+                        str(REPO / "src/toolbox/cpmap-nav-check.c"), "-o", str(_CHECKER)], check=True)
+    return str(_CHECKER)
 
 
 def package(mu, cluster):
@@ -23,7 +32,8 @@ def digest(path):
 
 def run(script, root, *args, ok=True, extra_env=None):
     result = subprocess.run(["sh", str(script), *map(str, args)],
-                            env={**os.environ, "CPMAP_TEST_ROOT": str(root), **(extra_env or {})},
+                            env={**os.environ, "CPMAP_TEST_ROOT": str(root),
+                                 "CPMAP_TEST_NAV_CHECK": host_checker(), **(extra_env or {})},
                             capture_output=True, text=True)
     if (result.returncode == 0) != ok:
         raise AssertionError(result.stdout + result.stderr)
@@ -83,7 +93,7 @@ def main():
                 root = Path(tmp)
                 dio, lsd, jars = fixture(root, size, mode, nav)
                 before_dio, before_lsd = digest(dio), digest(lsd)
-                if mode in ("partial", "bad-startup"):
+                if mode == "bad-startup":
                     run(pkg / "install.sh", root, payload, mu, cluster, ok=False)
                     assert digest(dio) == before_dio and digest(lsd) == before_lsd
                     continue
@@ -96,6 +106,10 @@ def main():
                     assert digest(existing) == digest(nav)
                 else:
                     assert "INSTALL_MISSING" in output and digest(installed_nav) == digest(nav)
+                if mode == "partial":
+                    with zipfile.ZipFile(jars / "NavActiveIgnore.jar") as archive:
+                        assert archive.read(archive.namelist()[0]) == b"custom"
+                    assert lsd.read_text().index("CarPlayNavigationPatch.jar") < lsd.read_text().index("NavActiveIgnore.jar")
                 first_lsd = digest(lsd)
                 run(pkg / "install.sh", root, payload, mu, cluster)
                 assert digest(lsd) == first_lsd

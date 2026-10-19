@@ -15,7 +15,7 @@ def section(text, heading):
 
 def main():
     before = subprocess.check_output(["git", "show", BASELINE + ":README.md"], cwd=REPO).decode()
-    after = (REPO / "README.md").read_text()
+    after = (REPO / "README.md").read_text(encoding="utf-8")
     for heading in ("可选付费支持", "开源与许可", "安全提示与免责声明",
                     "Optional paid support", "Open-source notice", "Safety and disclaimer"):
         assert section(before, heading) == section(after, heading), heading
@@ -28,7 +28,7 @@ def main():
     assert not (REPO / "tools/Build-791Idr5Release.ps1").exists()
     builder = (REPO / "tools/Build-MQBRelease.ps1").read_text(encoding="utf-8-sig")
     assert "MIB_Toolbox" not in builder
-    notes = (REPO / "releases/toolbox-plaintext-v1.2.1.md").read_text()
+    notes = (REPO / "releases/toolbox-plaintext-v1.2.2.md").read_text(encoding="utf-8")
     assert "## 中文" in notes and "## English" in notes and "omonob" in notes
     assert not re.search(r"\bIDR\d*\b|每\s*5\s*帧", notes, re.I)
     print("MQB_ONLY_DOC_POLICY_AND_PROTECTED_NOTICES_OK")

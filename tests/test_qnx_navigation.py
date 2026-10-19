@@ -38,6 +38,10 @@ def strict_environment(root):
     grep.write_text(STRICT_GREP)
     grep.chmod(0o755)
     log = root / "binary-grep.log"
+    for name in ("cksum", "tr", "strings", "unzip"):
+        shim = commands / name
+        shim.write_text('#!/bin/sh\necho "unavailable-tool: ' + name + '" >> "$CPMAP_STRICT_GREP_LOG"\nexit 127\n')
+        shim.chmod(0o755)
     return {"PATH": str(commands) + ":" + os.environ["PATH"],
             "CPMAP_STRICT_GREP_LOG": str(log)}, log
 
@@ -59,10 +63,12 @@ def baseline_failure(archive):
             env, log = strict_environment(root)
             output = run(payload / "common/install-carplay-maps.sh", root,
                          payload, mu, cluster, ok=False, extra_env=env)
-            assert "CPMAP_INSTALL_FAIL=NAVIGATION_PAYLOAD_INVALID" in output
-            assert log.is_file() and "binary-input" in log.read_text()
+            assert ("CPMAP_INSTALL_FAIL=NAVIGATION_PAYLOAD_INVALID" in output or
+                    "CPMAP_INSTALL_FAIL=NAVIGATION_PAYLOAD_CHECKSUM_MISMATCH" in output), output
+            assert log.is_file()
+            assert "binary-input" in log.read_text() or "unavailable-tool: cksum" in log.read_text()
             assert before == (digest(dio), digest(lsd))
-            print("REPRODUCED v1.2.0", mu, cluster, "NAVIGATION_PAYLOAD_INVALID")
+            print("REPRODUCED published installer", mu, cluster, output.strip())
 
 
 def exercise(payload, script, restore, mu, cluster, size):
@@ -82,9 +88,9 @@ def exercise(payload, script, restore, mu, cluster, size):
                 own_before = digest(jars / "CarPlayNavigationPatch.jar")
             before = digest(dio), digest(lsd)
             env, log = strict_environment(root)
-            if mode in ("partial", "bad-startup"):
+            if mode == "bad-startup":
                 output = run(script, root, payload, mu, cluster, ok=False, extra_env=env)
-                expected = "CUSTOM_CARPLAY_PATCH_REQUIRES_REVIEW" if mode == "partial" else "BOOTCLASSPATH_STRUCTURE_UNSUPPORTED"
+                expected = "BOOTCLASSPATH_STRUCTURE_UNSUPPORTED"
                 assert expected in output, output
                 assert before == (digest(dio), digest(lsd))
             else:
@@ -131,7 +137,7 @@ def corrupt_payload_checks():
             nav.write_bytes(data)
             env, log = strict_environment(root)
             output = run(pkg / "install.sh", root, payload, "MU1102", "791", ok=False, extra_env=env)
-            assert "NAVIGATION_PAYLOAD_CHECKSUM_MISMATCH" in output, output
+            assert "NAVIGATION_PAYLOAD_DAMAGED_REEXTRACT_SD" in output, output
             assert before == (digest(dio), digest(lsd))
             assert not (root / "mnt/app/carplaymaps").exists()
             assert not log.exists()

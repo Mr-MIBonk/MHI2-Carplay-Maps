@@ -3,7 +3,7 @@
 PAYLOAD="$1"
 EXPECTED_MU="$2"
 INSTRUMENT="$3"
-VERSION="V70-PLAINTEXT-TOOLBOX-1.2.1"
+VERSION="V70-PLAINTEXT-TOOLBOX-1.2.2"
 
 fail() {
     echo "CPMAP_INSTALL_FAIL=$1"
@@ -72,54 +72,46 @@ if [ "$EXPECTED_MU" = "MU1440" ] && [ -s "$PAYLOAD/profiles/MU1440/790/CarPlayCl
 fi
 NAV_JAR="$PAYLOAD/common/CarPlayNavigationPatch.jar"
 NAV_TARGET="$JARS/CarPlayNavigationPatch.jar"
+NAV_CHECK="$PAYLOAD/common/cpmap-nav-check"
 BRIDGE="$PAYLOAD/common/altscreen-most-bridge"
 SUPERVISOR="$PAYLOAD/common/carplay-cluster-supervisor"
 SEC="$PAYLOAD/common/libcarplay-security-bridge.so"
 PAIR_HELPER="$PAYLOAD/common/carplay-pairing-helper"
 PAIR_CORE="$PAYLOAD/common/libCarPlayPairingCore.so"
 
-for required in "$CORE" "$WRAPPER" "$CONTROL_JAR" "$NAV_JAR" "$BRIDGE" "$SUPERVISOR" "$SEC" "$PAIR_HELPER" "$PAIR_CORE"; do
+for required in "$CORE" "$WRAPPER" "$CONTROL_JAR" "$NAV_CHECK" "$BRIDGE" "$SUPERVISOR" "$SEC" "$PAIR_HELPER" "$PAIR_CORE"; do
     [ -s "$required" ] || fail "PAYLOAD_MISSING_`basename "$required"`"
 done
 
-# The shipped upstream JAR is pinned independently of text inspection. cksum
-# is POSIX and available on the target; do not require a host-only SHA utility.
+# The target may have neither cksum nor binary-safe text tools. Use our tiny
+# read-only checker, on MMX when invoked from the other node. The test override
+# is deliberately unavailable unless an explicit fixture filesystem is active.
+run_nav_check() {
+    if [ -n "${CPMAP_TEST_ROOT:-}" ] && [ -n "${CPMAP_TEST_NAV_CHECK:-}" ]; then
+        "$CPMAP_TEST_NAV_CHECK" "$@"
+    elif [ -n "$MMX" ]; then
+        on -f mmx "$NAV_CHECK" "$@"
+    else
+        "$NAV_CHECK" "$@"
+    fi
+}
+if [ ! -x "$NAV_CHECK" ]; then
+    chmod 755 "$NAV_CHECK" 2>/dev/null || true
+fi
+run_nav_check --self-test || fail "NAVIGATION_CHECKER_UNAVAILABLE_REEXTRACT_SD"
+
 navigation_payload_intact() {
     [ -s "$1" ] || return 1
-    nav_checksum=`cksum < "$1" 2>/dev/null` || return 1
-    set -- $nav_checksum
-    [ "$#" -eq 2 ] && [ "$1" = 3499852279 ] && [ "$2" = 27179 ]
+    run_nav_check --payload "$1"
 }
 
-# QNX grep is a TEXT utility, not GNU binary grep. JAR filenames are printable
-# ZIP directory strings but the surrounding archive contains NULs. Convert all
-# non-ASCII-printable bytes to newlines before passing anything to grep. tr's
-# octal/range syntax is supported by QNX 6.5; no strings/unzip/GNU -a is needed.
-jar_has_class() {
-    [ -s "$1" ] || return 1
-    jar_text=`LC_ALL=C tr -c '\40-\176' '\12' < "$1"` || return 1
-    printf '%s\n' "$jar_text" | grep -F "$2" >/dev/null 2>&1
-}
-
-# Check all seven navigation-ignore classes, including patches merged with
-# another user's metadata JAR; never overwrite that unrelated metadata JAR.
+# Inspect real ZIP central/local directory entries, not byte-string matches.
 has_navigation_patch() {
     [ -s "$1" ] || return 1
-    for nav_class in \
-        de/esolutions/fw/comm/dsi/carplay/impl/DSICarplayProxy.class \
-        de/esolutions/fw/dsi/androidauto2/DSIAndroidAuto2Dispatcher.class \
-        de/esolutions/fw/dsi/androidauto/DSIAndroidAutoDispatcher.class \
-        de/vw/mib/asl/internal/androidauto/target/NavigationListener.class \
-        de/vw/mib/asl/internal/androidauto/target/RequestHandler.class \
-        de/vw/mib/asl/internal/carplay/common/CarPlayModeHandling.class \
-        de/vw/mib/asl/internal/exboxm/api/impl/guidance/ExboxGuidanceManagerImpl.class; do
-        jar_has_class "$1" "$nav_class" || return 1
-    done
-    return 0
+    run_nav_check --has-patch "$1"
 }
-navigation_payload_intact "$NAV_JAR" || fail "NAVIGATION_PAYLOAD_CHECKSUM_MISMATCH_REEXTRACT_SD"
-has_navigation_patch "$NAV_JAR" || fail "NAVIGATION_PAYLOAD_CLASSES_MISSING_REEXTRACT_SD"
 NAV_INSTALL=yes
+NAV_USE_OWN=yes
 NAV_EXISTING=""
 BOOT_JARS=`awk '
     /^[ \t]*#/ { next }
@@ -133,7 +125,6 @@ BOOT_JARS=`awk '
         }
     }
 ' "$LSD"`
-NAV_CONFLICT=no
 for boot_jar in $BOOT_JARS; do
     case "$boot_jar" in
         '$BASE_DIR/'*) boot_file="$APP/eso/hmi/${boot_jar#\$BASE_DIR/}" ;;
@@ -141,8 +132,7 @@ for boot_jar in $BOOT_JARS; do
         /mnt/app/*) boot_file="$MMX$boot_jar" ;;
         *) continue ;;
     esac
-    # A partial previous copy of our own standalone JAR is safe to repair.
-    # Other active overrides still require review if their patch is incomplete.
+    # Repair our own incomplete copy; keep unrelated third-party JAR files.
     if [ "$boot_file" = "$NAV_TARGET" ] && ! navigation_payload_intact "$boot_file"; then
         echo "CPMAP_NAVIGATION_PATCH=REPAIR_OWN_JAR"
         continue
@@ -150,18 +140,17 @@ for boot_jar in $BOOT_JARS; do
     if has_navigation_patch "$boot_file"; then
         NAV_INSTALL=no
         NAV_EXISTING="$boot_jar"
+        [ "$boot_file" = "$NAV_TARGET" ] || NAV_USE_OWN=no
         break
     fi
-    if jar_has_class "$boot_file" 'de/esolutions/fw/comm/dsi/carplay/impl/DSICarplayProxy.class'; then
-        NAV_CONFLICT=yes
-    fi
 done
-if [ "$NAV_INSTALL" = yes ] && [ "$NAV_CONFLICT" = yes ]; then
-    fail "CUSTOM_CARPLAY_PATCH_REQUIRES_REVIEW"
-fi
 if [ "$NAV_INSTALL" = no ]; then
     echo "CPMAP_NAVIGATION_PATCH=KEEP_EXISTING ($NAV_EXISTING)"
 else
+    # Only demand a valid SD copy if it is actually needed. A partial custom
+    # patch is completed by our seven-class prepend, without changing its JAR.
+    [ -s "$NAV_JAR" ] || fail "PAYLOAD_MISSING_CarPlayNavigationPatch.jar"
+    navigation_payload_intact "$NAV_JAR" || fail "NAVIGATION_PAYLOAD_DAMAGED_REEXTRACT_SD"
     echo "CPMAP_NAVIGATION_PATCH=INSTALL_MISSING"
 fi
 
@@ -223,12 +212,18 @@ fi
 [ -n "$STOCK" ] || fail "FACTORY_DIO_MANAGER_NOT_FOUND"
 
 LSD_BASE="$LSD"
-for candidate in "$ROOT/map_control_rollback/lsd.sh" "$ROOT/rollback/lsd.sh" "$APP/carplaymaps-open/rollback/lsd.sh"; do
-    if [ -s "$candidate" ] && ! grep -q 'CarPlayClusterControls.jar' "$candidate" 2>/dev/null; then
-        LSD_BASE="$candidate"
-        break
-    fi
-done
+if [ -s "$ROOT/VERSION" ] && [ -s "$ROOT/rollback/lsd.sh" ]; then
+    # A repeat install must retain our first saved startup byte-for-byte, even
+    # if that original script contained comments or older classpath references.
+    LSD_BASE="$ROOT/rollback/lsd.sh"
+else
+    for candidate in "$ROOT/map_control_rollback/lsd.sh" "$ROOT/rollback/lsd.sh" "$APP/carplaymaps-open/rollback/lsd.sh"; do
+        if [ -s "$candidate" ] && ! grep -q 'CarPlayClusterControls.jar' "$candidate" 2>/dev/null; then
+            LSD_BASE="$candidate"
+            break
+        fi
+    done
+fi
 
 cp "$STOCK" "$NEW/stock_first/dio_manager.real" || fail "STOCK_COPY_FAILED"
 cp "$LSD_BASE" "$NEW/rollback/lsd.sh" || fail "LSD_BACKUP_FAILED"
@@ -252,13 +247,8 @@ else
     touch "$NEW/rollback/NAV_JAR_ABSENT" || fail "NAV_ABSENT_MARK_FAILED"
 fi
 
-COUNT=`grep -c 'CarPlayClusterControls.jar' "$LSD" 2>/dev/null`
-[ "$COUNT" -le 1 ] || fail "DUPLICATE_CONTROL_JAR_REFERENCE"
-ADD_CLASSPATH=""
-[ "$COUNT" -eq 1 ] || ADD_CLASSPATH='$BASE_DIR/lsd/jars/CarPlayClusterControls.jar'
-NAV_COUNT=`grep -c 'CarPlayNavigationPatch.jar' "$LSD" 2>/dev/null`
-[ "$NAV_COUNT" -le 1 ] || fail "DUPLICATE_NAVIGATION_JAR_REFERENCE"
-if [ "$NAV_INSTALL" = yes ] && [ "$NAV_COUNT" -eq 0 ]; then
+ADD_CLASSPATH='$BASE_DIR/lsd/jars/CarPlayClusterControls.jar'
+if [ "$NAV_USE_OWN" = yes ]; then
     [ -z "$ADD_CLASSPATH" ] || ADD_CLASSPATH="$ADD_CLASSPATH:"
     ADD_CLASSPATH="$ADD_CLASSPATH"'$BASE_DIR/lsd/jars/CarPlayNavigationPatch.jar'
 fi
@@ -269,19 +259,32 @@ else
     # -Xbootclasspath/p option: some J9 builds keep only its last occurrence.
     # On a stock script, add one line immediately before J9 instead.
     awk -v prepend="$ADD_CLASSPATH" '
-        BEGIN { done=0 }
         {
-            if (!done && $0 ~ /^[ \t]*BOOTCLASSPATH="\$BOOTCLASSPATH -Xbootclasspath\/p:/) {
-                sub(/-Xbootclasspath\/p:/, "-Xbootclasspath/p:" prepend ":")
-                done=1
+            lines[NR]=$0
+            if ($0 ~ /^[ \t]*#/) next
+            if ($0 ~ /-Xbootclasspath\/p:/ && $0 !~ /^[ \t]*BOOTCLASSPATH="\$BOOTCLASSPATH -Xbootclasspath\/p:[^" \t]+"[ \t]*(#.*)?$/) unsupported=1
+            if ($0 ~ /^[ \t]*BOOTCLASSPATH="\$BOOTCLASSPATH -Xbootclasspath\/p:[^" \t]+"[ \t]*(#.*)?$/) {
+                remove[NR]=1
+                if (!insert) insert=NR
+                match($0, /-Xbootclasspath\/p:[^" \t]+/)
+                value=substr($0,RSTART+18,RLENGTH-18)
+                count=split(value,items,":")
+                for(i=1;i<=count;i++) {
+                    if(items[i] ~ /\/CarPlayClusterControls\.jar$/ || items[i] ~ /\/CarPlayNavigationPatch\.jar$/) continue
+                    if(length(items[i]) && !seen[items[i]]++) kept=kept ":" items[i]
+                }
             }
-            if (!done && $0 ~ /^[ \t]*\$J9[ \t]/) {
-                print "BOOTCLASSPATH=\"$BOOTCLASSPATH -Xbootclasspath/p:" prepend "\""
-                done=1
-            }
-            print
+            if (!j9 && $0 ~ /^[ \t]*\$J9[ \t]/) j9=NR
         }
-        END { if (!done) exit 9 }
+        END {
+            if (!j9 || unsupported) exit 9
+            if (!insert) insert=j9
+            if (insert>j9) exit 9
+            for(row=1;row<=NR;row++) {
+                if(row==insert) print "BOOTCLASSPATH=\"$BOOTCLASSPATH -Xbootclasspath/p:" prepend kept "\""
+                if(!remove[row]) print lines[row]
+            }
+        }
     ' "$LSD" > "$STAGE/lsd.sh.patched" || fail "BOOTCLASSPATH_STRUCTURE_UNSUPPORTED"
 fi
 
@@ -354,10 +357,13 @@ rm -f "$ROOT/cpmap-guard" "$ROOT/cpmap-auth" "$ROOT/cpmap-provision" "$ROOT/intr
 [ -s "$ROOT/core.so" ] || fail "CORE_VERIFY_FAILED"
 [ -s "$ROOT/stock_first/dio_manager.real" ] || fail "STOCK_VERIFY_FAILED"
 [ -s "$JARS/CarPlayClusterControls.jar" ] || fail "CONTROL_JAR_VERIFY_FAILED"
-[ `grep -c 'CarPlayClusterControls.jar' "$LSD" 2>/dev/null` -eq 1 ] || fail "BOOTCLASSPATH_VERIFY_FAILED"
+active_reference_count() {
+    awk -v name="$1" '/^[ \t]*#/ {next} index($0,name) {n++} END {print n+0}' "$LSD"
+}
+[ `active_reference_count 'CarPlayClusterControls.jar'` -eq 1 ] || fail "BOOTCLASSPATH_VERIFY_FAILED"
 if [ "$NAV_INSTALL" = yes ]; then
-    navigation_payload_intact "$NAV_TARGET" && has_navigation_patch "$NAV_TARGET" || { rollback_commit; fail "NAVIGATION_VERIFY_FAILED"; }
-    [ `grep -c 'CarPlayNavigationPatch.jar' "$LSD" 2>/dev/null` -eq 1 ] || { rollback_commit; fail "NAVIGATION_CLASSPATH_VERIFY_FAILED"; }
+    navigation_payload_intact "$NAV_TARGET" && run_nav_check --same "$NAV_JAR" "$NAV_TARGET" || { rollback_commit; fail "NAVIGATION_VERIFY_FAILED"; }
+    [ `active_reference_count 'CarPlayNavigationPatch.jar'` -eq 1 ] || { rollback_commit; fail "NAVIGATION_CLASSPATH_VERIFY_FAILED"; }
 fi
 rm -rf "$OLD" "$STAGE" 2>/dev/null
 

@@ -26,7 +26,7 @@ export IPL_CONFIG_DIR_DIO_MANAGER=/etc/eso/production
 export PATH=/proc/boot:/sbin:/bin:/usr/bin:/usr/sbin:/armle/usr/bin:/armle/usr/sbin:/armle/sbin:/armle/bin
 export LD_LIBRARY_PATH=/mnt/app/root/lib-target:/eso/lib:/mnt/app/usr/lib:/mnt/app/armle/lib:/mnt/app/armle/lib/dll:/mnt/app/armle/usr/lib
 export CARPLAY_ALTSCREEN_ENABLE=1
-export CARPLAY_ALTSCREEN_LOG=/ramdisk/carplaymaps-video.log
+export CARPLAY_ALTSCREEN_LOG=/dev/null
 export CARPLAY_ALTSCREEN_CAPTURE_DIR=/ramdisk
 unset CARPLAY_CLUSTER_INTRO
 unset CARPLAY_CLUSTER_INTRO_FPS
@@ -44,7 +44,7 @@ fi
 PRELOAD="$CORE"
 if test -r "$SEC"; then
     PRELOAD="$CORE:$SEC"
-    export CARPLAY_SECURITY_BRIDGE_LOG=/ramdisk/carplay-maps-session.log
+    export CARPLAY_SECURITY_BRIDGE_LOG=/dev/null
     if test -x "$PAIR_HELPER" && test -r "$PAIR_CORE"; then
         (
             unset LD_PRELOAD

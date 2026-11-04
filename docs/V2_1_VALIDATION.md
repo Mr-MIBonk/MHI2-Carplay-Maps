@@ -201,7 +201,7 @@ reported physical boot-reapply or day/night observations.
 | 原厂菜单几何 | 每个固件 5,034 组边界检查，覆盖 G11 原厂负间距和子列表纵向偏移；SEAT 主选项条扫描位置与原车一致，四项弹窗外框同为 `(411,137,334,248)`，右侧选项未裁切 |
 | 可重复构建 | 20 个菜单／按键／帧率／信息 JAR 的类内容一致；四个原生信息辅助程序和两种 G11 核心字节一致 |
 | 安装事务 | 七种配置覆盖全新安装、更新、导航补齐、损坏、未知包装器拒绝、提交失败回退和原厂恢复 |
-| 本地候选 ZIP | rc.6 重新生成后完成九组 Linux 检查及 Windows／Linux 各 147 项解包脚本操作，七套清单、CRC/SHA-256 通过。Linux 首轮因宿主全局同步等待 FUSE 超时未计通过；测试工具改为真实同步临时目录所在文件系统后重跑通过，车辆脚本的 sync 未改 |
+| 最终试验 ZIP | rc.7 重新生成后完成九组 Linux 检查及 Windows／Linux 各 147 项解包脚本操作，七套清单、CRC/SHA-256 通过；运行文件与已检查的 rc.6 逐字节相同，仅 SD 根目录说明更新。此前 rc.6 的 Linux 首轮因宿主全局同步等待 FUSE 超时未计通过；测试工具改为真实同步临时目录所在文件系统后重跑通过，车辆脚本的 sync 未改 |
 | 无关工具箱文件 | 与已发布 2.0.1 比较，305 个无关 MQB 文件逐字节不变 |
 | SEAT 原生界面 | 自身 G11 800×480 固件界面，四项信息选项实际点击并保存，完整停止／启动虚拟机后仍保留 |
 | 最新构建重启边界 | 一轮媒体启动异常保留；原厂 APP 对照 20 分钟未复现，恢复候选版重试 15 分钟通过六字段／CRC 和实际菜单／弹窗显示。重试通过不抹去失败或确认根因 |
@@ -260,9 +260,11 @@ The G11 viewport retains its native padding, width, item/button offsets and
 spacing; eight-choice lists scroll continuously within their own content area,
 without the Volkswagen large-screen y-coordinate override.
 
-The rebuilt rc.6 local archive completed nine Linux suites and 147 extracted-script
+The final rc.7 experimental archive completed nine Linux suites and 147 extracted-script
 transaction operations on each of Windows and Linux, with profile manifests and
-CRC/SHA-256 checks. The first Linux attempt timed out in host-wide sync waiting
+CRC/SHA-256 checks. Its runtime files are byte-identical to the previously checked
+rc.6 archive; only the SD-root release notes changed. The earlier rc.6 first Linux
+attempt timed out in host-wide sync waiting
 for a FUSE filesystem; it is not counted as a pass. The test harness now executes
 real GNU sync -f on the temporary fixture filesystem, rather than every host mount;
 the shipped QNX sync call is unchanged. The rerun passed. Scope protection compares

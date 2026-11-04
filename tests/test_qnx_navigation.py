@@ -11,7 +11,8 @@ import subprocess
 import tempfile
 import zipfile
 
-from test_toolbox_install import PROFILES, REPO, digest, fixture, package, run
+from test_toolbox_install import (PROFILES, REPO, digest, fixture, package, run,
+                                  navigation_name, navigation_payload)
 
 
 STRICT_GREP = r'''#!/usr/bin/env python3
@@ -72,7 +73,8 @@ def baseline_failure(archive):
 
 
 def exercise(payload, script, restore, mu, cluster, size):
-    nav = payload / "common/CarPlayNavigationPatch.jar"
+    nav = navigation_payload(payload, mu, cluster)
+    nav_name = navigation_name(mu)
     for mode in ("stock", "existing", "merged", "missing-file", "own-corrupt", "partial", "bad-startup"):
         with tempfile.TemporaryDirectory(prefix="cpmap-text-grep-") as tmp:
             root = Path(tmp)
@@ -80,12 +82,12 @@ def exercise(payload, script, restore, mu, cluster, size):
             own_before = None
             if mode == "own-corrupt":
                 text = lsd.read_text().replace('$J9 $BOOTCLASSPATH Main',
-                    'BOOTCLASSPATH="$BOOTCLASSPATH -Xbootclasspath/p:$BASE_DIR/lsd/jars/CarPlayNavigationPatch.jar"\n$J9 $BOOTCLASSPATH Main')
+                    'BOOTCLASSPATH="$BOOTCLASSPATH -Xbootclasspath/p:$BASE_DIR/lsd/jars/' + nav_name + '"\n$J9 $BOOTCLASSPATH Main')
                 lsd.write_text(text)
                 broken = bytearray(nav.read_bytes())
                 broken[256] ^= 1
-                (jars / "CarPlayNavigationPatch.jar").write_bytes(broken)
-                own_before = digest(jars / "CarPlayNavigationPatch.jar")
+                (jars / nav_name).write_bytes(broken)
+                own_before = digest(jars / nav_name)
             before = digest(dio), digest(lsd)
             env, log = strict_environment(root)
             if mode == "bad-startup":
@@ -96,7 +98,7 @@ def exercise(payload, script, restore, mu, cluster, size):
             else:
                 output = run(script, root, payload, mu, cluster, extra_env=env)
                 assert "CPMAP_INSTALL_OK" in output
-                installed = jars / "CarPlayNavigationPatch.jar"
+                installed = jars / nav_name
                 if mode in ("existing", "merged"):
                     assert "KEEP_EXISTING" in output and not installed.exists()
                     existing = jars / ("ExistingMergedPatch.jar" if mode == "merged" else "NavActiveIgnore.jar")

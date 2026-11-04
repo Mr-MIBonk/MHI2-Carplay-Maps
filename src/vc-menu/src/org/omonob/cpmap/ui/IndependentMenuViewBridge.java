@@ -41,11 +41,13 @@ public final class IndependentMenuViewBridge {
     private final int stockHeight;
     private final boolean compact;
     private final int compactRowPitch, compactPopupPitch, compactPopupWidth, compactPopupX;
-    private final int compactOptionWidth, compactListX, compactListY;
+    private final int compactOptionWidth, compactListX, compactListY,compactListWidth;
+    private final int compactRowY,compactOptionY,compactOptionHeight,compactOptionItemHeight,compactOptionSpacing,compactPaddingTop,compactPaddingBottom;
+    private final int compactPopupInsetTop,compactPopupInsetBottom;
     private final WidgetModel[] originalParentChildren, originalViewChildren;
-    private static final int[] FIELDS={0,1,3,5};
-    private final ButtonModel[] rows=new ButtonModel[4], options=new ButtonModel[8], confirmationButtons=new ButtonModel[2];
-    private final TextAreaModel[] names=new TextAreaModel[4], values=new TextAreaModel[4], optionLabels=new TextAreaModel[8], confirmationLabels=new TextAreaModel[2];
+    private static final int[] FIELDS={0,1,2,3,5};
+    private final ButtonModel[] rows=new ButtonModel[FIELDS.length], options=new ButtonModel[8], confirmationButtons=new ButtonModel[2];
+    private final TextAreaModel[] names=new TextAreaModel[FIELDS.length], values=new TextAreaModel[FIELDS.length], optionLabels=new TextAreaModel[8], confirmationLabels=new TextAreaModel[2];
     private final ListItemModel[] choiceItems=new ListItemModel[8];
     private final WidgetList choiceList;
     private final Container confirmation;
@@ -83,15 +85,33 @@ public final class IndependentMenuViewBridge {
         if(dropDownDonor==null || dropDownDonor.get_dropDownListRef()==null)throw new IllegalStateException("OEM DropDown template missing");
         // Read G11 geometry from its OWN skin. Same widget IDs on SEAT do
         // not imply the 1280x640 VW dimensions; SKG11 uses different IDs.
-        compactRowPitch=ancestorListItem(rowDonor).get_height();
+        compactRowPitch=ancestorListItem(rowDonor).get_height()+((WidgetListModel)stockList).get_spacingVertical();
+        compactRowY=rowDonor.get_y();
         WidgetModel nativeOption=findListItem(dropDownDonor.get_dropDownListRef());
         if(nativeOption==null)throw new IllegalStateException("Native option item missing");
-        compactPopupPitch=nativeOption.get_height();
+        ButtonModel nativeOptionButton=findButton(nativeOption);
+        if(nativeOptionButton==null)throw new IllegalStateException("Native option button missing");
+        compactOptionItemHeight=nativeOption.get_height();
+        compactOptionY=nativeOptionButton.get_y();compactOptionHeight=nativeOptionButton.get_height();
+        compactOptionSpacing=dropDownDonor.get_dropDownListRef().get_spacingVertical();
+        compactPopupPitch=compactOptionItemHeight+compactOptionSpacing;
         compactOptionWidth=nativeOption.get_width();
         compactPopupWidth=dropDownDonor.get_width();
         compactPopupX=dropDownDonor.get_x();
+        de.vw.mib.graphics.Insets nativeChoicePadding=dropDownDonor.get_dropDownListRef().get_padding();
+        if(compact && nativeChoicePadding==null)throw new IllegalStateException("Native popup padding missing");
+        // The native viewport includes its padding; its option is narrower.
+        // Shrinking that viewport to the option width clips its right edge.
+        // Preserve the donor padding instead of flattening it to zero.
         compactListX=dropDownDonor.get_dropDownListRef().get_x();
         compactListY=dropDownDonor.get_dropDownListRef().get_y();
+        compactListWidth=dropDownDonor.get_dropDownListRef().get_width();
+        compactPaddingTop=compact?nativeChoicePadding.top:0;
+        compactPaddingBottom=compact?nativeChoicePadding.bottom:0;
+        de.vw.mib.properties.values.LayoutAttribs nativePopupLayout=dropDownDonor.get_layoutAttribs();
+        if(compact && nativePopupLayout==null)throw new IllegalStateException("Native popup outer insets missing");
+        compactPopupInsetTop=compact?nativePopupLayout.getInsetTop():0;
+        compactPopupInsetBottom=compact?nativePopupLayout.getInsetBottom():0;
         // Append one real native list entry. Do not rename, hide or shrink the
         // original MirrorLink region while its page animation is being drawn.
         entryItem=(ListItemModel)cloneTree(ancestorListItem(plainDonor));
@@ -115,8 +135,8 @@ public final class IndependentMenuViewBridge {
         ButtonModel pageBack=findButton(headline);push(pageBack,61);
         WidgetModel frame=cloneTree(required(view,96892073));geometry(frame,0,82,1280,16);
         panel=container("CPMAP_INDEPENDENT_ROWS",30,84,1139,549);
-        WidgetModel[] rowNodes=new WidgetModel[4];
-        for(int i=0;i<4;i++) {
+        WidgetModel[] rowNodes=new WidgetModel[FIELDS.length];
+        for(int i=0;i<FIELDS.length;i++) {
             rows[i]=(ButtonModel)cloneTree(rowDonor);
             names[i]=(TextAreaModel)find(rows[i],"TextLabel");
             values[i]=(TextAreaModel)find(rows[i],"CurrentConnectiontype");
@@ -181,7 +201,7 @@ public final class IndependentMenuViewBridge {
         choiceList.set_scrollTypeTouch(TemplateListModel.SCROLLTYPETOUCH_STEPLESS);
         choiceList.set_scrollTypeRotary(TemplateListModel.SCROLLTYPEROTARY_LAST_ELEMENT);
         choiceList.set_forwardPressDelay(120);
-        choiceList.set_padding(new de.vw.mib.graphics.Insets(0,0,0,0));
+        if(!compact)choiceList.set_padding(new de.vw.mib.graphics.Insets(0,0,0,0));
         choiceList.set_spacingVertical(-3);choiceList.set_spacingHorizontal(0);choiceList.set_spacingPage(0);
         choiceList.set_separatorMode(WidgetListModel.SEPARATOR_MODE_ENABLED);
         geometry(choiceList,26,23,562,549);
@@ -247,7 +267,7 @@ public final class IndependentMenuViewBridge {
         // our entry; no post-init cache surgery or stock-tree reinitialization.
         ((ContainerModel)stockList).setChildren(extended);
         view.setChildren(append(append(originalViewChildren,page),popup));
-        log("INDEPENDENT_ENTRY_ATTACHED public_v2=1 fields=4 stock_mirrorlink_untouched=1 wireless_interface_only=1 card_position_selector=1");
+        log(new StringBuffer("INDEPENDENT_ENTRY_ATTACHED public_v2=1 fields=").append(FIELDS.length).append(" stock_mirrorlink_untouched=1 wireless_interface_only=1 card_position_selector=1").toString());
     }
 
     public static void attach(AbstractViewHandler handler) {
@@ -319,7 +339,7 @@ public final class IndependentMenuViewBridge {
         popupTitle.set_width(514);notice.set_width(520);notice.set_visualLineCount(2);
         log(new StringBuffer("OEM_ANCHOR x=").append(x).append(" width=").append(width)
             .append(" height=").append(height).append(" ref_abs_x=").append(stockReference.getAbsX()).append(" parent_abs_x=").append(parent.getAbsX()).toString());
-        for(int i=0;i<4;i++) {
+        for(int i=0;i<FIELDS.length;i++) {
             // Reapply after native initialization/activation has performed its
             // anchor layout. Width changes must also resize the image child.
             geometry(rows[i],0,i*91,width,height);
@@ -331,8 +351,8 @@ public final class IndependentMenuViewBridge {
             WidgetModel separator=find(rows[i],"Separator");
             if(separator!=null)separator.set_x(569);
             int field=FIELDS[i];
-            names[i].set_text(field<2?LinkedMessages.get(language,field):field==3?new StringBuffer(WirelessMenuMessages.get(language)).append(" (test)").toString():CardMenuMessages.get(language,0));
-            values[i].set_text(choice(field,field<2?state.value(field):field==3?(wirelessStore.read().enabled?1:0):MenuClusterProfile.cardChoice(cardStore.read().position)));
+            names[i].set_text(field<2?LinkedMessages.get(language,field):field==2?(compact?InformationMenuMessages.compactLabel(language):InformationMenuMessages.label(language)):field==3?new StringBuffer(WirelessMenuMessages.get(language)).append(" (test)").toString():CardMenuMessages.get(language,0));
+            values[i].set_text(choice(field,field<3?state.value(field):field==3?(wirelessStore.read().enabled?1:0):MenuClusterProfile.cardChoice(cardStore.read().position)));
             applyFont(names[i]);applyFont(values[i]);
             names[i].set_alignmentHorizontal(rtl?AbstractTextModel.ALIGNMENTHORIZONTAL_RIGHT:AbstractTextModel.ALIGNMENTHORIZONTAL_LEFT);
             values[i].set_alignmentHorizontal(rtl?AbstractTextModel.ALIGNMENTHORIZONTAL_RIGHT:AbstractTextModel.ALIGNMENTHORIZONTAL_LEFT);
@@ -383,7 +403,7 @@ public final class IndependentMenuViewBridge {
     }
     private void renderChoices() throws Exception {
         ProjectionSettings.State state=store.read();
-        int count=choiceCount(activeField),current=activeField<2?state.value(activeField):activeField==3?(wirelessStore.read().enabled?1:0):MenuClusterProfile.cardChoice(cardStore.read().position);
+        int count=choiceCount(activeField),current=activeField<3?state.value(activeField):activeField==3?(wirelessStore.read().enabled?1:0):MenuClusterProfile.cardChoice(cardStore.read().position);
         confirmation.set_visible(false);choiceList.set_visible(true);
         int visibleRows=Math.min(count,6);
         choiceList.set_height(visibleRows*91+3);
@@ -408,9 +428,11 @@ public final class IndependentMenuViewBridge {
         // The stock automatic anchor algorithm assumes a short ASL list. A
         // scrolling eight-item static list must stay inside the content area;
         // keep the exact OEM skin/insets/pitch, only bound its opening rect.
-        popupBackground.set_layoutAutomatically(count<=6);
-        if(count>6)geometry(popupBackground,575,66,614,visibleRows*91+50);
-        popupBackground.setAutoLayoutArea(new de.vw.mib.graphics.Rectangle(0,84,view.get_width(),549));
+        popupBackground.set_layoutAutomatically(compact || count<=6);
+        if(!compact && count>6)geometry(popupBackground,575,66,614,visibleRows*91+50);
+        popupBackground.setAutoLayoutArea(compact
+            ?new de.vw.mib.graphics.Rectangle(0,parent.get_y(),view.get_width(),stockHeight)
+            :new de.vw.mib.graphics.Rectangle(0,84,view.get_width(),549));
         de.vw.mib.graphics.Rectangle anchor=new de.vw.mib.graphics.Rectangle();rows[rowForField(activeField)].getAbsBounds(anchor);
         popupBackground.setArrowDestinationArea(anchor);
         popupBackground.set_visible(true);
@@ -463,7 +485,7 @@ public final class IndependentMenuViewBridge {
             if(action==60){refresh();page.set_visible(true);page.repaint();log("INDEPENDENT_PAGE_OPEN");return;}
             if(action==61){closePopup();page.set_visible(false);log("INDEPENDENT_PAGE_CLOSE");return;}
             if(action==90)return;
-            if(action>=0 && action<4){open(FIELDS[action]);return;}
+            if(action>=0 && action<FIELDS.length){open(FIELDS[action]);return;}
             if(action==20){closePopup();return;}
             if(activeField<0)return;
             if(pendingMap>=0){
@@ -603,14 +625,18 @@ public final class IndependentMenuViewBridge {
         if(width<600 || width>780 || compactRowPitch<50 || compactRowPitch>80
             || compactPopupPitch<50 || compactPopupPitch>80 || compactPopupWidth<300 || compactPopupWidth>440)
             throw new IllegalStateException("Unknown G11 stock geometry");
-        geometry(entryItem,0,0,width,compactRowPitch);
-        geometry(entryButton,0,compactRowPitch-height,width,height);
+        // Parent WidgetList applies its own spacing. Keep the supplied entry's
+        // original item height/offset rather than counting that spacing twice
+        // after using full native pitch for our independent page rows.
+        int entryHeight=compactRowPitch-((WidgetListModel)stockList).get_spacingVertical();
+        geometry(entryItem,0,0,width,entryHeight);
+        geometry(entryButton,0,entryHeight-height,width,height);
         geometry(entryLabel,20,0,width-40,height);resizeBackground(entryButton);
         geometry(panel,left,top,width,available);
         WidgetModel frame=find(page,"Frame");
         if(frame!=null)geometry(frame,0,top+available,view.get_width(),view.get_height()-top-available);
         for(int index=0;index<rows.length;index++) {
-            geometry(rows[index],0,index*compactRowPitch,width,height);resizeBackground(rows[index]);
+            geometry(rows[index],0,compactRowY+index*compactRowPitch,width,height);resizeBackground(rows[index]);
             int split=width/2;
             geometry(names[index],18,0,split-28,height);
             geometry(values[index],split+18,0,width-split-68,height);
@@ -624,11 +650,11 @@ public final class IndependentMenuViewBridge {
             WidgetModel separator=find(rows[index],"Separator");
             if(separator!=null)geometry(separator,split,0,separator.get_width(),height);
         }
-        choiceList.set_spacingVertical(0);
-        geometry(choiceList,compactListX,compactListY,compactOptionWidth,compactPopupPitch*5);
+        choiceList.set_spacingVertical(compactOptionSpacing);
+        geometry(choiceList,compactListX,compactListY,compactListWidth,compactPopupPitch*5);
         for(int index=0;index<options.length;index++) {
-            geometry(choiceItems[index],0,index*compactPopupPitch,compactOptionWidth,compactPopupPitch);
-            geometry(options[index],0,0,compactOptionWidth,height);resizeBackground(options[index]);
+            geometry(choiceItems[index],0,index*compactPopupPitch,compactOptionWidth,compactOptionItemHeight);
+            geometry(options[index],0,compactOptionY,compactOptionWidth,compactOptionHeight);resizeBackground(options[index]);
             optionLabels[index].set_width(compactOptionWidth-optionLabels[index].get_x()-16);
         }
         int popupLeft=Math.max(8,Math.min(compactPopupX,view.get_width()-compactPopupWidth-8));
@@ -646,20 +672,37 @@ public final class IndependentMenuViewBridge {
         }
         log(new StringBuffer("G11_STOCK_LAYOUT canvas=800x480 row=").append(width).append('x').append(height)
             .append(" pitch=").append(compactRowPitch).append(" popup=").append(compactPopupWidth)
-            .append(" option_pitch=").append(compactPopupPitch).toString());
+            .append(" option_pitch=").append(compactPopupPitch)
+            .append(" native_padding=").append(choiceList.get_padding())
+            .append(" outer_insets=").append(compactPopupInsetTop).append(',').append(compactPopupInsetBottom)
+            .append(" native_button_y=").append(compactRowY).append(',').append(compactOptionY)
+            .append(" content_bounds=").append(top).append(',').append(available)
+            .append(" native_option_item_gap=").append(compactOptionItemHeight).append(',').append(compactOptionSpacing).toString());
     }
     private void placeCompactPopup(int count,int current,de.vw.mib.graphics.Rectangle anchor) {
-        int inset=Math.max(12,compactListY+8);
-        int visible=Math.min(count,Math.max(1,(stockHeight-inset)/compactPopupPitch));
-        int height=visible*compactPopupPitch+inset;
+        // The older Skoda donor's list starts at y21, not at zero as on
+        // SEAT. OEM PushUp.calculateDimension includes that child offset in
+        // the outer height; omitting it leaves the final option uncovered.
+        int visible=NativeSelectorGeometry.visibleRows(count,stockHeight-compactListY-compactPopupInsetTop-compactPopupInsetBottom,compactPaddingTop,compactPaddingBottom,compactOptionItemHeight,compactOptionSpacing);
+        int contentHeight=NativeSelectorGeometry.contentHeight(visible,compactOptionItemHeight,compactOptionSpacing);
+        int viewportHeight=contentHeight+compactPaddingTop+compactPaddingBottom;
+        int height=NativeSelectorGeometry.popupHeight(compactListY,viewportHeight,compactPopupInsetTop,compactPopupInsetBottom);
         int x=Math.max(8,Math.min(compactPopupX,view.get_width()-compactPopupWidth-8));
-        int y=Math.max(parent.get_y(),Math.min(anchor.y,view.get_height()-height-8));
-        popupBackground.set_layoutAutomatically(false);
-        geometry(popupBackground,x,y,compactPopupWidth,height);
-        geometry(choiceList,compactListX,compactListY,compactOptionWidth,visible*compactPopupPitch);
+        // Retain the native anchor algorithm and its top/center/bottom policy.
+        // Only bound the continuous viewport for long lists; do not align the
+        // first option to the button unconditionally or flatten the skin inset.
+        popupBackground.set_layoutAutomatically(true);
+        geometry(popupBackground,x,popupBackground.get_y(),compactPopupWidth,height);
+        geometry(choiceList,compactListX,compactListY,compactListWidth,viewportHeight);
         popupBackground.setAutoLayoutArea(new de.vw.mib.graphics.Rectangle(0,parent.get_y(),view.get_width(),stockHeight));
         choiceList.validateList();
         choiceList.setViewportY(Math.max(0,Math.min(current*compactPopupPitch,(count-visible)*compactPopupPitch)));
+        popupBackground.setArrowDestinationArea(anchor);
+        popupBackground.set_y(NativeSelectorGeometry.top(popupBackground.get_y(),parent.get_y(),stockHeight,height));
+        log(new StringBuffer("G11_CHOICE_GEOMETRY field=").append(activeField)
+            .append(" box=").append(popupBackground.get_x()).append(',').append(popupBackground.get_y()).append(',').append(popupBackground.get_width()).append(',').append(popupBackground.get_height())
+            .append(" list=").append(choiceList.get_x()).append(',').append(choiceList.get_y()).append(',').append(choiceList.get_width()).append(',').append(choiceList.get_height())
+            .append(" visible=").append(visible).append(" count=").append(count).toString());
     }
     private static int relativeX(WidgetModel model,WidgetModel ancestor) {
         int x=0;

@@ -23,6 +23,7 @@ public final class ProjectionRuntimePolicy {
         if(cover==null || musicAllowed() || cover.url==null)return cover;
         String url=cover.url;
         if(url.startsWith("/var/app/icab/tmp/cp_cover_") || url.equals("/var/app/icab/tmp/cp_cover.jpg")
+           || url.startsWith("/ramdisk/cpmap-info/cp_cover") || url.startsWith("/ramdisk/cpmap-info/covers/")
            || url.startsWith("/mnt/icab/persistent/carplayvc/covers/") || url.startsWith("/tsd/var/carplayvc/cover"))return null;
         return cover;
     }

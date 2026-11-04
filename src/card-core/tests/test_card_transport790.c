@@ -46,6 +46,7 @@ static void drain(int position,int view){
  check(i<10);check(g_card_policy.applied_position==position&&g_card_policy.applied_view==view&&!g_card_policy.blocked);
  card_runtime_poll();check(!pending);
 }
+#ifndef CARD_TRANSPORT_HELPERS_ONLY
 int main(void){
  char root[]="/tmp/card-transport-test-XXXXXX",route_path[512],state_path[512];
  Obj *session,*second,*display;AltActivationTask *activation;FILE *file;int n,i;unsigned generation=1;
@@ -93,3 +94,4 @@ int main(void){
  printf("CARD_PRODUCTION_CF_TRANSPORT_PASS checks=%d single_inflight=1 ready=1 all_positions=1 rapid_switch=1 failed_ack=1 immediate_error=1 lost_ack=1 stale_session=1 leaked_cf=0 sends=%d\n",checks,wire_sends);
  return 0;
 }
+#endif

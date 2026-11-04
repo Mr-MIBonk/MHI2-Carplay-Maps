@@ -1,6 +1,13 @@
 # Navigation prerequisite integration
 
-`install-carplay-maps.sh` is the canonical installer copied to the five standalone profiles and the single complete MQB Toolbox archive. M.I.B. automatic-flashing distributions and their build entry points are withdrawn. `restore-carplay-maps.sh` restores the separate navigation JAR and is used by the standalone packages and MQB restore entry.
+`install-carplay-maps.sh` is the canonical installer copied to the seven profile/cluster integration directories and the single complete MQB Toolbox archive. These profile files are not the local-only standalone installer experiment. M.I.B. automatic-flashing distributions and their build entry points are withdrawn. `restore-carplay-maps.sh` is also used by the MQB restore entry.
+
+V2.1 additionally includes the experimental information JAR and native helpers,
+an owned mm-ipod wrapper, exact first-original backup and failure rollback.
+It preserves unrelated tool files and separate user preferences, and rejects
+unrecognized pre-existing mm-ipod wrappers. See [information scope and tests](../information/README.md).
+The historical navigation-prerequisite details below remain applicable; they
+are not a claim that the new information module has physical acceptance.
 
 The navigation prerequisite is the unchanged upstream MQB Toolbox `Modifications/Lsd/NavActiveIgnore.jar`, distributed here as `CarPlayNavigationPatch.jar`:
 

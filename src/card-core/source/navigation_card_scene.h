@@ -30,7 +30,17 @@ static const char *cpmap_card_url_for(int position){
  * the original card rectangles 0..3 are not changed by map centering.
  */
 static struct cpmap_card_rect cpmap_card_rect_for_view(int index){
+#if defined(CPMAP_FIRMWARE) && CPMAP_FIRMWARE == 1447
+ /* SEAT has a different visible vertical aperture. Coordinates 0..3 are
+  * reconstructed from octacon84's MU1447 contribution (SHA-256 recorded in
+  * docs/SEAT_V2_1_ADAPTATION.md); never apply the VW card offsets globally.
+  * View 4 deliberately reuses the SEAT pure-map rectangle: the VW-specific
+  * iPhone navigation x=42 correction is not qualified on this cockpit.
+  * The outer declaration and every encoded frame remain 1010x376. */
+ static const struct cpmap_card_rect rects[5]={{202,1,606,329},{202,45,606,272},{202,45,606,272},{325,40,360,260},{202,1,606,329}};
+#else
  static const struct cpmap_card_rect rects[5]={{202,16,606,344},{18,75,606,284},{386,75,606,284},{325,75,360,284},{42,16,606,344}};
+#endif
  return rects[index>=0&&index<5?index:0];
 }
 static int cpmap_card_view_for(int position,int navigating){

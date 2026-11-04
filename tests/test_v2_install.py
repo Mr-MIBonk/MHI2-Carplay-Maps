@@ -17,7 +17,7 @@ def main():
     if mode=='bad-startup':
      run(pkg/'install.sh',root,payload,mu,cluster,ok=False);assert before==(digest(dio),digest(lsd));continue
     out=run(pkg/'install.sh',root,payload,mu,cluster);assert 'CPMAP_INSTALL_OK' in out
-    for name in ('VCMenu.jar','VCMirrorRate.jar','CarPlayClusterControls.jar'):
+    for name in ('VCMenu.jar','VCMirrorRate.jar','CarPlayClusterControls.jar','VCInformation.jar'):
      expected=payload/'profiles'/mu/cluster/name
      assert digest(jars/name)==digest(expected),name
      assert lsd.read_text().count(name)==1
@@ -29,14 +29,17 @@ def main():
     assert not (jars/'VCMenu.jar').exists() and not (jars/'VCMirrorRate.jar').exists()
     assert (prefs/'settings.state').read_bytes()==b'fixture-preserve-user-state'
    print('V2_INSTALL_REPEAT_RESTORE_PASS',mu,cluster,mode)
-  for target in ('VCMenu.jar','VCMirrorRate.jar',navigation_name(mu)):
+  for target in ('VCMenu.jar','VCMirrorRate.jar','VCInformation.jar',navigation_name(mu),'mm-ipod'):
    with tempfile.TemporaryDirectory(prefix='cpmap-v2-rollback-') as tmp:
     root=Path(tmp);dio,lsd,jars=fixture(root,size,'stock',nav);before=(digest(dio),digest(lsd))
     commands=root/'commands';commands.mkdir();mv=commands/'mv'
-    mv.write_text('#!/bin/sh\ncase "$1" in */'+target+'.new) exit 99;; esac\nexec /bin/mv "$@"\n');mv.chmod(0o755)
+    suffix='.cpmap-new' if target=='mm-ipod' else '.new'
+    mv.write_text('#!/bin/sh\ncase "$1" in */'+target+suffix+') exit 99;; esac\nexec /bin/mv "$@"\n');mv.chmod(0o755)
     run(pkg/'install.sh',root,payload,mu,cluster,ok=False,extra_env={'PATH':str(commands)+':'+os.environ['PATH']})
     assert before==(digest(dio),digest(lsd))
     assert not (jars/'VCMenu.jar').exists() and not (jars/'VCMirrorRate.jar').exists()
+    assert not (jars/'VCInformation.jar').exists()
+    assert (root/'mnt/app/armle/usr/sbin/mm-ipod').read_bytes().startswith(b'\x7fELF')
    print('V2_PARTIAL_COMMIT_ROLLBACK_PASS',mu,cluster,target)
  print('V2_ALL_INSTALL_PROFILES_PASS count='+str(len(PROFILES)))
 if __name__=='__main__':main()

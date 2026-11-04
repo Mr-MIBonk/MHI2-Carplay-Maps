@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import zipfile
+from host_sync_fixture import scoped_sync_commands
 
 REPO = Path(__file__).resolve().parents[1]
 PROFILES = [("MU1102", "791", 55915411), ("MU1102", "790", 55915411),
@@ -42,9 +43,13 @@ def navigation_payload(payload, mu, cluster):
 
 
 def run(script, root, *args, ok=True, extra_env=None):
+    environment={**os.environ, "CPMAP_TEST_ROOT": str(root),
+                 "CPMAP_TEST_NAV_CHECK": host_checker(), **(extra_env or {})}
+    scoped_sync=scoped_sync_commands(root)
+    if scoped_sync:
+        environment['PATH']=str(scoped_sync)+':'+environment['PATH']
     result = subprocess.run(["sh", str(script), *map(str, args)],
-                            env={**os.environ, "CPMAP_TEST_ROOT": str(root),
-                                 "CPMAP_TEST_NAV_CHECK": host_checker(), **(extra_env or {})},
+                            env=environment,
                             capture_output=True, text=True)
     if (result.returncode == 0) != ok:
         raise AssertionError(result.stdout + result.stderr)
@@ -60,6 +65,11 @@ def fixture(root, size, mode, nav_payload):
     dio = app / "eso/bin/apps/dio_manager"
     dio.parent.mkdir(parents=True)
     dio.write_bytes(b"factory-dio" * 65000)
+    ipod=app/'armle/usr/sbin/mm-ipod'
+    ipod.parent.mkdir(parents=True)
+    elf=bytearray(52);elf[:6]=b'\x7fELF\x01\x01';elf[18]=40
+    ipod.write_bytes(elf+b'factory-mm-ipod-fixture')
+    ipod.chmod(0o755)
     lsd = app / "eso/hmi/lsd/lsd.sh"
     jars = lsd.parent / "jars"
     jars.mkdir(parents=True)

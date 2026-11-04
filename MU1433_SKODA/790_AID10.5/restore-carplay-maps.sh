@@ -14,6 +14,7 @@ fi
 APP="$MMX/mnt/app"
 ROOT="$APP/carplaymaps"
 DIO="$APP/eso/bin/apps/dio_manager"
+IPOD="$APP/armle/usr/sbin/mm-ipod"
 LSD="$APP/eso/hmi/lsd/lsd.sh"
 JAR="$APP/eso/hmi/lsd/jars/CarPlayClusterControls.jar"
 NAV_NAME="CarPlayNavigationPatch.jar"
@@ -25,6 +26,9 @@ NAV_JAR="$APP/eso/hmi/lsd/jars/$NAV_NAME"
 
 [ -s "$ROOT/stock_first/dio_manager.real" ] || { echo "CPMAP_RESTORE_FAIL=STOCK_MISSING"; exit 1; }
 [ -s "$ROOT/rollback/lsd.sh" ] || { echo "CPMAP_RESTORE_FAIL=LSD_BACKUP_MISSING"; exit 1; }
+if [ -e "$ROOT/information/ENABLED" ] && [ ! -s "$ROOT/stock_first/mm-ipod.real" ]; then
+    echo "CPMAP_RESTORE_FAIL=MM_IPOD_BACKUP_MISSING"; exit 1
+fi
 
 if [ -n "${CPMAP_TEST_ROOT:-}" ]; then
     :
@@ -44,6 +48,11 @@ fi
 
 cp "$ROOT/stock_first/dio_manager.real" "$DIO.restore" || exit 1
 cp "$ROOT/rollback/lsd.sh" "$LSD.restore" || exit 1
+if [ -s "$ROOT/stock_first/mm-ipod.real" ]; then
+    cp "$ROOT/stock_first/mm-ipod.real" "$IPOD.restore" || exit 1
+    chmod 755 "$IPOD.restore" || exit 1
+    mv "$IPOD.restore" "$IPOD" || exit 1
+fi
 chmod 755 "$DIO.restore" "$LSD.restore"
 mv "$DIO.restore" "$DIO" || exit 1
 mv "$LSD.restore" "$LSD" || exit 1
@@ -63,7 +72,7 @@ if [ -s "$ROOT/rollback/$NAV_NAME" ]; then
 elif [ -e "$ROOT/rollback/NAV_JAR_ABSENT" ]; then
     rm -f "$NAV_JAR"
 fi
-for name in VCMenu.jar VCMirrorRate.jar; do
+for name in VCMenu.jar VCMirrorRate.jar VCInformation.jar; do
     if [ -e "$ROOT/rollback/$name" ]; then
         cp "$ROOT/rollback/$name" "$JAR.restore" || exit 1
         chmod 644 "$JAR.restore"
@@ -73,6 +82,8 @@ for name in VCMenu.jar VCMirrorRate.jar; do
     fi
 done
 
+# Tell only our artwork supervisor to stop before removing its files.
+rm -f "$ROOT/information/ENABLED"
 rm -rf "$ROOT"
 sync 2>/dev/null || true
 echo "CPMAP_RESTORE_OK"

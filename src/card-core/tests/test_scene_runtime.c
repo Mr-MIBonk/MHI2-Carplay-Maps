@@ -13,7 +13,11 @@ static void write_position(const char *root,int pos,unsigned generation){
 }
 int main(void){
  char root[]="/tmp/cpmap-card-scene-test-XXXXXX";int pos,i,j;Obj *d,*views;
+#if defined(CPMAP_FIRMWARE) && CPMAP_FIRMWARE == 1447
+ static const int x[]={202,202,202,325,202},y[]={1,45,45,40,1},w[]={606,606,606,360,606},h[]={329,272,272,260,329};
+#else
  static const int x[]={202,18,386,325,42},y[]={16,75,75,75,16},w[]={606,606,606,360,606},h[]={344,284,284,284,344};
+#endif
  assert(mkdtemp(root));assert(!setenv("CPMAP_CARD_STATE_DIR",root,1));
  assert(!setenv("CARPLAY_ALTSCREEN_LOG","/dev/null",1));
  for(pos=0;pos<4;pos++){
@@ -41,6 +45,10 @@ int main(void){
   drop(d);assert(live==0);
  }
  fail_number=1;assert(!create_alt_display());assert(live==0);fail_number=0;
+#if defined(CPMAP_FIRMWARE) && CPMAP_FIRMWARE == 1447
+ printf("SEAT_MU1447_RUNTIME_BUILDER_PASS positions=4 views=5 community_rects=1 vw_pure_map_shift=0 encoded=1010x376 leaks=0\n");
+#else
  printf("AID10_5_RUNTIME_BUILDER_PASS positions=4 views=5 iphone17_navigation_center=1 left_right_unchanged=1 encoded=1010x376 leaks=0\n");
+#endif
  return 0;
 }

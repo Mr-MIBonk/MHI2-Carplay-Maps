@@ -3,7 +3,7 @@
 PAYLOAD="$1"
 EXPECTED_MU="$2"
 INSTRUMENT="$3"
-VERSION="VC-PLAINTEXT-2.1.0-g11-beta.1"
+VERSION="VC-PLAINTEXT-2.1.0"
 
 fail() {
     echo "CPMAP_INSTALL_FAIL=$1"
@@ -32,6 +32,7 @@ fi
 APP="$MMX/mnt/app"
 JXE="$MMX/ifs/lsd.jxe"
 DIO="$APP/eso/bin/apps/dio_manager"
+IPOD="$APP/armle/usr/sbin/mm-ipod"
 LSD="$APP/eso/hmi/lsd/lsd.sh"
 JARS="$APP/eso/hmi/lsd/jars"
 ROOT="$APP/carplaymaps"
@@ -96,6 +97,8 @@ PAIR_HELPER="$PAYLOAD/common/carplay-pairing-helper"
 PAIR_CORE="$PAYLOAD/common/libCarPlayPairingCore.so"
 MENU_JAR="$PAYLOAD/profiles/$EXPECTED_MU/$INSTRUMENT/VCMenu.jar"
 RATE_JAR="$PAYLOAD/profiles/$EXPECTED_MU/$INSTRUMENT/VCMirrorRate.jar"
+INFO_JAR="$PAYLOAD/profiles/$EXPECTED_MU/$INSTRUMENT/VCInformation.jar"
+INFO_PAYLOAD="$PAYLOAD/common/information"
 MIRROR="$PAYLOAD/common/cpvc-mirror-canvas-$INSTRUMENT"
 TAP="$PAYLOAD/common/libcpvc-mirror-tap.so"
 QUERY="$PAYLOAD/common/libcpvc-dmdt-query.so"
@@ -104,8 +107,11 @@ if [ -s "$ROOT/cpmap-auth" ] || grep -q 'VCMenu-V73.jar' "$LSD"; then
     fail "ENCRYPTED_INSTALLATION_REQUIRES_ITS_OWN_MIGRATION_TOOL"
 fi
 
-for required in "$CORE" "$WRAPPER" "$CONTROL_JAR" "$NAV_CHECK" "$BRIDGE" "$SUPERVISOR" "$SEC" "$PAIR_HELPER" "$PAIR_CORE" "$MENU_JAR" "$RATE_JAR" "$MIRROR" "$TAP" "$QUERY"; do
+for required in "$CORE" "$WRAPPER" "$CONTROL_JAR" "$NAV_CHECK" "$BRIDGE" "$SUPERVISOR" "$SEC" "$PAIR_HELPER" "$PAIR_CORE" "$MENU_JAR" "$RATE_JAR" "$INFO_JAR" "$MIRROR" "$TAP" "$QUERY"; do
     [ -s "$required" ] || fail "PAYLOAD_MISSING_`basename "$required"`"
+done
+for name in mm-ipod.wrapper.sh cpvc-rgd-bootstrap.sh artwork-launcher.sh libcpvc-rgd.so cpvc-rgd-sync carplay_artwork_helper; do
+    [ -s "$INFO_PAYLOAD/$name" ] || fail "INFORMATION_PAYLOAD_MISSING_$name"
 done
 
 # The target may have neither cksum nor binary-safe text tools. Use our tiny
@@ -124,6 +130,17 @@ if [ ! -x "$NAV_CHECK" ]; then
     chmod 755 "$NAV_CHECK" 2>/dev/null || true
 fi
 run_nav_check --self-test || fail "NAVIGATION_CHECKER_UNAVAILABLE_REEXTRACT_SD"
+# Only replace the original native executable or our own recognized wrapper.
+# Never steal an unrelated toolbox/private mm-ipod hook.
+IPOD_STOCK="$IPOD"
+if run_nav_check --elf-arm "$IPOD"; then
+    :
+elif grep -q 'CPMAP_PUBLIC_V21_IPOD_WRAPPER' "$IPOD" 2>/dev/null; then
+    IPOD_STOCK="$ROOT/stock_first/mm-ipod.real"
+else
+    fail "ORIGINAL_MM_IPOD_MISSING_OR_UNKNOWN_WRAPPER"
+fi
+run_nav_check --elf-arm "$IPOD_STOCK" || fail "ORIGINAL_MM_IPOD_MISSING_OR_UNKNOWN_WRAPPER"
 
 navigation_payload_intact() {
     [ -s "$1" ] || return 1
@@ -183,9 +200,10 @@ echo "CarPlay Maps VC"
 echo "Free open-source project by omonob (QCDWJ)"
 echo "Detected firmware: $DETECTED_MU (lsd.jxe $JXE_SIZE bytes)"
 echo "Selected cluster: $INSTRUMENT"
-echo "Scope: VC settings, CarPlay map video, native mirroring and navigation cards"
+echo "Scope: VC settings, map video, mirroring, cards and experimental CarPlay information"
 echo "Wireless CarPlay: saved test interface only; no wireless service is included"
-echo "No music metadata, startup animation, device binding, or paid watchdog"
+echo "Information: navigation/music independent switches; experimental firmware adaptation"
+echo "No startup animation, device binding, or paid watchdog"
 
 if [ -n "${CPMAP_TEST_ROOT:-}" ]; then
     :
@@ -204,16 +222,17 @@ else
 fi
 
 rm -rf "$STAGE" "$NEW" "$OLD" 2>/dev/null
-mkdir -p "$STAGE" "$NEW/stock_first" "$NEW/rollback" "$NEW/security_bridge" || fail "STAGE_CREATE_FAILED"
+mkdir -p "$STAGE" "$NEW/stock_first" "$NEW/rollback" "$NEW/security_bridge" "$NEW/information" || fail "STAGE_CREATE_FAILED"
 cp "$LSD" "$STAGE/lsd.sh.current" || fail "CURRENT_LSD_SNAPSHOT_FAILED"
 cp "$DIO" "$STAGE/dio_manager.current" || fail "CURRENT_DIO_SNAPSHOT_FAILED"
+cp "$IPOD" "$STAGE/mm-ipod.current" || fail "CURRENT_IPOD_SNAPSHOT_FAILED"
 if [ -s "$JARS/CarPlayClusterControls.jar" ]; then
     cp "$JARS/CarPlayClusterControls.jar" "$STAGE/control.current" || fail "CURRENT_CONTROL_SNAPSHOT_FAILED"
 fi
 if [ -s "$NAV_TARGET" ]; then
     cp "$NAV_TARGET" "$STAGE/nav.current" || fail "CURRENT_NAV_SNAPSHOT_FAILED"
 fi
-for name in VCMenu.jar VCMirrorRate.jar; do
+for name in VCMenu.jar VCMirrorRate.jar VCInformation.jar; do
     if [ -e "$JARS/$name" ]; then
         cp "$JARS/$name" "$STAGE/$name.current" || fail "CURRENT_MENU_SNAPSHOT_FAILED"
     fi
@@ -257,6 +276,8 @@ else
 fi
 
 cp "$STOCK" "$NEW/stock_first/dio_manager.real" || fail "STOCK_COPY_FAILED"
+cp "$IPOD_STOCK" "$NEW/stock_first/mm-ipod.real" || fail "IPOD_BACKUP_FAILED"
+run_nav_check --same "$IPOD_STOCK" "$NEW/stock_first/mm-ipod.real" || fail "IPOD_BACKUP_VERIFY_FAILED"
 cp "$LSD_BASE" "$NEW/rollback/lsd.sh" || fail "LSD_BACKUP_FAILED"
 if [ -e "$ROOT/rollback/JAR_ABSENT" ]; then
     touch "$NEW/rollback/JAR_ABSENT" || fail "JAR_ABSENT_MARK_FAILED"
@@ -281,6 +302,7 @@ fi
 
 ADD_CLASSPATH='$BASE_DIR/lsd/jars/CarPlayClusterControls.jar'
 ADD_CLASSPATH='$BASE_DIR/lsd/jars/VCMenu.jar:$BASE_DIR/lsd/jars/VCMirrorRate.jar:'"$ADD_CLASSPATH"
+ADD_CLASSPATH="$ADD_CLASSPATH:"'$BASE_DIR/lsd/jars/VCInformation.jar'
 if [ "$NAV_USE_OWN" = yes ]; then
     [ -z "$ADD_CLASSPATH" ] || ADD_CLASSPATH="$ADD_CLASSPATH:"
     NAV_REFERENCE='$BASE_DIR/lsd/jars/'"$NAV_NAME"
@@ -310,7 +332,7 @@ else
                 count=split(value,items,":")
                 for(i=1;i<=count;i++) {
                     item_count=split(items[i],path_parts,"/")
-                    if(items[i] ~ /\/CarPlayClusterControls\.jar$/ || path_parts[item_count]==nav_name || items[i] ~ /\/VCMenu\.jar$/ || items[i] ~ /\/VCMirrorRate\.jar$/) continue
+                    if(items[i] ~ /\/CarPlayClusterControls\.jar$/ || path_parts[item_count]==nav_name || items[i] ~ /\/VCMenu\.jar$/ || items[i] ~ /\/VCMirrorRate\.jar$/ || items[i] ~ /\/VCInformation\.jar$/) continue
                     if(length(items[i]) && !seen[items[i]]++) kept=kept ":" items[i]
                 }
             }
@@ -344,7 +366,14 @@ cp "$PAIR_CORE" "$NEW/security_bridge/libCarPlayPairingCore.so" || fail "PAIR_CO
 cp "$MIRROR" "$NEW/cpvc-mirror-canvas" || fail "MIRROR_COPY_FAILED"
 cp "$TAP" "$NEW/libcpvc-mirror-tap.so" || fail "TAP_COPY_FAILED"
 cp "$QUERY" "$NEW/libcpvc-dmdt-query.so" || fail "QUERY_COPY_FAILED"
-for name in VCMenu.jar VCMirrorRate.jar; do
+for name in mm-ipod.wrapper.sh cpvc-rgd-bootstrap.sh artwork-launcher.sh libcpvc-rgd.so cpvc-rgd-sync carplay_artwork_helper; do
+    cp "$INFO_PAYLOAD/$name" "$NEW/information/$name" || fail "INFORMATION_COPY_FAILED_$name"
+    run_nav_check --same "$INFO_PAYLOAD/$name" "$NEW/information/$name" || fail "INFORMATION_STAGE_VERIFY_FAILED_$name"
+done
+touch "$NEW/information/ENABLED" || fail "INFORMATION_ENABLE_MARK_FAILED"
+chmod 755 "$NEW/stock_first/mm-ipod.real" "$NEW/information/"*.sh "$NEW/information/cpvc-rgd-sync" "$NEW/information/carplay_artwork_helper" || fail "INFORMATION_MODE_FAILED"
+chmod 644 "$NEW/information/libcpvc-rgd.so" "$NEW/information/ENABLED" || fail "INFORMATION_MODE_FAILED"
+for name in VCMenu.jar VCMirrorRate.jar VCInformation.jar; do
     if [ -e "$ROOT/rollback/$name.absent" ]; then
         touch "$NEW/rollback/$name.absent" || fail "MENU_BACKUP_MARK_FAILED"
     elif [ -s "$ROOT/rollback/$name" ]; then
@@ -367,9 +396,12 @@ chmod 644 "$NEW/libcpvc-mirror-tap.so" "$NEW/libcpvc-dmdt-query.so"
 cp "$CONTROL_JAR" "$JARS/CarPlayClusterControls.jar.new" || fail "CONTROL_JAR_STAGE_FAILED"
 cp "$MENU_JAR" "$JARS/VCMenu.jar.new" || fail "MENU_JAR_STAGE_FAILED"
 cp "$RATE_JAR" "$JARS/VCMirrorRate.jar.new" || fail "RATE_JAR_STAGE_FAILED"
+cp "$INFO_JAR" "$JARS/VCInformation.jar.new" || fail "INFORMATION_JAR_STAGE_FAILED"
+cp "$NEW/information/mm-ipod.wrapper.sh" "$IPOD.cpmap-new" || fail "IPOD_STAGE_FAILED"
+chmod 755 "$IPOD.cpmap-new" || fail "IPOD_STAGE_MODE_FAILED"
 cp "$STAGE/lsd.sh.patched" "$LSD.cpmap-new" || fail "LSD_ACTIVATION_STAGE_FAILED"
 chmod 644 "$JARS/CarPlayClusterControls.jar.new"
-chmod 644 "$JARS/VCMenu.jar.new" "$JARS/VCMirrorRate.jar.new"
+chmod 644 "$JARS/VCMenu.jar.new" "$JARS/VCMirrorRate.jar.new" "$JARS/VCInformation.jar.new"
 chmod 755 "$LSD.cpmap-new"
 if [ "$NAV_INSTALL" = yes ]; then
     cp "$NAV_JAR" "$NAV_TARGET.new" || fail "NAV_JAR_STAGE_FAILED"
@@ -386,8 +418,10 @@ mv "$NEW" "$ROOT" || {
 
 rollback_commit() {
     cp "$STAGE/dio_manager.current" "$DIO" 2>/dev/null || true
+    cp "$STAGE/mm-ipod.current" "$IPOD" 2>/dev/null || true
+    chmod 755 "$IPOD" 2>/dev/null || true
     cp "$STAGE/lsd.sh.current" "$LSD" 2>/dev/null || true
-    for name in VCMenu.jar VCMirrorRate.jar; do
+    for name in VCMenu.jar VCMirrorRate.jar VCInformation.jar; do
         if [ -e "$STAGE/$name.current" ]; then
             cp "$STAGE/$name.current" "$JARS/$name" 2>/dev/null || true
         else
@@ -411,10 +445,12 @@ rollback_commit() {
 mv "$JARS/CarPlayClusterControls.jar.new" "$JARS/CarPlayClusterControls.jar" || { rollback_commit; fail "CONTROL_JAR_ACTIVATION_FAILED"; }
 mv "$JARS/VCMenu.jar.new" "$JARS/VCMenu.jar" || { rollback_commit; fail "MENU_JAR_ACTIVATION_FAILED"; }
 mv "$JARS/VCMirrorRate.jar.new" "$JARS/VCMirrorRate.jar" || { rollback_commit; fail "RATE_JAR_ACTIVATION_FAILED"; }
+mv "$JARS/VCInformation.jar.new" "$JARS/VCInformation.jar" || { rollback_commit; fail "INFORMATION_JAR_ACTIVATION_FAILED"; }
 if [ "$NAV_INSTALL" = yes ]; then
     mv "$NAV_TARGET.new" "$NAV_TARGET" || { rollback_commit; fail "NAV_JAR_ACTIVATION_FAILED"; }
 fi
 mv "$LSD.cpmap-new" "$LSD" || { rollback_commit; fail "LSD_ACTIVATION_FAILED"; }
+mv "$IPOD.cpmap-new" "$IPOD" || { rollback_commit; fail "IPOD_ACTIVATION_FAILED"; }
 cp "$ROOT/dio_manager.wrapper.sh" "$DIO.new" || { rollback_commit; fail "DIO_WRAPPER_STAGE_FAILED"; }
 chmod 755 "$DIO.new"
 mv "$DIO.new" "$DIO" || { rollback_commit; fail "DIO_WRAPPER_ACTIVATION_FAILED"; }
@@ -427,12 +463,18 @@ rm -f "$ROOT/cpmap-guard" "$ROOT/cpmap-auth" "$ROOT/cpmap-provision" "$ROOT/intr
 [ -s "$JARS/CarPlayClusterControls.jar" ] || fail "CONTROL_JAR_VERIFY_FAILED"
 run_nav_check --same "$MENU_JAR" "$JARS/VCMenu.jar" || { rollback_commit; fail "MENU_VERIFY_FAILED"; }
 run_nav_check --same "$RATE_JAR" "$JARS/VCMirrorRate.jar" || { rollback_commit; fail "RATE_VERIFY_FAILED"; }
+run_nav_check --same "$INFO_JAR" "$JARS/VCInformation.jar" || { rollback_commit; fail "INFORMATION_JAR_VERIFY_FAILED"; }
+run_nav_check --same "$INFO_PAYLOAD/mm-ipod.wrapper.sh" "$IPOD" || { rollback_commit; fail "IPOD_VERIFY_FAILED"; }
+for name in mm-ipod.wrapper.sh cpvc-rgd-bootstrap.sh artwork-launcher.sh libcpvc-rgd.so cpvc-rgd-sync carplay_artwork_helper; do
+    run_nav_check --same "$INFO_PAYLOAD/$name" "$ROOT/information/$name" || { rollback_commit; fail "INFORMATION_FINAL_VERIFY_FAILED_$name"; }
+done
 active_reference_count() {
     awk -v name="$1" '/^[ \t]*#/ {next} index($0,name) {n++} END {print n+0}' "$LSD"
 }
 [ `active_reference_count 'CarPlayClusterControls.jar'` -eq 1 ] || fail "BOOTCLASSPATH_VERIFY_FAILED"
 [ `active_reference_count 'VCMenu.jar'` -eq 1 ] || { rollback_commit; fail "MENU_CLASSPATH_VERIFY_FAILED"; }
 [ `active_reference_count 'VCMirrorRate.jar'` -eq 1 ] || { rollback_commit; fail "RATE_CLASSPATH_VERIFY_FAILED"; }
+[ `active_reference_count 'VCInformation.jar'` -eq 1 ] || { rollback_commit; fail "INFORMATION_CLASSPATH_VERIFY_FAILED"; }
 if [ "$NAV_INSTALL" = yes ]; then
     navigation_payload_intact "$NAV_TARGET" && run_nav_check --same "$NAV_JAR" "$NAV_TARGET" || { rollback_commit; fail "NAVIGATION_VERIFY_FAILED"; }
     [ `active_reference_count "$NAV_NAME"` -eq 1 ] || { rollback_commit; fail "NAVIGATION_CLASSPATH_VERIFY_FAILED"; }

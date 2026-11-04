@@ -1,11 +1,11 @@
 ###########################################################################
-# CarPlay Maps VC 2.0 - free open-source project by omonob
+# CarPlay Maps VC 2.1 - free open-source project by omonob
 ###########################################################################
 screen carplay-maps-vc Customization
 
 keyValue
     value String sys 0x00000000 0
-    label "CarPlay Maps VC 2.0"
+    label "CarPlay Maps VC 2.1"
     poll 0
 
 keyValue
@@ -15,7 +15,7 @@ keyValue
 
 keyValue
     value String sys 0x00000000 0
-    label "VC maps, mirroring and navigation cards"
+    label "VC maps, mirroring, cards and experimental information"
     poll 0
 
 keyValue

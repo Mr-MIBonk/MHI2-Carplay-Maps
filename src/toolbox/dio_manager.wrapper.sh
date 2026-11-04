@@ -19,6 +19,9 @@ if test -x "$ROOT/carplay-cluster-supervisor";then
  ("$ROOT/carplay-cluster-supervisor" >/dev/null 2>&1) &
 fi
 PAIR_ROOT="$ROOT/security_bridge"
+if test -f "$ROOT/information/ENABLED" && test -x "$ROOT/information/artwork-launcher.sh";then
+ (exec "$ROOT/information/artwork-launcher.sh" </dev/null >/dev/null 2>&1) &
+fi
 if test -x "$PAIR_ROOT/carplay-pairing-helper" && test -r "$PAIR_ROOT/libCarPlayPairingCore.so";then
  (export LD_LIBRARY_PATH="$PAIR_ROOT:$LD_LIBRARY_PATH" CARPLAY_PAIRING_STORE="$PAIR_ROOT";exec "$PAIR_ROOT/carplay-pairing-helper" --server >/dev/null 2>&1) &
 fi

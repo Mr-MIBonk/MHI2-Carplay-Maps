@@ -85,6 +85,12 @@ static int inspect(const char *path,int payload,int g11) {
 done: free(p);fclose(f);return rc;
 }
 int main(int argc,char **argv) {
+ if(argc==3&&!strcmp(argv[1],"--elf-arm")){
+   unsigned char h[52];FILE *f=fopen(argv[2],"rb");size_t n;
+   if(!f)return 2;
+   n=fread(h,1,sizeof h,f);fclose(f);
+   return n==sizeof h&&!memcmp(h,"\177ELF",4)&&h[4]==1&&h[5]==1&&u16(h+18)==40u?0:1;
+ }
  if(argc==2&&!strcmp(argv[1],"--self-test")){
    static const unsigned char test[]="123456789";
    return crc32(test,9)==0xcbf43926u?0:2;

@@ -41,14 +41,16 @@ foreach($mu in $selected){
  & "$Jdk\java.exe" --add-exports java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED -cp $tools BuildMirrorRateTest $stock $classes $rate (Join-Path $dir 'ChangeDataRateSequence.original.class')
  if($LASTEXITCODE){throw ('Mirror cadence ABI failed '+$mu)}
  # Immutable published inputs, never a previously staged/routed output.
- $skoda=$mu -in @('MU1433','MU1440')
- $controlName=if($skoda){'Skoda-Controls-v1.2.2.jar'}else{'VW-Controls-v1.2.2.jar'}
+ # octacon84's MU1447 contribution uses the same already-audited roller
+ # implementation as Skoda, including onEncoder2(4,40,...), not VW keys alone.
+ $roller=$mu -in @('MU1433','MU1440','MU1447')
+ $controlName=if($roller){'Skoda-Controls-v1.2.2.jar'}else{'VW-Controls-v1.2.2.jar'}
  $control=Join-Path $module ('baseline/'+$controlName)
- $controlHash=if($skoda){'8BD1C88F6E00DF44A8ACA8302AC1E0F2A49EF0679788B07FBBCCFA1F014970AC'}else{'C8CEAAD026C2EFA20EC190260CB0BA7C982CCF7F1B3754C31C1930FA461AC032'}
+ $controlHash=if($roller){'8BD1C88F6E00DF44A8ACA8302AC1E0F2A49EF0679788B07FBBCCFA1F014970AC'}else{'C8CEAAD026C2EFA20EC190260CB0BA7C982CCF7F1B3754C31C1930FA461AC032'}
  if((Get-FileHash -LiteralPath $control).Hash -ne $controlHash){throw 'Original published controls baseline mismatch'}
  & "$Jdk\java.exe" --add-exports java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED -cp $tools BuildControlHook $control (Join-Path $dir 'CarPlayClusterControls.jar') $menu
  if($LASTEXITCODE){throw ('Wheel canvas routing failed '+$mu)}
- $testNames=@('CardPositionSettingsTest','Card791OptionsTest','MapSwitchSettingsTest','ProjectionSettingsTest','WirelessCarPlaySettingsTest','ProjectionPolicyTest','FeatureFlowTest','PublicProfileTest','CarPlayNavigationOwnershipTest')
+ $testNames=@('CardPositionSettingsTest','Card791OptionsTest','MapSwitchSettingsTest','ProjectionSettingsTest','WirelessCarPlaySettingsTest','ProjectionPolicyTest','FeatureFlowTest','PublicProfileTest','CarPlayNavigationOwnershipTest','InformationMenuMessagesTest','NativeSelectorGeometryTest')
  $testSources=$testNames | ForEach-Object {Join-Path $module ('tests/'+$_+'.java')}
  foreach($cli in @('CardStateCli','ProjectionStateCli','MapSwitchStateCli','WirelessStateCli')){$testSources+=Join-Path $module ('tests/'+$cli+'.java')}
  & "$Jdk\javac.exe" -encoding UTF-8 -source 7 -target 7 -Xlint:-options -cp ($menu+';'+$stock) -d $tests @testSources
@@ -64,7 +66,7 @@ foreach($mu in $selected){
   $second=@(& "$Jdk\java.exe" -Xverify:all -cp $reloadCp $scenario[0] $fixture);if($LASTEXITCODE -ne 0 -or ($second -join '') -notmatch ($scenario[2]+' source=saved')){throw 'Separate JVM lost saved settings'}
  }
  Write-Output ($mu+' SEPARATE_JVM_CARD_AND_WIRELESS_RELOAD_PASS')
- $routing=if($skoda){'SkodaCanvasRoutingTest'}else{'ActualControlHookTest'}
+ $routing=if($roller){'SkodaCanvasRoutingTest'}else{'ActualControlHookTest'}
  $routingCp=(Join-Path $dir 'CarPlayClusterControls.jar')+';'+$menu+';'+$stock
  & "$Jdk\javac.exe" -encoding UTF-8 -source 7 -target 7 -Xlint:-options -cp $routingCp -d $tests (Join-Path $module ('tests/'+$routing+'.java'))
  if($LASTEXITCODE){throw ('Real wheel test compilation failed '+$mu)}

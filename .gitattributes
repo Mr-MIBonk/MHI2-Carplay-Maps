@@ -7,7 +7,12 @@
 *.py text eol=lf
 *.ps1 text eol=lf
 *.json text eol=lf
+*.tsv text eol=lf
 *.esd text eol=lf
+src/information/tests/*.synthetic.log text eol=lf
+src/information/native/vendor/LICENSE text eol=lf
+**/payload/common/information/cpvc-rgd-sync binary
+**/payload/common/information/carplay_artwork_helper binary
 tests/fixtures/host-only/sync text eol=lf
 **/payload/common/cpvc-mirror-canvas-* binary
 *.jar binary

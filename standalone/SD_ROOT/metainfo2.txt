@@ -52,14 +52,14 @@ FinalScriptChecksum = "e73b54066cf07f1b007c78eb2d1040c0935b0e6a"
 FinalScriptMaxTime = "120"
 FinalScriptName = "Wireless CarPlay Maps independent management entry"
 
-[scripts\final\Dir]
+[install\scripts\final\Dir]
 FileSize = "516"
 CheckSum = "1253f88af6ff091b3bee148164bd0051974df436"
 
 [WirelessCarPlayMaps]
 VendorInfo = "omonob"
 DeviceDescription = "Wireless CarPlay Maps LOCAL TEST"
-DownloadGroup = "Wireless CarPlay Maps"
+DownloadGroup = "WirelessCarPlayMaps"
 
 [WirelessCarPlayMaps\GEM\0\default\File]
 CheckSumSize = "524288"

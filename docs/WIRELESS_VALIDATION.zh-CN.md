@@ -1,5 +1,11 @@
 # Wireless CarPlay Maps V3.1 验证记录 / Validation
 
+## 安装包装修订说明 / Installer-metadata correction
+
+先前检查没有发现下载组名与组件 ID 不一致，以及目录声明缺少 `install` 前缀。这是原厂软件更新元信息关联检查的遗漏，不应以功能安装事务或 ZIP 校验通过代替原厂更新入口验收。本次修正两项声明，按最终文件重算校验，并独立检查目录关联、组名、源路径、脚本和组件校验、完整清单及归档内容；反向测试必须拒绝旧错误。无线、地图、菜单及安装／恢复程序不改动。软件更新界面的实机验收仍待复测。
+
+Earlier checks missed a component/download-group mismatch and a missing `install` prefix in the final-script directory declaration. Passing feature transactions or ZIP checks did not validate native software-update metadata acceptance. This repack corrects both declarations, regenerates integrity metadata and independently checks directory/group relationships, source paths, script/component hashes, complete manifests and archive contents. Negative tests must reject the old errors. Wireless, map, menu and install/restore programs remain unchanged. Native software-update acceptance still requires a hardware retest.
+
 V3.1 为试验预发布。新增 MU1367/790、MU1367/791、Škoda MU1440/790 的无线接口适配；MU1440/791 不支持。MU1102 的现有组合继续保留，MU1433 与 MU1447 仍在仅有线范围内。
 
 V3.1 is an experimental prerelease. Wireless ports are added for MU1367/790, MU1367/791 and Škoda MU1440/790. MU1440/791 is unsupported. Existing MU1102 combinations remain; MU1433 and MU1447 remain wired-only.
@@ -8,6 +14,9 @@ V3.1 is an experimental prerelease. Wireless ports are added for MU1367/790, MU1
 
 | 检查 / Check | 结果 / Result |
 |---|---|
+| 安装元信息、路径、完整清单与归档 / Installer metadata, paths, complete manifest and archive | 614 项检查通过；130 个文件、129 项清单；全部安装／运行载荷与修订前逐字节一致 / 614 checks; 130 files, 129 manifest entries; install/runtime payloads byte-identical |
+| 错误注入拒绝 / Negative fault-injection tests | 13 种错误均被拒绝，包含旧组名、旧目录、错误校验、大小、源路径、目的路径、版本和签名前缀 / all 13 injected faults rejected, including both previously missed mismatches |
+| 工具箱校验脚本交叉检查 / Upstream hash-generator cross-check | 在独立副本中重新生成后校验值等价，收尾脚本、目录清单及原签名前缀不变 / equivalent hashes after regeneration in an isolated copy; final script, hash list and signed preamble unchanged |
 | 新装、重复更新、管理入口更新、恢复、卸载与拒绝未知改动 / Install, updates, restore, uninstall and unknown-change refusals | 396 项通过 / assertions passed |
 | 历史公开版升级 / Historical public-release upgrades | 1071 项通过；九个旧版本、四十九个版本／机型组合 / assertions passed; nine old releases and forty-nine combinations |
 | 已发布无线前代与 V3.0 升级 / Published wireless predecessor and V3.0 migration | 各七种配置，含重复更新、恢复与卸载 / seven profiles each, including repeated updates, restore and uninstall |

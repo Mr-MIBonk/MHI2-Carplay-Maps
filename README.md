@@ -2,6 +2,10 @@
 
 **Wireless CarPlay Maps V3.1 — 试验预发布 / Experimental prerelease**
 
+**V3.1 安装包修订：**修正软件更新入口的下载组名与收尾目录声明，重新计算最终文件校验。请重新下载发行页的 Standalone 安装包及校验清单，完整替换 SD 卡上的本项目文件，不与旧包混用。无线、地图和菜单程序未改动；原厂软件更新界面仍需实机复测。
+
+**V3.1 installer repack:** corrected the download-group identifier and final-script directory declaration, then regenerated integrity metadata from the final files. Download the Standalone installer and checksum list again; replace this project's complete SD contents rather than mixing packages. Wireless, map and menu programs are unchanged. Native software-update acceptance still requires a hardware retest.
+
 让支持的 MHI2 车机连接无线 CarPlay，并把手机地图映射到仪表，让仪表也能显示地图画面。项目同时提供屏幕镜像、导航卡片和方向盘地图缩放，使用原车界面完成设置和切换。
 
 Connect wireless CarPlay on supported MHI2 head units and display the phone's map on the instrument cluster. The project also provides screen mirroring, navigation cards and steering-wheel map zoom through the original head-unit interface.

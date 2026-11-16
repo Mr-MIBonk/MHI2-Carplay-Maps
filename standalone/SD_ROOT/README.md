@@ -2,15 +2,19 @@
 
 **Wireless CarPlay Maps V3.1 — 试验预发布 / Experimental prerelease**
 
+**V3.1 安装包修订：**修正软件更新入口的下载组名与收尾目录声明，重新计算最终文件校验。请重新下载发行页的 Standalone 安装包及校验清单，完整替换 SD 卡上的本项目文件，不与旧包混用。无线、地图和菜单程序未改动；原厂软件更新界面仍需实机复测。
+
+**V3.1 installer repack:** corrected the download-group identifier and final-script directory declaration, then regenerated integrity metadata from the final files. Download the Standalone installer and checksum list again; replace this project's complete SD contents rather than mixing packages. Wireless, map and menu programs are unchanged. Native software-update acceptance still requires a hardware retest.
+
 让支持的 MHI2 车机连接无线 CarPlay，并把手机地图映射到仪表，让仪表也能显示地图画面。项目同时提供屏幕镜像、导航卡片和方向盘地图缩放，使用原车界面完成设置和切换。
 
 Connect wireless CarPlay on supported MHI2 head units and display the phone's map on the instrument cluster. The project also provides screen mirroring, navigation cards and steering-wheel map zoom through the original head-unit interface.
 
 维护者 / Maintainer：[omonob](https://github.com/omonob)。本项目不隶属于 Volkswagen、Škoda、SEAT、Audi、Apple 或 QNX。
 
-[下载 V3.1 / Download](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/releases/tag/v3.1) · [详细开发历程 / Development history](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/v3.1/docs/WIRELESS_DEVELOPMENT.zh-CN.md) · [中英文安装说明 / Installation guide](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/v3.1/docs/WIRELESS_INSTALLATION.md) · [升级兼容 / Upgrade compatibility](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/v3.1/docs/WIRELESS_COMPATIBILITY.zh-CN.md) · [致谢 / Credits](CREDITS.md)
+[下载 V3.1 / Download](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/releases/tag/v3.1) · [详细开发历程 / Development history](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/main/docs/WIRELESS_DEVELOPMENT.zh-CN.md) · [中英文安装说明 / Installation guide](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/main/docs/WIRELESS_INSTALLATION.md) · [升级兼容 / Upgrade compatibility](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/main/docs/WIRELESS_COMPATIBILITY.zh-CN.md) · [致谢 / Credits](CREDITS.md)
 
-**首次无线连接：先手动配对蓝牙，再让 iPhone 加入车机的 Wi-Fi 热点，完成两项连接后无线 CarPlay 才会启动。** 仅开启无线开关并不够。[中英文连接步骤 / Connection instructions](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/v3.1/docs/WIRELESS_CONNECTION.zh-CN_EN.md)。
+**首次无线连接：先手动配对蓝牙，再让 iPhone 加入车机的 Wi-Fi 热点，完成两项连接后无线 CarPlay 才会启动。** 仅开启无线开关并不够。[中英文连接步骤 / Connection instructions](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/main/docs/WIRELESS_CONNECTION.zh-CN_EN.md)。
 
 **First wireless connection: manually pair Bluetooth, then join the head unit's Wi-Fi hotspot from the iPhone. Both are needed before wireless CarPlay starts.** Enabling the wireless switch alone is not enough.
 
@@ -187,7 +191,7 @@ Historical wrappers could survive outside the replaced project directory while l
 
 Known-good baselines are preserved and major changes are tested separately. Fault evidence is saved before editing; a diagnostic regression is rolled back before further changes. Historical tests run actual old installers, then upgrade, repeat, restore and uninstall. The established matrix covers nine public historical releases and forty-nine release/profile combinations. V3.1 also checks current installation and migration from its published predecessor.
 
-Manifests, archive readback, recovery snapshots, required target commands and unrelated-file changes are checked. Offline tests do not establish real-phone, cluster, touch, radio or long-term vehicle acceptance. [验证记录 / Validation records](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/v3.1/docs/WIRELESS_VALIDATION.zh-CN.md).
+Manifests, archive readback, recovery snapshots, required target commands and unrelated-file changes are checked. Offline tests do not establish real-phone, cluster, touch, radio or long-term vehicle acceptance. [验证记录 / Validation records](docs/WIRELESS_VALIDATION.zh-CN.md).
 
 ## 精确支持范围 / Exact support scope
 
@@ -285,9 +289,9 @@ Native update labels, SD mounts and engineering-menu locations vary by firmware.
 
 After successful installation and a full restart, unplug USB and enable Wireless CarPlay and the head-unit WLAN hotspot. Manually pair the head unit in iPhone **Settings → Bluetooth**, then join its hotspot in **Settings → Wi-Fi**, using the network name and password displayed by the head unit. Enter CarPlay after both connections are ready; select the current iPhone in App-Connect if it does not open automatically.
 
-这里连接的是**车机自身热点**，不是手机个人热点或外部上网 Wi-Fi。后续再分项检查中控画面、声音、仪表地图和方向盘缩放。完整步骤与连接排查见[中英文连接说明](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/v3.1/docs/WIRELESS_CONNECTION.zh-CN_EN.md)。
+这里连接的是**车机自身热点**，不是手机个人热点或外部上网 Wi-Fi。后续再分项检查中控画面、声音、仪表地图和方向盘缩放。完整步骤与连接排查见[中英文连接说明](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/main/docs/WIRELESS_CONNECTION.zh-CN_EN.md)。
 
-Join **the head unit's own hotspot**, not the phone's Personal Hotspot or an external internet Wi-Fi network. Check main-screen video/audio, cluster maps and steering zoom separately. See the [bilingual connection guide](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/v3.1/docs/WIRELESS_CONNECTION.zh-CN_EN.md) for the complete steps and troubleshooting.
+Join **the head unit's own hotspot**, not the phone's Personal Hotspot or an external internet Wi-Fi network. Check main-screen video/audio, cluster maps and steering zoom separately. See the [bilingual connection guide](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/main/docs/WIRELESS_CONNECTION.zh-CN_EN.md) for the complete steps and troubleshooting.
 
 ## 更新与恢复 / Update and recovery
 

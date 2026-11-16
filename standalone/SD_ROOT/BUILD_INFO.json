@@ -33,5 +33,9 @@
   ],
   "legacy_phone_profiles": "Old saved selection is migrated; no second active declaration is shipped",
   "release": "V3.1",
-  "publication_scope": "Installer, installation instructions and engineering explanations"
+  "publication_scope": "Installer, installation instructions and engineering explanations",
+  "installer_revision": "swdl-metadata-fix-1",
+  "installer_repacked_at": "2026-11-16T23:03:03.636068+08:00",
+  "installer_fix_scope": "DownloadGroup identifier and FinalScript directory binding; runtime unchanged",
+  "native_swdl_acceptance": "Hardware retest pending; offline metadata and transaction checks are not native SWDL acceptance"
 }

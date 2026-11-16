@@ -1,5 +1,11 @@
 # Wireless CarPlay Maps V3.1 安装与目录说明 / Installation and layout
 
+## V3.1 安装包修订 / Installer repack
+
+本次修复软件更新下载组名和收尾目录声明，按最终文件重新计算安装校验与完整性清单。无线、地图、菜单和安装／恢复程序未改动。请重新下载发行页的 Standalone ZIP 与 `SHA256SUMS.txt`，校验后解压，完整替换 SD 卡上的本项目文件，不与旧包混用，也不要只覆盖一个元信息文件。离线检查通过不代表原厂软件更新界面已经完成实机验收。
+
+This repack corrects the software-update group identifier and final-script directory declaration, then regenerates integrity metadata from the final files. Wireless, map, menu and install/restore programs are unchanged. Download the release's Standalone ZIP and `SHA256SUMS.txt` again, verify and extract them, and replace this project's complete SD contents. Do not mix earlier files or replace only the metadata file. Offline checks are not native software-update acceptance on hardware.
+
 ## 精确支持范围 / Exact support scope
 
 | 固件 / Firmware | 仪表 / Cluster | 本包无线服务 / Wireless service |

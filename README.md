@@ -2,9 +2,9 @@
 
 **Wireless CarPlay Maps V3.1 — 试验预发布 / Experimental prerelease**
 
-**V3.1 安装包修订：**修正软件更新入口的下载组名与收尾目录声明，重新计算最终文件校验。请重新下载发行页的 Standalone 安装包及校验清单，完整替换 SD 卡上的本项目文件，不与旧包混用。无线、地图和菜单程序未改动；原厂软件更新界面仍需实机复测。
+**V3.1 安装包校正：**采用作者提供的原始元信息文件，保留 Windows CRLF 换行、原定收尾目录及下载组名。目录校验按 7-Zip 的 `SHA1 for data` 对整个收尾目录计算，包含脚本与 `hashes.txt`，不再误用清单文件本身的哈希。请重新下载 Standalone 安装包和校验清单，完整替换本项目 SD 文件。无线、地图和菜单程序未改动；我们的原车更新入口仍待实机复测。
 
-**V3.1 installer repack:** corrected the download-group identifier and final-script directory declaration, then regenerated integrity metadata from the final files. Download the Standalone installer and checksum list again; replace this project's complete SD contents rather than mixing packages. Wireless, map and menu programs are unchanged. Native software-update acceptance still requires a hardware retest.
+**V3.1 installer correction:** the author's metadata file is preserved byte-for-byte, including Windows CRLF and the supplied final-directory and download-group declarations. The directory checksum is verified against 7-Zip's `SHA1 for data` over both the script and `hashes.txt`, not the hash-list file alone. Download the Standalone installer and checksums again and replace the project's complete SD contents. Wireless, map and menu programs are unchanged; our hardware retest remains pending.
 
 让支持的 MHI2 车机连接无线 CarPlay，并把手机地图映射到仪表，让仪表也能显示地图画面。项目同时提供屏幕镜像、导航卡片和方向盘地图缩放，使用原车界面完成设置和切换。
 

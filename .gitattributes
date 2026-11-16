@@ -35,5 +35,7 @@ MU1447_SEAT/**/payload/common/carplay-cluster-supervisor binary
 MU1447_SEAT/**/payload/common/carplay-pairing-helper binary
 
 # Preserve archived manifests byte-for-byte on every checkout platform.
+# metainfo2.txt includes a signed CRLF prefix; never normalize its bytes.
 /standalone/SD_ROOT/** -text
+/standalone/SD_ROOT/metainfo2.txt -text -eol whitespace=trailing-space,space-before-tab,cr-at-eol
 /wireless/** -text

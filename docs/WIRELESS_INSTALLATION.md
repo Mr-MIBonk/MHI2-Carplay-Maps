@@ -2,9 +2,9 @@
 
 ## V3.1 安装包修订 / Installer repack
 
-本次修复软件更新下载组名和收尾目录声明，按最终文件重新计算安装校验与完整性清单。无线、地图、菜单和安装／恢复程序未改动。请重新下载发行页的 Standalone ZIP 与 `SHA256SUMS.txt`，校验后解压，完整替换 SD 卡上的本项目文件，不与旧包混用，也不要只覆盖一个元信息文件。离线检查通过不代表原厂软件更新界面已经完成实机验收。
+本次采用作者提供的原始元信息文件，保留 Windows CRLF、收尾目录声明和带空格的下载组名；目录校验按 7-Zip 的 `SHA1 for data` 对脚本和 `hashes.txt` 一起计算，而不是只计算清单文件。包内清单及下载校验同步更新，运行和安装／恢复程序不变。请重新下载本页 Standalone ZIP 与 `SHA256SUMS.txt`，校验后完整替换本项目 SD 文件，勿混用旧包或只替换元信息。我们的原厂更新入口仍待实机复测。
 
-This repack corrects the software-update group identifier and final-script directory declaration, then regenerates integrity metadata from the final files. Wireless, map, menu and install/restore programs are unchanged. Download the release's Standalone ZIP and `SHA256SUMS.txt` again, verify and extract them, and replace this project's complete SD contents. Do not mix earlier files or replace only the metadata file. Offline checks are not native software-update acceptance on hardware.
+This repack preserves the author's original metadata, including Windows CRLF, the final-directory descriptor and the spaced download-group label. The directory checksum uses 7-Zip's `SHA1 for data` over both the script and `hashes.txt`, not the hash list alone. Package/download manifests are refreshed; runtime and install/restore programs are unchanged. Download Standalone and `SHA256SUMS.txt` again and replace this project's complete SD contents without mixing old files. Our native software-update hardware retest remains pending.
 
 ## 精确支持范围 / Exact support scope
 

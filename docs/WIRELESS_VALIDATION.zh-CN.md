@@ -2,9 +2,9 @@
 
 ## 安装包装修订说明 / Installer-metadata correction
 
-先前检查没有发现下载组名与组件 ID 不一致，以及目录声明缺少 `install` 前缀。这是原厂软件更新元信息关联检查的遗漏，不应以功能安装事务或 ZIP 校验通过代替原厂更新入口验收。本次修正两项声明，按最终文件重算校验，并独立检查目录关联、组名、源路径、脚本和组件校验、完整清单及归档内容；反向测试必须拒绝旧错误。无线、地图、菜单及安装／恢复程序不改动。软件更新界面的实机验收仍待复测。
+上一轮检查错误地把“与旧包一致”当作签名头有效的证明，也误把 `hashes.txt` 单文件 SHA-1 当成这套安装目录的校验。作者补充说明使用 7-Zip 对整个收尾目录计算 `SHA1 for data`，包含脚本和清单；本地独立复算已得到完全一致的 `f98e4c9162f089363b6a8d6c92cd40112ba902a1`。不能用之前的目录路径／组名推导覆盖作者提供的原文件。本次保留作者元信息的全部原始字节，并重新核对 CRLF、头部实际校验、目录计算、文件内容、完整清单及打包结果；我们的原车更新入口仍待实机复测。
 
-Earlier checks missed a component/download-group mismatch and a missing `install` prefix in the final-script directory declaration. Passing feature transactions or ZIP checks did not validate native software-update metadata acceptance. This repack corrects both declarations, regenerates integrity metadata and independently checks directory/group relationships, source paths, script/component hashes, complete manifests and archive contents. Negative tests must reject the old errors. Wireless, map, menu and install/restore programs remain unchanged. Native software-update acceptance still requires a hardware retest.
+The previous audit treated a prefix matching the earlier package as proof of validity and incorrectly used the SHA-1 of `hashes.txt` alone for this directory. The author clarified 7-Zip's directory `SHA1 for data`, including the script and hash list. Independent local calculation reproduces `f98e4c9162f089363b6a8d6c92cd40112ba902a1`. The author's metadata bytes, CRLF, descriptors and labels are now preserved; raw signed-header integrity, directory calculation, files, manifests and ZIP contents are checked separately. Our native-update hardware retest remains pending.
 
 V3.1 为试验预发布。新增 MU1367/790、MU1367/791、Škoda MU1440/790 的无线接口适配；MU1440/791 不支持。MU1102 的现有组合继续保留，MU1433 与 MU1447 仍在仅有线范围内。
 
@@ -14,9 +14,9 @@ V3.1 is an experimental prerelease. Wireless ports are added for MU1367/790, MU1
 
 | 检查 / Check | 结果 / Result |
 |---|---|
-| 安装元信息、路径、完整清单与归档 / Installer metadata, paths, complete manifest and archive | 614 项检查通过；130 个文件、129 项清单；全部安装／运行载荷与修订前逐字节一致 / 614 checks; 130 files, 129 manifest entries; install/runtime payloads byte-identical |
-| 错误注入拒绝 / Negative fault-injection tests | 13 种错误均被拒绝，包含旧组名、旧目录、错误校验、大小、源路径、目的路径、版本和签名前缀 / all 13 injected faults rejected, including both previously missed mismatches |
-| 工具箱校验脚本交叉检查 / Upstream hash-generator cross-check | 在独立副本中重新生成后校验值等价，收尾脚本、目录清单及原签名前缀不变 / equivalent hashes after regeneration in an isolated copy; final script, hash list and signed preamble unchanged |
+| 安装元信息、路径、完整清单与归档 / Installer metadata, paths, complete manifest and archive | 130 个文件、129 项清单逐项检查；安装／运行载荷与前包逐字节一致 / 130 files, 129 manifest entries; install/runtime payloads byte-identical |
+| 错误注入拒绝 / Negative fault-injection tests | 20 种错误拒绝测试，包含 LF／混合换行、错误签名头、清单单文件哈希误用和目录／标签误改 / 20 fault-injection rejection tests, including line endings, signed headers, the wrong hash algorithm and altered descriptors/labels |
+| 7-Zip 与独立实现交叉检查 / 7-Zip and independent calculation | 两文件合计 516 字节；目录 data 校验与作者一致；不是 data-and-names，也不是 hashes.txt 本身的值 / two files, 516 bytes; data hash matches the author, not data-and-names or hashes.txt alone |
 | 新装、重复更新、管理入口更新、恢复、卸载与拒绝未知改动 / Install, updates, restore, uninstall and unknown-change refusals | 396 项通过 / assertions passed |
 | 历史公开版升级 / Historical public-release upgrades | 1071 项通过；九个旧版本、四十九个版本／机型组合 / assertions passed; nine old releases and forty-nine combinations |
 | 已发布无线前代与 V3.0 升级 / Published wireless predecessor and V3.0 migration | 各七种配置，含重复更新、恢复与卸载 / seven profiles each, including repeated updates, restore and uninstall |

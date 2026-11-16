@@ -25,10 +25,11 @@
   "automatic_reboot": false,
   "headunit_accessed": false,
   "physical_acceptance": "NOT PERFORMED FOR THIS LEAN BUILD",
-  "source_coverage": "Owned integration sources plus declared opaque receiver/OEM dependencies; not a complete receiver C source release",
+  "source_coverage": "Implementation sources are maintained locally. Required installation scripts and runtime files are supplied; component provenance and applicable rights are retained.",
   "phone_profiles": [
     "iPhone 17 Pro Max"
   ],
   "legacy_phone_profiles": "Old saved selection is migrated; no second active declaration is shipped",
-  "release": "V3.0"
+  "release": "V3.0",
+  "publication_scope": "Installer, installation instructions and engineering explanations"
 }

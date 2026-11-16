@@ -2,9 +2,9 @@
 
 ## 版本与文档 / Version and documentation
 
-当前发行名称为 **V3.0**，标签为 `v3.0`。首页、下载文件名、安装器显示、包内当前版本和源码当前版本一致。历史兼容标记、备份格式、原厂／库版本及原始测试报告不冒改成新产品版本。
+当前发行名称为 **V3.0**，标签为 `v3.0`。首页、下载文件名、安装器显示和包内当前版本一致。公开交付为安装包和说明，不附单独的实现源码包。历史兼容标记、备份格式、原厂／库版本及原始测试报告不冒改成新产品版本。
 
-The current release is **V3.0**, tagged `v3.0`. Public names, archive filenames, installer display and current package/source versions agree. Historical compatibility markers, snapshot formats, vendor/library versions and original reports are not relabeled.
+The current release is **V3.0**, tagged `v3.0`. Public names, archive filenames, installer display and current package version agree. The public delivery contains the installer and documentation without a separate implementation-source package. Historical compatibility markers, snapshot formats, vendor/library versions and original reports are not relabeled.
 
 首页直接展开项目时间线、接入分工、开发问题及处理；安装与目录说明中英文均提供。软件运行所需配置保持原有已核对策略，本文档修订不改变原生接收、显示、地图位置或按键程序。
 

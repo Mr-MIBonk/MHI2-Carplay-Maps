@@ -5,13 +5,13 @@
       "path": "carplay/payload/common/CarPlayClusterControls.jar",
       "sha256": "959ce508e80150445635b1c27ae9bc6173689d6427af19e80faeae31cbf09a0f",
       "bytes": 19272,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/common/CarPlayNavigationPatch.jar",
       "sha256": "a4803f7fd008152aca19d4e00b8b45789ac18dccf4cf405d129ce02297982ffe",
       "bytes": 27179,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/common/altscreen-most-bridge",
@@ -83,175 +83,175 @@
       "path": "carplay/payload/profiles/MU1102/790/CarPlayClusterControls.jar",
       "sha256": "959ce508e80150445635b1c27ae9bc6173689d6427af19e80faeae31cbf09a0f",
       "bytes": 19272,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1102/790/VCMenu.jar",
       "sha256": "0c8507b3e330854a13993a92cf7a0314f83872965c4cbaf0e73118d88ee309c3",
       "bytes": 102477,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1102/790/VCMirrorRate.jar",
       "sha256": "cb8ebceac44b66d0ef9f00e53b7ac79049f3900df84f592d8b96d0eca6b5888f",
       "bytes": 3234,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1102/790/core.so",
       "sha256": "97ccb829f996b74305099ca54e6f4a693a17381b391d170c1227f44e49ff0769",
       "bytes": 50321,
-      "origin": "Frozen public V2.1 rc7 exact-profile map core. Corresponding owned source included."
+      "origin": "Frozen public V2.1 rc7 exact-profile map core. Historical component provenance retained; implementation sources are not included in this installer."
     },
     {
       "path": "carplay/payload/profiles/MU1102/791/CarPlayClusterControls.jar",
       "sha256": "959ce508e80150445635b1c27ae9bc6173689d6427af19e80faeae31cbf09a0f",
       "bytes": 19272,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1102/791/VCMenu.jar",
       "sha256": "0c8507b3e330854a13993a92cf7a0314f83872965c4cbaf0e73118d88ee309c3",
       "bytes": 102477,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1102/791/VCMirrorRate.jar",
       "sha256": "cb8ebceac44b66d0ef9f00e53b7ac79049f3900df84f592d8b96d0eca6b5888f",
       "bytes": 3234,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1102/791/core.so",
       "sha256": "b3d28142eac16d220e639bd0d8056e595e4d4bbf90a9d63d2e3c402c62b870b0",
       "bytes": 48524,
-      "origin": "Frozen public V2.1 rc7 exact-profile map core. Corresponding owned source included."
+      "origin": "Frozen public V2.1 rc7 exact-profile map core. Historical component provenance retained; implementation sources are not included in this installer."
     },
     {
       "path": "carplay/payload/profiles/MU1367/790/CarPlayClusterControls.jar",
       "sha256": "959ce508e80150445635b1c27ae9bc6173689d6427af19e80faeae31cbf09a0f",
       "bytes": 19272,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1367/790/VCMenu.jar",
       "sha256": "1859f5a1c3cb4fed9c7c7088705153ba9315fd452d676cd4203e2dea10757c41",
       "bytes": 69032,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1367/790/VCMirrorRate.jar",
       "sha256": "cb8ebceac44b66d0ef9f00e53b7ac79049f3900df84f592d8b96d0eca6b5888f",
       "bytes": 3234,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1367/790/core.so",
       "sha256": "97ccb829f996b74305099ca54e6f4a693a17381b391d170c1227f44e49ff0769",
       "bytes": 50321,
-      "origin": "Frozen public V2.1 rc7 exact-profile map core. Corresponding owned source included."
+      "origin": "Frozen public V2.1 rc7 exact-profile map core. Historical component provenance retained; implementation sources are not included in this installer."
     },
     {
       "path": "carplay/payload/profiles/MU1367/791/CarPlayClusterControls.jar",
       "sha256": "959ce508e80150445635b1c27ae9bc6173689d6427af19e80faeae31cbf09a0f",
       "bytes": 19272,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1367/791/VCMenu.jar",
       "sha256": "1859f5a1c3cb4fed9c7c7088705153ba9315fd452d676cd4203e2dea10757c41",
       "bytes": 69032,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1367/791/VCMirrorRate.jar",
       "sha256": "cb8ebceac44b66d0ef9f00e53b7ac79049f3900df84f592d8b96d0eca6b5888f",
       "bytes": 3234,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1367/791/core.so",
       "sha256": "b3d28142eac16d220e639bd0d8056e595e4d4bbf90a9d63d2e3c402c62b870b0",
       "bytes": 48524,
-      "origin": "Frozen public V2.1 rc7 exact-profile map core. Corresponding owned source included."
+      "origin": "Frozen public V2.1 rc7 exact-profile map core. Historical component provenance retained; implementation sources are not included in this installer."
     },
     {
       "path": "carplay/payload/profiles/MU1433/790/CarPlayClusterControls.jar",
       "sha256": "93af38e9687256a55088ce3ae1a35ee3a56e94200f5867c009e640ebbe5b4354",
       "bytes": 18488,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1433/790/CarPlayMapsG11Navigation.jar",
       "sha256": "71d72b7a56b2a44fdc366abe4bc8987a5b1a51f1e783e6477d331b9e08cf9091",
       "bytes": 9482,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1433/790/VCMenu.jar",
       "sha256": "0a0e8d0502a55c4e4f067cb87ecb9014996a8abb6083861d4c3825290075b00f",
       "bytes": 68642,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1433/790/VCMirrorRate.jar",
       "sha256": "cb8ebceac44b66d0ef9f00e53b7ac79049f3900df84f592d8b96d0eca6b5888f",
       "bytes": 3234,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1433/790/core.so",
       "sha256": "27512347859ade9766e7503a25c77531edbda7cfbe5fac224352ad172f10f348",
       "bytes": 50321,
-      "origin": "Frozen public V2.1 rc7 exact-profile map core. Corresponding owned source included."
+      "origin": "Frozen public V2.1 rc7 exact-profile map core. Historical component provenance retained; implementation sources are not included in this installer."
     },
     {
       "path": "carplay/payload/profiles/MU1440/790/CarPlayClusterControls.jar",
       "sha256": "93af38e9687256a55088ce3ae1a35ee3a56e94200f5867c009e640ebbe5b4354",
       "bytes": 18488,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1440/790/VCMenu.jar",
       "sha256": "d823fa151662f45cb4be806f34a96ea670864911cb8d9167ccd459f016c77bdf",
       "bytes": 69032,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1440/790/VCMirrorRate.jar",
       "sha256": "cb8ebceac44b66d0ef9f00e53b7ac79049f3900df84f592d8b96d0eca6b5888f",
       "bytes": 3234,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1440/790/core.so",
       "sha256": "97ccb829f996b74305099ca54e6f4a693a17381b391d170c1227f44e49ff0769",
       "bytes": 50321,
-      "origin": "Frozen public V2.1 rc7 exact-profile map core. Corresponding owned source included."
+      "origin": "Frozen public V2.1 rc7 exact-profile map core. Historical component provenance retained; implementation sources are not included in this installer."
     },
     {
       "path": "carplay/payload/profiles/MU1447/790/CarPlayClusterControls.jar",
       "sha256": "93af38e9687256a55088ce3ae1a35ee3a56e94200f5867c009e640ebbe5b4354",
       "bytes": 18488,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1447/790/VCMenu.jar",
       "sha256": "189f886276019dda88413ec7c57112f7d746bdb7fe7fa597e3365842d8aefaf0",
       "bytes": 69032,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1447/790/VCMirrorRate.jar",
       "sha256": "cb8ebceac44b66d0ef9f00e53b7ac79049f3900df84f592d8b96d0eca6b5888f",
       "bytes": 3234,
-      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see source coverage and exact profile."
+      "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
       "path": "carplay/payload/profiles/MU1447/790/core.so",
       "sha256": "918f81fb43f49dacfb5e52c304e24ee3f9d00a0b6d6f66f85d6d3d87de8feaed",
       "bytes": 50321,
-      "origin": "Frozen public V2.1 rc7 exact-profile map core. Corresponding owned source included."
+      "origin": "Frozen public V2.1 rc7 exact-profile map core. Historical component provenance retained; implementation sources are not included in this installer."
     },
     {
       "path": "carplay/payload/wireless/common/connectionmanager",

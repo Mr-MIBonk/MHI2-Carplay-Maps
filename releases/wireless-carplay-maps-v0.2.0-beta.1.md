@@ -7,7 +7,7 @@ Experimental prerelease / 试验预发布，不替代稳定版 2.0.1。
 ## 下载与安装
 
 - `Wireless_CarPlay_Maps_Standalone_v0.2.0-beta.1.zip`：独立安装包，把 SD_ROOT 内容放到卡根；从原车软件更新注册后，进入绿色菜单 Wireless CarPlay Maps 安装功能。
-- `Wireless_CarPlay_Maps_Source_v0.2.0-beta.1.zip`：本项目提供的源码、构建方法、验证报告及冻结依赖清单，不代表完整接收器 C 源码已齐备。
+- 本次不另行提供实现源码包；安装请使用上述 Standalone 文件。No separate implementation-source package is distributed; use the Standalone file above for installation.
 - `SHA256SUMS.txt`：下载后校验。安装、备份与恢复说明见 [README](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/wireless-carplay-maps-v0.2.0-beta.1/README.md)。
 
 只保留 iPhone 17 Pro Max 手机配置。保留地图、镜像、导航卡片和方向盘地图缩放；不带独立音乐／封面／导航文字映射、仪表启动动画及迎宾／离车音效。无线设置只提供无线 CarPlay。

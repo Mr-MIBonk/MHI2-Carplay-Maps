@@ -8,7 +8,11 @@ Connect wireless CarPlay on supported MHI2 head units and display the phone's ma
 
 维护者 / Maintainer：[omonob](https://github.com/omonob)。本项目不隶属于 Volkswagen、Škoda、SEAT、Audi、Apple 或 QNX。
 
-[下载 V3.0 / Download](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/releases/tag/v3.0) · [详细开发历程 / Development history](docs/WIRELESS_DEVELOPMENT.zh-CN.md) · [中英文安装说明 / Installation guide](docs/WIRELESS_INSTALLATION.md) · [升级兼容 / Upgrade compatibility](docs/WIRELESS_COMPATIBILITY.zh-CN.md) · [源码 / Source](wireless/) · [致谢 / Credits](CREDITS.md)
+[下载 V3.0 / Download](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/releases/tag/v3.0) · [详细开发历程 / Development history](docs/WIRELESS_DEVELOPMENT.zh-CN.md) · [中英文安装说明 / Installation guide](docs/WIRELESS_INSTALLATION.md) · [升级兼容 / Upgrade compatibility](docs/WIRELESS_COMPATIBILITY.zh-CN.md) · [致谢 / Credits](CREDITS.md)
+
+本次公开内容为安装包、安装方法、开发历程与实现思路，不提供单独的实现源码包。安装包保留安装、更新和恢复所必需的脚本及运行文件。
+
+This publication provides the installer, installation instructions, development history and engineering explanations. It does not provide a separate implementation-source package. Scripts and runtime files required for installation, updates and recovery remain included.
 
 ## 本版能做什么 / What V3.0 provides
 
@@ -184,15 +188,14 @@ The installer still checks exact firmware inputs. Similar model names do not est
 | 下载文件 / File | 用途 / Purpose |
 |---|---|
 | `Wireless_CarPlay_Maps_Standalone_v3.0.zip` | 面向安装的完整 SD 目录。The complete SD folder for installation. |
-| `Wireless_CarPlay_Maps_Source_v3.0.zip` | 本项目提供的源码、构建方法与验证记录；不是直接复制到 SD 根目录的安装包。Provided source, build notes and validation; not the user-facing SD package. |
 | `SHA256SUMS.txt` | 校验下载文件是否完整。Download integrity checksums. |
 | `INSTALLATION.zh-CN_EN.md` | 中英文安装、更新、恢复和目录说明。Bilingual installation, update, recovery and layout guide. |
 | `DEVELOPMENT_HISTORY.zh-CN.md` | 更完整的开发历程与实现说明。The extended Chinese development history. |
 | `RELEASE_NOTES.md` | V3.0 发布详情及验收边界。V3.0 release details and acceptance boundaries. |
 
-GitHub 自动提供的 `Source code (zip)`／`Source code (tar.gz)` 是仓库归档，不是面向用户整理的 SD 安装包。普通安装请选 **Standalone** 文件，不要把源码目录直接当作 SD 卡根目录。
+GitHub 自动显示的 `Source code (zip)`／`Source code (tar.gz)` 是对应标签的仓库快照，并非另行上传的源码包，也不是本项目整理的 SD 安装包。安装请只选择 **Standalone** 文件。
 
-GitHub's automatic `Source code (zip)` and `Source code (tar.gz)` downloads are repository archives, not the prepared user SD package. For normal installation choose **Standalone** and do not copy the source folder as the SD root.
+GitHub's automatic `Source code (zip)` and `Source code (tar.gz)` entries are snapshots of the tagged repository, not separately uploaded source packages or the prepared SD installer. For installation use only **Standalone**.
 
 ## 安装包目录结构 / Installer layout
 
@@ -273,32 +276,20 @@ Use **new complete V3.0 media to update the manager first, then update the featu
 
 Unknown wrappers, private encrypted versions, damaged backups or targets modified by another project stop the operation. Missing required tools or insufficient space also stop it. A retained legacy script name is only an updater compatibility shim, not another phone profile or a standalone install command.
 
-## 源码包与仓库结构 / Source archive and repository layout
+## 公开文件结构 / Published files
 
 ```text
-Wireless_CarPlay_Maps_Source_v3.0.zip
-└─ Wireless_CarPlay_Maps_Source/
-   ├─ src/                         本项目提供的实现源码 / Provided implementation sources
-   ├─ tests/                       离线夹具与回归检查 / Offline fixtures and regression checks
-   ├─ tools/                       构建及完整性检查工具 / Build and integrity tools
-   ├─ evidence/                    历史和本次验证记录 / Historical and current validation records
-   ├─ README.md
-   ├─ SOURCE_BUILD.md              构建条件与源码范围 / Build requirements and source coverage
-   ├─ DEPENDENCIES.json
-   ├─ CONTENTS.sha256
-   └─ ...
-
 GitHub repository
 ├─ README.md                       当前 V3.0 项目首页 / Current V3.0 introduction
 ├─ standalone/SD_ROOT/             独立安装目录 / Independent installer tree
-├─ wireless/                       对应源码与验证记录 / Corresponding source and validation
 ├─ docs/                           开发、安装与兼容说明 / Development, installation and compatibility
-└─ releases/                       当前与历史发布说明 / Current and historical release notes
+├─ releases/                       当前与历史发布说明 / Current and historical release notes
+└─ CREDITS.md                       致谢与来源 / Credits and provenance
 ```
 
-源码中的接收器接口、原厂 HMI 覆盖层、地图接入和独立安装事务各自分工。已有冻结接收程序、SDK／OEM 依赖不等于完整 C 源码已经齐备，也不冒称全部为新写原创；构建条件和依赖来源分别记录在 `SOURCE_BUILD.md`、`DEPENDENCIES.json` 与 `CREDITS.md`。
+开发历程说明蓝牙引导、网络会话、原厂界面与仪表地图如何衔接，以及遇到的问题和处理方法；不附实现源码或源码构建工具。安装包内的 `DEPENDENCIES.json` 和 `CREDITS.md` 保留组件来源、真实上游和原有权利说明。
 
-Receiver interfaces, native HMI overlays, map integration and installation transactions have separate responsibilities. Frozen receiver and SDK/OEM dependencies are not a complete C-source release or newly authored project code. Build requirements and provenance are documented in `SOURCE_BUILD.md`, `DEPENDENCIES.json` and `CREDITS.md`. Original notices and applicable rights remain in place.
+The development history explains how Bluetooth bootstrap, network sessions, the native interface and cluster maps fit together, including problems and solutions. It does not attach implementation sources or source-build tools. The installer's `DEPENDENCIES.json` and `CREDITS.md` retain component provenance, upstream attribution and applicable rights.
 
 ## 当前边界与后续工作 / Known limits and next work
 

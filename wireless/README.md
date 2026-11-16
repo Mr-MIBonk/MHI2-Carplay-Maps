@@ -105,6 +105,14 @@ Map position could change when navigation started, with visible distortion. Phys
 
 A visible page did not guarantee working input. Popup layers, list controls and page controllers needed the native lifecycle. The correction used native selectors, explicit binding/state updates and cleanup on exit, with separate checks for entry, transitions and selection.
 
+### 产品版本与仪表型号不能混用 / Release names are not hardware profiles
+
+发布核对还发现，旧菜单曾把产品的 `VERSION` 文件当成仪表型号读取。独立包使用产品版本标记后，菜单可能把它判为未知配置。现在改为优先读取专用的 `PROFILE`，与已确认的仪表配置核对；只对真正包含旧仪表标识的历史值保留兼容。
+
+此修订通过了九十二项分类、缺失、冲突和历史兼容检查。它不靠改写产品版本来伪装仪表，也不根据手机画布猜测型号；菜单实际触屏及整机运行仍属于后续硬件验收。
+
+Publication checks found that an older menu read the product `VERSION` file as if it identified the cluster. It now prioritizes the dedicated `PROFILE` and checks it against the confirmed cluster, with fallback only for genuine historical hardware identifiers. Ninety-two classification, missing-input, conflict and legacy cases pass. Real touch and unit acceptance remain separate.
+
 ### 看见手机卡片，不等于已经接受连接 / Device presence was mistaken for connection
 
 设备被发现、用户点击连接、会话被接受和手动断开是不同事件。早期状态混淆会让仪表过早接管，或在用户主动断开后又被后台逻辑拉回。

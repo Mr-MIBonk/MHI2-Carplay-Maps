@@ -9,14 +9,24 @@ public final class MenuClusterProfile {
   if(test!=null && "1".equals(System.getProperty("cpvc.offline"))){
    if("790".equals(test))return 790;if("791".equals(test))return 791;
   }
-  return select(readOptional("/mnt/app/carplaymaps/VERSION"),
-                readOptional("/mnt/persist/omonob-phone/cluster-profile"));
+  String profile=readOptional("/mnt/app/carplaymaps/PROFILE");
+  return selectProfile(profile,profile==null?readOptional("/mnt/app/carplaymaps/VERSION"):null,
+                       readOptional("/mnt/persist/omonob-phone/cluster-profile"));
+ }
+ public static int selectProfile(String profile,String version,String confirmed){
+  if(profile!=null)return select(profile,confirmed);
+  // Only historical device-prefixed values carry a hardware identity.
+  // Current product release names must never be parsed as cluster models.
+  if(version!=null){String text=version.trim();
+   if(text.startsWith("3GD920790-")||text.startsWith("3G0920791-"))return select(text,confirmed);
+  }
+  return select(null,confirmed);
  }
  public static int select(String installed,String confirmed){
   int known=0,chosen=0;
   if(installed!=null){String text=installed.trim();
-   if(text.startsWith("3GD920790-"))known=790;
-   else if(text.startsWith("3G0920791-"))known=791;
+   if(text.equals("MU1102/790")||text.equals("MU1367/790")||text.equals("MU1440/790")||text.equals("MU1433/790")||text.equals("MU1447/790")||text.startsWith("3GD920790-"))known=790;
+   else if(text.equals("MU1102/791")||text.equals("MU1367/791")||text.startsWith("3G0920791-"))known=791;
    else throw new IllegalStateException("Unknown installed cluster profile");
   }
   if(confirmed!=null){String text=confirmed.trim();

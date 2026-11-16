@@ -30,3 +30,9 @@ These are isolated host-filesystem installation/code checks. No unit was connect
 原始 R2 和早期报告保留当时的构建时间、版本及结论；本次记录单独存放，避免把历史证据改写成 V3.0 已实车验证。
 
 Original R2 and earlier reports keep their historical dates, versions and conclusions. Current V3.0 evidence is separate rather than rewriting those records as vehicle acceptance.
+
+## 菜单配置识别 / Menu profile identification
+
+MU1102 菜单改为读取独立 PROFILE，不再把产品版本号当仪表型号；实际交付的 Java 辅助类通过 92 项检查，覆盖当前、历史、缺失和冲突配置。本次只变更该 JAR 成员，原生接收与地图程序不变；以上完整安装回归已在更新后的包上重跑。
+
+The MU1102 helper reads the dedicated PROFILE rather than parsing product versions as hardware identity. The shipped class passes 92 cases; only this JAR member changes. Full installation regression above is rerun with the updated package. Native receiver/map binaries are unchanged.

@@ -3,7 +3,7 @@ screen wireless-carplay-maps Main
 
 keyValue
     value String sys 0x00000000 0
-    label "Wireless CarPlay Maps - LOCAL CANDIDATE"
+    label "Wireless CarPlay Maps V3.0"
     poll 0
 
 keyValue

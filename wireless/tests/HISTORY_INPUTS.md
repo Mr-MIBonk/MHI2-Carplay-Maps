@@ -8,6 +8,7 @@ Required container paths:
 - `/history/HISTORY_FIXTURES.json`: `evidence/public-history-inputs.json` from this source tree.
 - `/inputs/history/<tag>`: clean immutable Git archives for each tag listed in that JSON, preserving their paths. The first tag instead uses its verified release ZIP payload as `/inputs/history/toolbox-plaintext-v1.0.0/payload`.
 - `/r1`: the prior local R1 SD_ROOT, used only to reproduce its migration defect and saved-phone conversion.
+- `/r2`: the previously published wireless Standalone package's SD_ROOT, used to check all seven predecessor-to-V3.0 profile migrations. This is a historical input, not the current release.
 - `/old-manager`: the original independent CarPlay Maps SD_ROOT, used for exact old-manager retirement/restore tests.
 - An empty output directory passed as the second argument. A host C compiler and standard POSIX commands are required.
 

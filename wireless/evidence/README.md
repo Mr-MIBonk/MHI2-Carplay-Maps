@@ -1,3 +1,7 @@
+# V3.0 evidence
+
+The current reports are v3-install-test.json, v3-upgrade-test.json and V3_VALIDATION.zh-CN_EN.md. Earlier R1/R2 reports below are preserved historical evidence, not renamed V3.0 results.
+
 # Evidence scope
 
 The R2 reports `r2-install-test.json`, `r2-public-upgrades.json`, `r2-clean-source-build.json`, and `r2-audit.json` describe this revision. The historical test inputs are identified in `public-history-inputs.json`; their complete old packages are deliberately not redistributed here.

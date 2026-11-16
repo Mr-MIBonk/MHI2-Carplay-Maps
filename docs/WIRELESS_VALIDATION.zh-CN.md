@@ -1,21 +1,32 @@
-# Wireless CarPlay Maps 发布验证
+# Wireless CarPlay Maps V3.0 验证记录 / Validation
 
-本页记录独立试验预发布包的离线验证，不代表已完成全部真实手机、GPU、触屏或实车验收。
+## 版本与文档 / Version and documentation
 
-## 主屏检查
+当前发行名称为 **V3.0**，标签为 `v3.0`。首页、下载文件名、安装器显示、包内当前版本和源码当前版本一致。历史兼容标记、备份格式、原厂／库版本及原始测试报告不冒改成新产品版本。
 
-两种仪表配置配套的无线接收程序均以实际 ARM 指令执行夹具核对主屏申请为 30 fps，检查默认值和多组输入值，并以原始程序作反向对照。不是只搜索字符串或修改文件名。
+The current release is **V3.0**, tagged `v3.0`. Public names, archive filenames, installer display and current package/source versions agree. Historical compatibility markers, snapshot formats, vendor/library versions and original reports are not relabeled.
 
-有线主屏使用的字典复制代码通过 AddressSanitizer 和 UndefinedBehaviorSanitizer 检查；重新构建的主屏库与安装载荷 SHA-256 一致。仪表的独立地图、卡片、镜像策略和位置参数未被这次发布改动。
+首页直接展开项目时间线、接入分工、开发问题及处理；安装与目录说明中英文均提供。软件运行所需配置保持原有已核对策略，本文档修订不改变原生接收、显示、地图位置或按键程序。
 
-## 安装与归档
+The README expands the timeline, architecture, problems and fixes. Installation and layout guidance are bilingual. This revision retains the established native receiver, display, geometry and control programs.
 
-R2 的 49 个旧版／机型升级组合及 1,272 项离线断言保留原报告。本次公开包的运行文件与 R2 一致，另外重跑最终包的 355 项安装、更新、回滚、恢复及卸载检查。没有把重复检查相加冒称更多独立场景。
+## 当前检查 / Current checks
 
-新增源码的原生组件重新编译并核对 ARM QNX ELF 格式；源码范围与冻结依赖分别说明。归档重新生成后逐文件回读，解压再校验完整清单及 SWDL 绑定。Git 属性保持安装介质和源码清单所指字节不被换行转换改写。
+- 当前七种机型配置：**355 项离线断言通过**，包含安装、管理入口更新、功能更新、恢复、卸载及故障处理。
+- 历史升级检查：**994 项离线断言通过**，覆盖九个旧公开版本的四十九种组合，并额外检查前一个已发布无线包的七种配置升级到 V3.0、重复更新和恢复。
+- 版本改动后的完整性清单及软件更新绑定重新计算、校验；最终 ZIP 逐文件回读并重新解压验证。
+- 原生可执行文件和库与前一个已核对包逐项比对，未因版本命名或说明文字而替换。
 
-原 R26、R1、R2 交付不覆盖，旧稳定版和历史发布不重打包。离线报告保留当时日期，“未操作车机”的结论不改写为实机通过。
+Seven current profiles pass **355 offline assertions**, including installation, manager/feature updates, restore, uninstall and fault handling. The historical suite passes **994 assertions** across forty-nine combinations from nine earlier public releases, plus seven migrations from the published wireless predecessor to V3.0.
 
-## 仍需实机验证
+Manifests and SWDL bindings are regenerated and verified; final archives are read back and re-extracted. Native programs/libraries are compared with the previous checked package and are not replaced by this labeling/documentation revision.
 
-首次无线连接后的个例断连、790 卡片位置、镜像实际消费、冷启动和反复切换、原车雷达／倒车共存、自定义网络策略，以及新精简组合的完整手机与触屏验收，仍以对应现场结果为准。暂缓的问题未列为已修复。
+## 边界 / Limits
+
+这些是隔离主机文件系统里的安装与代码检查，没有连接车机、重启车机或把不存在的真实手机和仪表接口当作成功。新精简组合的完整实机验收、网络、触屏及长期运行仍以现场结果为准。
+
+These are isolated host-filesystem installation/code checks. No unit was connected or rebooted, and missing real phone/cluster interfaces were not counted as successes. Full hardware, radio, touch and long-term acceptance remain separate.
+
+原始 R2 和早期报告保留当时的构建时间、版本及结论；本次记录单独存放，避免把历史证据改写成 V3.0 已实车验证。
+
+Original R2 and earlier reports keep their historical dates, versions and conclusions. Current V3.0 evidence is separate rather than rewriting those records as vehicle acceptance.

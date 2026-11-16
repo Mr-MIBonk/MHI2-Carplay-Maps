@@ -1,73 +1,136 @@
-# VW MHI2 Wireless CarPlay Maps
+# Wireless CarPlay Maps V3.0 安装与目录说明 / Installation and layout
 
-**Wireless CarPlay Maps v0.2.0-beta.1 — experimental prerelease / 试验预发布。**
+## 精确支持范围 / Exact support scope
 
-Wireless CarPlay, phone-map video and screen mirroring for supported VW MHI2 platforms. Maintainer: [omonob](https://github.com/omonob).
+| 固件 / Firmware | 仪表 / Cluster | 本包无线服务 / Wireless service |
+|---|---|---|
+| MU1102 | 790 / AID 10.5；791 / AID 12.3 | 提供 / Included |
+| MU1367 | 790；791 | 尚未移植，仅有线 / Wired only; wireless port pending |
+| MU1440 Škoda | 790 | 尚未移植，仅有线 / Wired only; wireless port pending |
+| MU1433 Škoda G11 | 790 | 尚未移植，仅有线 / Wired only; wireless port pending |
+| MU1447 SEAT G11 | 790 | 尚未移植，仅有线 / Wired only; wireless port pending |
 
-大众 MHI2 无线 CarPlay、手机地图视频到仪表及屏幕镜像。**中控主屏申请 30 fps**，有线与无线采用同一主屏策略。仪表保留各自既定地图／镜像策略，申请值不等于实测消费帧率。
+安装器仍按固件原文件精确核对，不以型号名称相似放行。未列出的台湾、欧洲或 Audi MHI2／MHI2Q 平台仍在适配；不是所有同品牌车机都通用。
 
-[Download independent SD package / 独立安装包](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/releases/tag/wireless-carplay-maps-v0.2.0-beta.1) · [开发历程](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/wireless-carplay-maps-v0.2.0-beta.1/docs/WIRELESS_DEVELOPMENT.zh-CN.md) · [安装与兼容性](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/wireless-carplay-maps-v0.2.0-beta.1/docs/WIRELESS_INSTALLATION.zh-CN.md) · [旧版升级检查](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/wireless-carplay-maps-v0.2.0-beta.1/docs/WIRELESS_COMPATIBILITY.zh-CN.md) · [源码](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/tree/wireless-carplay-maps-v0.2.0-beta.1/wireless/) · [Credits](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/wireless-carplay-maps-v0.2.0-beta.1/CREDITS.md)
+The installer still checks exact firmware inputs. Similar model names do not establish compatibility. Unlisted Taiwan, European and Audi MHI2/MHI2Q targets remain pending; this is not universal same-brand support.
 
-## 本版范围
+## 该下载哪个文件 / Which download to use
 
-- MU1102 新增实际无线 CarPlay 接收服务；手机连接设置只提供本项目的“无线 CarPlay”开关。
-- 保留 CarPlay 地图、镜像、导航卡片和方向盘地图缩放。卡片是视频场景，与独立文字信息映射不同。
-- 只提供 iPhone 17 Pro Max 手机配置；790 和 791 保留必要的独立硬件适配。
-- 精简版不包含歌曲文字、封面及导航文字映射模块，不包含仪表启动动画或迎宾／离车声音。
-- 独立 SD 软件更新注册、独立绿色菜单管理，不再要求完整 MQB Toolbox。原车其他手机协议不被擅自删除。
-- 不改密码、SSH、设备密钥、FEC、仪表编码或其他项目的文件。
+| 下载文件 / File | 用途 / Purpose |
+|---|---|
+| `Wireless_CarPlay_Maps_Standalone_v3.0.zip` | 面向安装的完整 SD 目录。The complete SD folder for installation. |
+| `Wireless_CarPlay_Maps_Source_v3.0.zip` | 本项目提供的源码、构建方法与验证记录；不是直接复制到 SD 根目录的安装包。Provided source, build notes and validation; not the user-facing SD package. |
+| `SHA256SUMS.txt` | 校验下载文件是否完整。Download integrity checksums. |
+| `INSTALLATION.zh-CN_EN.md` | 中英文安装、更新、恢复和目录说明。Bilingual installation, update, recovery and layout guide. |
+| `DEVELOPMENT_HISTORY.zh-CN.md` | 更完整的开发历程与实现说明。The extended Chinese development history. |
+| `RELEASE_NOTES.md` | V3.0 发布详情及验收边界。V3.0 release details and acceptance boundaries. |
 
-## 精确支持范围
+GitHub 自动提供的 `Source code (zip)`／`Source code (tar.gz)` 是仓库归档，不是面向用户整理的 SD 安装包。普通安装请选 **Standalone** 文件，不要把源码目录直接当作 SD 卡根目录。
 
-| 固件 | lsd.jxe 字节数 | 仪表 | 无线服务 |
-|---|---:|---|---|
-| MU1102 | 55915411 | 790／791 | 本版提供 |
-| MU1367 | 55840541 | 790／791 | 尚未移植，本版仅有线 |
-| MU1440 Škoda | 55840933 | 790 | 尚未移植，本版仅有线 |
-| MU1433 Škoda G11 | 52751492 | 790 | 尚未移植，本版仅有线 |
-| MU1447 SEAT G11 | 55712574 | 790 | 尚未移植，本版仅有线 |
+GitHub's automatic `Source code (zip)` and `Source code (tar.gz)` downloads are repository archives, not the prepared user SD package. For normal installation choose **Standalone** and do not copy the source folder as the SD root.
 
-其他台湾、欧洲及 Audi MHI2／MHI2Q 精确平台仍在适配，未列出即不支持，不以相近固件号推定兼容。新精简组合尚未完成全部真实手机／仪表／触屏验收；无线主屏与衍生功能的既有测试经验不等于所有组合均已验证。
+## 安装包目录结构 / Installer layout
 
-## 独立安装
+```text
+Wireless_CarPlay_Maps_Standalone_v3.0.zip
+└─ SD_ROOT/
+   ├─ metainfo2.txt                 软件更新入口 / SWDL entry metadata
+   ├─ carplay/
+   │  └─ payload/
+   │     ├─ common/                 共用安装与地图程序 / Common installer and map runtime
+   │     ├─ profiles/               精确固件与仪表载荷 / Exact firmware and cluster profiles
+   │     └─ wireless/               无线接入及配套配置 / Wireless runtime and configuration
+   ├─ install/
+   │  ├─ esd/                      独立绿色菜单定义 / Dedicated green-menu definition
+   │  ├─ scripts/                  注册、安装、更新与恢复 / Register, install, update and restore
+   │  │  └─ final/                 软件更新收尾脚本 / SWDL final script
+   │  └─ file-check                完整性检查辅助程序 / Integrity-check helper
+   ├─ README.md                    项目与安装说明 / Project and installation notes
+   ├─ CONTENTS.sha256              包内文件清单 / Per-file integrity manifest
+   ├─ BUILD_INFO.json              当前构建信息 / Current build information
+   ├─ DEPENDENCIES.json             依赖与来源记录 / Dependency provenance
+   ├─ CREDITS.md                    致谢与归属 / Credits and provenance
+   └─ ...                          其他随包说明和兼容标记 / Other notes and compatibility markers
+```
 
-1. 完整备份原系统，准备恢复通路。车辆停稳、稳定供电，完全断开 USB 与无线 CarPlay。
-2. 从本页试验预发布下载 `Wireless_CarPlay_Maps_Standalone_v0.2.0-beta.1.zip`，按 `SHA256SUMS.txt` 校验。
-3. 把 ZIP 内 **SD_ROOT 的内容**复制到 SD 卡根目录，让 `metainfo2.txt` 位于卡根。
-4. 从原车软件更新入口选择 SD，注册独立绿色菜单页。此步只安装管理入口，不刷整套固件。
-5. 打开绿色菜单 **Wireless CarPlay Maps**，按真实仪表选择安装项；等待 `WMAPS_FEATURE_COMMIT_OK` 和全部校验通过。
-6. 手动完整重启后再连接手机。失败时保留日志，不反复运行旧安装包。
+**复制的是 `SD_ROOT` 里面的全部内容，不是外层文件夹。** 卡根应直接能看到 `metainfo2.txt`、`carplay` 和 `install`。不要只复制几个脚本，也不要单独运行 `payload/common` 内的内部脚本。
 
-首次安装前保存的基线用于恢复；若原本已有公开旧版，恢复的是该旧版，不冒称恢复原厂。新装后请使用新管理入口恢复，不使用旧 SD 卸载脚本。未知包装器、自定义启动文件、私人加密版本或缺少安装工具时会停止，不强制覆盖。
+**Copy all contents inside `SD_ROOT`, not the outer folder itself.** The card root must directly contain `metainfo2.txt`, `carplay` and `install`. Do not copy only selected scripts or invoke internal `payload/common` scripts individually.
 
-## 离线验证与已知问题
+```text
+正确 / Correct SD root       错误 / Incorrect nesting
+SD:/metainfo2.txt            SD:/SD_ROOT/metainfo2.txt
+SD:/carplay/                 SD:/Wireless_CarPlay_Maps/SD_ROOT/...
+SD:/install/
+```
 
-发布依据 R2 的 **49 个历史版本／机型升级组合、1,272 项离线断言**，覆盖 9 个历史公开版本、7 个当前机型配置以及安装、重复更新、失败回退、首次基线恢复和卸载。发布前另行复核主屏申请和最终归档完整性，记录见 [检查报告](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/tree/wireless-carplay-maps-v0.2.0-beta.1/wireless/evidence/)。
+## 中文安装步骤
 
-已修正旧 V2.1 升级时的媒体包装器残留、旧信息 JAR／类路径退出、旧 R1 手机配置迁移和备份完整性检查。原 R26、R1 交付及旧发布标签不改写。
+1. **确认支持范围。** 核对固件与仪表，准备完整系统备份和可用的恢复通路。不要跳过不支持提示。
+2. **准备平台。** 车辆停稳并持续稳定供电，完全断开 USB 和无线 CarPlay。工程／绿色菜单应已可用，本包不替你修改工程模式开关。
+3. **下载和校验。** 下载 V3.0 的 Standalone ZIP，与 `SHA256SUMS.txt` 对照；文件不完整时先重新下载，不尝试安装。
+4. **准备 SD 卡。** 解压后把 `SD_ROOT` 内全部内容复制到卡根，保留目录层级及所有随包文件。按上面的结构检查，不要多套一层目录。
+5. **注册独立入口。** 从原车软件更新入口选择对应 SD 介质，完成管理页注册。这一步不是直接刷整套固件，也不等于功能已经安装。
+6. **进入绿色菜单安装。** 打开 **Wireless CarPlay Maps**。790 选择 AID 10.5 项，791 选择 AID 12.3 项；仍以精确固件门禁为准。安装器选择匹配载荷，备份并检查当前文件后提交。
+7. **确认完成再重启。** 等待 `WMAPS_FEATURE_COMMIT_OK` 和全部校验成功，之后手动完整重启车机，再连接手机。失败时保留日志，先不要反复重装、删除备份或连接手机测试。
+8. **分项验收。** 检查无线连接、正常 CarPlay 画面与声音、仪表地图、镜像往返、卡片、方向盘缩放以及原车雷达／倒车等功能；有异常时保持现场，先恢复或排查。
 
-仍需实机验证：个例首次无线断连、790 卡片位置、无线镜像实际流畅度、自定义网络策略共存。Home 后后台镜像暂停、静态页面返回中控延迟恢复及倒车影像到仪表仍暂缓；USB 仍插着时主动断开有线后再选无线仍有限制。仅供有完整备份与恢复能力的测试者使用。
+不同固件的原厂软件更新入口名称、SD 挂载方式和工程菜单位置可能不同，本说明不提供跨平台猜测的隐藏菜单按键组合。
 
-## 开发历程
+## Installation steps in English
 
-根据团队回顾：8 月 11 日立项、17 日取得进展、18 日早期跑通、25 日接手继续研究、29 日取得关键进展。早期由 CloudCode 辅助；“81 版”仅指另一路尚未成功的累计尝试，不是正式版本号或成功黄金基线。
+1. **Confirm support.** Check the exact firmware and cluster. Keep a full system backup and a working recovery path. Do not bypass an unsupported-target refusal.
+2. **Prepare the unit.** Park safely, maintain reliable power and fully disconnect USB and wireless CarPlay. Engineering/green-menu access must already be available; this package does not enable engineering mode for you.
+3. **Download and verify.** Use the V3.0 Standalone ZIP and check it against `SHA256SUMS.txt`. Redownload a damaged file instead of attempting installation.
+4. **Prepare the SD card.** Extract the ZIP and copy every item inside `SD_ROOT` to the card root, preserving the directory layout. Do not add an extra outer folder.
+5. **Register the independent entry.** Select the SD medium from the unit's native software-update interface and complete registration. This installs the manager, not a full firmware image or the entire feature runtime.
+6. **Install from the green menu.** Open **Wireless CarPlay Maps**. Select the AID 10.5 entry for 790 or the AID 12.3 entry for 791, subject to the exact firmware check. The installer stages the matching files, checks current state and saves the baseline before commit.
+7. **Reboot only after success.** Wait for `WMAPS_FEATURE_COMMIT_OK` and all checks to succeed, then fully reboot manually before connecting the phone. On failure preserve logs; do not repeatedly reinstall, delete backups or test with the phone connected.
+8. **Validate separately.** Check wireless connection, normal main-screen video/audio, cluster maps, mirror transitions, cards, steering zoom and factory parking/reverse functions. Preserve a failing state for diagnosis or restore it first.
 
-[详细开发说明](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/wireless-carplay-maps-v0.2.0-beta.1/docs/WIRELESS_DEVELOPMENT.zh-CN.md)解释蓝牙引导、WLAN 接收、原厂 HMI 接入、主屏与仪表状态隔离、触控、会话所有权及切换恢复；介绍显示能力和位置声明的实现方法，不公布具体位置参数。源码页眉日期不是发行或验收日期。
+Native update labels, SD mounts and engineering-menu locations vary by firmware. This guide does not guess hidden-button sequences across platforms.
 
-## Source and provenance
+## 更新与恢复 / Update and recovery
 
-Owned integration sources are in `wireless/`; the corresponding independent installer is in `standalone/SD_ROOT/`. The source archive is **not a complete C-source rebuild of the frozen wireless receiver or OEM/SDK dependencies**. See `DEPENDENCIES.json`, `SOURCE_BUILD.md` and component notices. The project's GPL-3.0 terms do not relabel OEM/SDK code or grant rights the project does not own.
+| 绿色菜单项 / Menu item | 含义 / Meaning |
+|---|---|
+| `Update this management entry only` | 从新的完整介质更新管理入口，保留首次备份。Update the manager from new complete media while retaining the first baseline. |
+| `Update installed Wireless CarPlay Maps` | 按已保存的精确配置更新功能。Update the feature using the saved exact profile. |
+| `Show status` | 查看识别结果与已安装配置。Inspect detected firmware and installed profile. |
+| `Restore saved first baseline - keep this entry` | 恢复首次保存的状态，保留管理入口。Restore the saved first baseline and keep the manager. |
+| `Restore baseline and remove this entry` | 先恢复，再移除本项目入口。Restore first, then remove this project's entry. |
 
-特别感谢 **[olli991](https://github.com/olli991)** 提供大量开发思路、原车行为对照及测试反馈；感谢 **[octacon84](https://github.com/octacon84)** 提供 SEAT/MU1447 素材与布局工作。[完整致谢](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/wireless-carplay-maps-v0.2.0-beta.1/CREDITS.md)。
+升级请使用 **新的完整 V3.0 介质先更新管理入口，再更新功能**。首次保存的基线不一定是原厂：如果安装前已有旧公开版本，恢复会回到那个版本。不要再运行旧 SD 卸载脚本来拆除新运行目录。
 
-## Previous releases
+Use **new complete V3.0 media to update the manager first, then update the feature**. The first baseline is not necessarily factory state: if an older public version was already installed, restore returns to it. Do not run an old SD uninstaller against the new runtime.
 
-Stable [2.0.1](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/releases/tag/toolbox-plaintext-v2.0.1) and the earlier [2.1 rc.7](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/releases/tag/toolbox-plaintext-v2.1.0-rc.7) remain available. Their full-toolbox installation instructions apply to those releases, **not this independent wireless package**. [Historical introduction](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/blob/wireless-carplay-maps-v0.2.0-beta.1/docs/LEGACY_V2_1_README.md).
+未知包装器、私人加密版本、损坏备份或安装后被其他项目修改的目标会停止处理，不强行覆盖；安装工具或空间不足也会明确停止。旧名称的个别脚本只是升级兼容壳，不代表新增手机配置，不能脱离管理入口单独运行。
 
-## English summary
+Unknown wrappers, private encrypted versions, damaged backups or targets modified by another project stop the operation. Missing required tools or insufficient space also stop it. A retained legacy script name is only an updater compatibility shim, not another phone profile or a standalone install command.
 
-This experimental release adds an actual wireless CarPlay service on exact MU1102 targets, plus independent SD/GEM installation. Wired and wireless main-screen requests use 30 fps. Instrument-map/mirror policies remain profile-specific. Only the iPhone 17 Pro Max phone profile is offered. Other firmware rows are wired-only; this is not universal MHI2/MHI2Q support.
+## 源码包与仓库结构 / Source archive and repository layout
 
-Song/cover/navigation-text mapping, instrument startup animations and welcome/exit sounds are outside this lean package. Back up the unit, disconnect the phone, install the independent manager, select the real cluster, and fully reboot only after all checks succeed. Use the new manager to restore the saved first baseline. Do not use an old uninstaller on the new runtime.
+```text
+Wireless_CarPlay_Maps_Source_v3.0.zip
+└─ Wireless_CarPlay_Maps_Source/
+   ├─ src/                         本项目提供的实现源码 / Provided implementation sources
+   ├─ tests/                       离线夹具与回归检查 / Offline fixtures and regression checks
+   ├─ tools/                       构建及完整性检查工具 / Build and integrity tools
+   ├─ evidence/                    历史和本次验证记录 / Historical and current validation records
+   ├─ README.md
+   ├─ SOURCE_BUILD.md              构建条件与源码范围 / Build requirements and source coverage
+   ├─ DEPENDENCIES.json
+   ├─ CONTENTS.sha256
+   └─ ...
 
-Offline synthetic upgrade and rollback tests do not prove phone/GPU/touchscreen acceptance or long-term real-car stability. Known issues and frozen dependency boundaries are listed above. Old stable releases remain unchanged.
+GitHub repository
+├─ README.md                       当前 V3.0 项目首页 / Current V3.0 introduction
+├─ standalone/SD_ROOT/             独立安装目录 / Independent installer tree
+├─ wireless/                       对应源码与验证记录 / Corresponding source and validation
+├─ docs/                           开发、安装与兼容说明 / Development, installation and compatibility
+└─ releases/                       当前与历史发布说明 / Current and historical release notes
+```
+
+源码中的接收器接口、原厂 HMI 覆盖层、地图接入和独立安装事务各自分工。已有冻结接收程序、SDK／OEM 依赖不等于完整 C 源码已经齐备，也不冒称全部为新写原创；构建条件和依赖来源分别记录在 `SOURCE_BUILD.md`、`DEPENDENCIES.json` 与 `CREDITS.md`。
+
+Receiver interfaces, native HMI overlays, map integration and installation transactions have separate responsibilities. Frozen receiver and SDK/OEM dependencies are not a complete C-source release or newly authored project code. Build requirements and provenance are documented in `SOURCE_BUILD.md`, `DEPENDENCIES.json` and `CREDITS.md`. Original notices and applicable rights remain in place.

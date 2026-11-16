@@ -92,7 +92,7 @@ for record,mu,cluster,payload,installer in matrix:
         has_info=(root/'mnt/app/carplaymaps/information/ENABLED').exists()
         invoke(root,'install-entry');old=snapshot(root)
         invoke(root,'install-'+cluster)
-        check((root/'mnt/app/carplaymaps/VERSION').read_text().strip()=='WIRELESS-CARPLAY-MAPS-LOCAL-2','new version exact')
+        check((root/'mnt/app/carplaymaps/VERSION').read_text().strip()=='WIRELESS-CARPLAY-MAPS-3.0','new version exact')
         check(ipod.read_bytes().startswith(b'\x7fELF'),'native mm-ipod restored/preserved')
         check(not (root/'mnt/app/carplaymaps/information').exists(),'old information runtime removed')
         check(not (root/'mnt/app/eso/hmi/lsd/jars/VCInformation.jar').exists(),'known information jar removed')
@@ -193,6 +193,21 @@ with tempfile.TemporaryDirectory(prefix='wmaps-first-journal-failure-') as td:
     after=snapshot(root,False);check(after==before,('extended first journal rollback exact',delta(before,after)))
     print('FIRST_JOURNAL_EXTENSION_FAULT_ROLLBACK_PASS',flush=True)
 
+r2_cases=[]
+for mu,cluster in [('MU1102','790'),('MU1102','791'),('MU1367','790'),('MU1367','791'),('MU1440','790'),('MU1433','790'),('MU1447','790')]:
+    with tempfile.TemporaryDirectory(prefix='wmaps-published-predecessor-') as td:
+        root=Path(td);fixture(root,mu);original=snapshot(root)
+        invoke(root,'install-entry',Path('/r2'));invoke(root,'install-'+cluster,Path('/r2'))
+        check((root/'mnt/app/carplaymaps/VERSION').read_text().strip()=='WIRELESS-CARPLAY-MAPS-LOCAL-2','actual published predecessor installed')
+        invoke(root,'update-entry');invoke(root,'update-feature');invoke(root,'update-feature')
+        check((root/'mnt/app/carplaymaps/VERSION').read_text().strip()=='WIRELESS-CARPLAY-MAPS-3.0','V3.0 installed from predecessor')
+        invoke(root,'restore-feature')
+        restored=snapshot(root);restored.pop('mnt/app/eso/hmi/engdefs/WirelessCarPlayMaps.esd',None)
+        check(restored==original,('published predecessor first baseline preserved',mu,cluster,delta(original,restored)))
+        invoke(root,'uninstall');check(snapshot(root)==original,'published predecessor migration uninstall exact')
+        r2_cases.append(mu+'/'+cluster)
+        print('PUBLISHED_PREDECESSOR_TO_V3_UPGRADE_PASS',mu,cluster,flush=True)
+
 with tempfile.TemporaryDirectory(prefix='wmaps-tree-checker-') as td:
     root=Path(td);tree=root/'tree';tree.mkdir();put(tree/'nested/file',b'\x00\xfftest')
     proof=root/'tree.sha256';run([CHECK,'--tree-hash',tree,proof]);run([CHECK,'--tree-check',tree,proof])
@@ -213,6 +228,7 @@ with tempfile.TemporaryDirectory(prefix='wmaps-command-preflight-') as td:
     check(snapshot(root,False)==before,'missing utility makes no installed-file change')
     print('REQUIRED_COMMAND_PREFLIGHT_BEFORE_WRITE_PASS',flush=True)
 report={'result':'OFFLINE_PUBLIC_HISTORY_UPGRADE_PASS','checks':checks,'cases':cases,'case_count':len(cases),
+        'published_predecessor_upgrade_profiles':r2_cases,
         'headunit_accessed':False,'QNX_runtime_or_phone_tested':False,'R1_regression_reproduced_and_recovered':True,
         'old_16e_selection_migrated_to_only_17PM':True,'scope':'synthetic install/rollback filesystem, not visual or performance acceptance'}
 (OUT/'REPORT.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))

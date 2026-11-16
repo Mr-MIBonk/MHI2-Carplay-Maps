@@ -92,10 +92,12 @@ validate_snapshot(){
    test "$index_runtime" = yes && test -s "$backup/runtime.sha256" || return 1
   else test "$index_runtime" = no && test ! -e "$backup/runtime.sha256" || return 1;fi
   "$CHECK" --manifest "$backup" "$backup/INDEX_SHA256" || return 1
- elif test "$backup" = "$T" && test -s "$ROOT/VERSION" && test "`cat "$ROOT/VERSION"`" = WIRELESS-CARPLAY-MAPS-LOCAL-2;then
-  # A completed R2 always seals its first journal. Do not silently downgrade
-  # a damaged R2 journal into the legacy R1 compatibility path.
-  return 1
+ elif test "$backup" = "$T" && test -s "$ROOT/VERSION";then
+  # Completed R2 and V3.0 journals are sealed. Never reinterpret a damaged
+  # current journal as the historical unsealed R1 format.
+  case "`cat "$ROOT/VERSION"`" in
+   WIRELESS-CARPLAY-MAPS-LOCAL-2|WIRELESS-CARPLAY-MAPS-3.0)return 1;;
+  esac
  fi
  # Validate the entire journal before restoring any destination.
  : > "$S/validate-seen"

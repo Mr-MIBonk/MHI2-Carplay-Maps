@@ -1,0 +1,8 @@
+profiles/AID10.5-17PM/wcp_receiver	/mnt/ota/wcp_receiver	755
+profiles/AID10.5-17PM/wireless-receiver-exec	/mnt/app/carplaymaps/wireless-receiver-exec	755
+profiles/AID10.5-17PM/libomonob-wireless-maps.so	/mnt/app/carplaymaps/libomonob-wireless-maps.so	644
+profiles/AID10.5-17PM/wireless-entry	/mnt/app/carplaymaps/wireless-entry	755
+profiles/AID10.5-17PM/altscreen.conf	/mnt/persist/altscreen.conf	644
+profiles/AID10.5-17PM/altscreen.geom	/mnt/persist/altscreen.geom	644
+profiles/AID10.5-17PM/v75-wireless-display.conf	/mnt/persist/v75-wireless-display.conf	644
+profiles/AID10.5-17PM/cluster-profile	/mnt/persist/omonob-phone/cluster-profile	644

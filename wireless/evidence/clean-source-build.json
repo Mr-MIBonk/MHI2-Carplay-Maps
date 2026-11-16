@@ -1,0 +1,61 @@
+{
+  "result": "CLEAN_EXPORTED_OWNED_NATIVE_SOURCE_BUILD_PASS",
+  "no_development_reference_mounts": true,
+  "network": false,
+  "vehicle_accessed": false,
+  "not_a_complete_opaque_receiver_source_rebuild": true,
+  "files": [
+    {
+      "name": "native/790/libomonob-wireless-maps.so",
+      "sha256": "160d43f227dcdda27a11e4b8a8623c68a0aabe488ae18cc9766992fcd6dc5cfa"
+    },
+    {
+      "name": "native/791/libomonob-wireless-maps.so",
+      "sha256": "b40e381e0d8b9c56b55b797570fcafe8861b2f026b3125feb9efeceeadfa1fa7"
+    },
+    {
+      "name": "native/AID10.5-16e/wireless-receiver-exec",
+      "sha256": "6b806bdee624f307e6b813414bc5122a96f413c2b05ba5ff6f745c5d37cceac8"
+    },
+    {
+      "name": "native/AID10.5-17PM/wireless-receiver-exec",
+      "sha256": "25ca8eb2ffa8406aaad101e926e6b920390aa1f495e0441eed78992e19ab8143"
+    },
+    {
+      "name": "native/AID12.3/wireless-receiver-exec",
+      "sha256": "bc51da4be87ddcd2d1b6c9d0421a9e80df5804adfe567923938e56ec41d5cf5c"
+    },
+    {
+      "name": "native/carplay-cluster-supervisor",
+      "sha256": "875c5964106dd1a295407c5df47d7a3b255d6c3915485f4c733f97b36bb8220b"
+    },
+    {
+      "name": "native/config-patch",
+      "sha256": "9bdddc1dbb3153fa8f16a2b0b9e251fd753654736dfe6b4f3b7e3615338ff36d"
+    },
+    {
+      "name": "native/cpvc-mirror-canvas-790",
+      "sha256": "db38eeeb2d1906538bd663d94023b4b83d188eef07f6135eda8d113837f06cf7"
+    },
+    {
+      "name": "native/cpvc-mirror-canvas-791",
+      "sha256": "72fb746c347ef2de5539f94fc99a2fe08d0d8d04cf0215a78117af71b12177a5"
+    },
+    {
+      "name": "native/file-check",
+      "sha256": "fe5e9adf66b87f27f01ba1607d5e7af9fab19d20bfe5e0cdef0d4f096d12327b"
+    },
+    {
+      "name": "native/libomonob-primary30.so",
+      "sha256": "d605804e6a68b075e773ce62a7a6bbe640164d2799b375bf650135d4f1efbfa2"
+    },
+    {
+      "name": "native/wireless-entry-idr180",
+      "sha256": "2886410dc9c52c2014565deb1e747f8e3119abefcd4b5a001c19be7346ce63da"
+    },
+    {
+      "name": "native/wireless-entry-idr5",
+      "sha256": "1234821c3e6f7a3501cf224cd9eb77bdb2f0eadf49dbf08a2cd0bbcdfbe2a0c9"
+    }
+  ]
+}

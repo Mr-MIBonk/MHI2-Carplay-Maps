@@ -1,0 +1,21 @@
+{
+  "result": "ACTUAL_ARM_WIRELESS_PRIMARY30_PASS",
+  "profiles": [
+    {
+      "profile": "AID10.5-17PM",
+      "receiver_sha256": "396c73bcd7674483245776d0493552832f7ebbcefed399d7b9dd1182a5336c90",
+      "actual_ARM_primary_request": 30,
+      "input_variations_checked": 9,
+      "negative_control_distinguished": true
+    },
+    {
+      "profile": "AID12.3",
+      "receiver_sha256": "f195665b0e9fb8a592618e64b7201ddfc536a9b082c6dd35db214b99d5e01de1",
+      "actual_ARM_primary_request": 30,
+      "input_variations_checked": 9,
+      "negative_control_distinguished": true
+    }
+  ],
+  "physical_unit_or_phone_tested": false,
+  "geometry_modified": false
+}

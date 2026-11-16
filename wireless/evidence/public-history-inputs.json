@@ -1,0 +1,65 @@
+[
+  {
+    "tag": "toolbox-plaintext-v1.0.0",
+    "version": "V7.2.2-PLAINTEXT-TOOLBOX-1",
+    "kind": "release_zip",
+    "archive_sha256": "183815ce0fdad198ed8a621114f0505580d8577a7def17a9af693c965262c478",
+    "payload": "inputs/history/toolbox-plaintext-v1.0.0/payload"
+  },
+  {
+    "tag": "toolbox-plaintext-v1.1.0",
+    "version": "V70-PLAINTEXT-TOOLBOX-1.1.0",
+    "kind": "git_tag",
+    "commit": "222e76a47a13308042e097bb127c60a5effb6848",
+    "tree": "inputs/history/toolbox-plaintext-v1.1.0"
+  },
+  {
+    "tag": "toolbox-plaintext-v1.2.0",
+    "version": "V70-PLAINTEXT-TOOLBOX-1.1.0",
+    "kind": "git_tag",
+    "commit": "8f442efdc1723bc424edb08c7d52e33176009e15",
+    "tree": "inputs/history/toolbox-plaintext-v1.2.0"
+  },
+  {
+    "tag": "toolbox-plaintext-v1.2.1",
+    "version": "V70-PLAINTEXT-TOOLBOX-1.2.1",
+    "kind": "git_tag",
+    "commit": "071624582c3c68cf6e39585788cfe899150cc817",
+    "tree": "inputs/history/toolbox-plaintext-v1.2.1"
+  },
+  {
+    "tag": "toolbox-plaintext-v1.2.2",
+    "version": "V70-PLAINTEXT-TOOLBOX-1.2.2",
+    "kind": "git_tag",
+    "commit": "02d3f35872c44c7b3cbff7fcd76b19e13222ebc9",
+    "tree": "inputs/history/toolbox-plaintext-v1.2.2"
+  },
+  {
+    "tag": "toolbox-plaintext-v2.0.0",
+    "version": "VC-PLAINTEXT-TOOLBOX-2.0.0",
+    "kind": "git_tag",
+    "commit": "2f5fd58b63b48b807d59c5f79795847fc8c50d05",
+    "tree": "inputs/history/toolbox-plaintext-v2.0.0"
+  },
+  {
+    "tag": "toolbox-plaintext-v2.0.1",
+    "version": "VC-PLAINTEXT-TOOLBOX-2.0.1",
+    "kind": "git_tag",
+    "commit": "c645c379f26ed5db7e252f80297d6f7cb4468a34",
+    "tree": "inputs/history/toolbox-plaintext-v2.0.1"
+  },
+  {
+    "tag": "toolbox-plaintext-v2.1.0-g11-beta.1",
+    "version": "VC-PLAINTEXT-2.1.0-g11-beta.1",
+    "kind": "git_tag",
+    "commit": "90751cd7ce8db751083e403d1fa4b79b8c0241b4",
+    "tree": "inputs/history/toolbox-plaintext-v2.1.0-g11-beta.1"
+  },
+  {
+    "tag": "toolbox-plaintext-v2.1.0-rc.7",
+    "version": "VC-PLAINTEXT-2.1.0",
+    "kind": "git_tag",
+    "commit": "5ba6f7f579305960f8cae941fd4a4061f759b054",
+    "tree": "inputs/history/toolbox-plaintext-v2.1.0-rc.7"
+  }
+]

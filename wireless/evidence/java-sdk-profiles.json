@@ -1,0 +1,22 @@
+[
+  {
+    "firmware": "MU1102",
+    "sha256": "2c6ba244252279fe43acc2ec0be941dc777f12715bf465f0be543103d613881f"
+  },
+  {
+    "firmware": "MU1367",
+    "sha256": "feb4c3355d3401f7e9de4dc04ee15c09f46231b7639ef1124c3345a3358755c7"
+  },
+  {
+    "firmware": "MU1440",
+    "sha256": "1e426d06b4936dc03cef3513e71e5c765d87edfa981cf6c91e026178090c4bbe"
+  },
+  {
+    "firmware": "MU1433",
+    "sha256": "dfd6b678067a9f73f2942d6424d33d634c33a1d1d90d6c80fdaa107666ae2c75"
+  },
+  {
+    "firmware": "MU1447",
+    "sha256": "062eef92824e4831dea2497fb44863b87e48775ad6aed012f355b0505ec5bf4e"
+  }
+]

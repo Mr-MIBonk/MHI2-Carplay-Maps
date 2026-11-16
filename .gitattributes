@@ -33,3 +33,7 @@ MU1433_SKODA/**/payload/common/carplay-pairing-helper binary
 MU1447_SEAT/**/payload/common/altscreen-most-bridge binary
 MU1447_SEAT/**/payload/common/carplay-cluster-supervisor binary
 MU1447_SEAT/**/payload/common/carplay-pairing-helper binary
+
+# Preserve archived manifests byte-for-byte on every checkout platform.
+/standalone/SD_ROOT/** -text
+/wireless/** -text

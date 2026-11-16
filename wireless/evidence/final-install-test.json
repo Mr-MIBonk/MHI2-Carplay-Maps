@@ -1,0 +1,38 @@
+{
+  "result": "OFFLINE_STANDALONE_SYNTHETIC_PASS",
+  "checks": 352,
+  "profiles": [
+    {
+      "profile": "MU1102/790",
+      "result": "INSTALL_UPDATE_ENTRY_UPDATE_RESTORE_UNINSTALL_PASS"
+    },
+    {
+      "profile": "MU1102/791",
+      "result": "INSTALL_UPDATE_ENTRY_UPDATE_RESTORE_UNINSTALL_PASS"
+    },
+    {
+      "profile": "MU1367/790",
+      "result": "INSTALL_UPDATE_ENTRY_UPDATE_RESTORE_UNINSTALL_PASS"
+    },
+    {
+      "profile": "MU1367/791",
+      "result": "INSTALL_UPDATE_ENTRY_UPDATE_RESTORE_UNINSTALL_PASS"
+    },
+    {
+      "profile": "MU1440/790",
+      "result": "INSTALL_UPDATE_ENTRY_UPDATE_RESTORE_UNINSTALL_PASS"
+    },
+    {
+      "profile": "MU1433/790",
+      "result": "INSTALL_UPDATE_ENTRY_UPDATE_RESTORE_UNINSTALL_PASS"
+    },
+    {
+      "profile": "MU1447/790",
+      "result": "INSTALL_UPDATE_ENTRY_UPDATE_RESTORE_UNINSTALL_PASS"
+    }
+  ],
+  "headunit_accessed": false,
+  "actual_QNX_loader": false,
+  "phone_acceptance": false,
+  "host_global_sync": false
+}

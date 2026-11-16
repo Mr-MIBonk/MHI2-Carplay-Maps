@@ -1,0 +1,122 @@
+[
+  {
+    "profile": "MU1367",
+    "sdk_sha256": "feb4c3355d3401f7e9de4dc04ee15c09f46231b7639ef1124c3345a3358755c7",
+    "base_sha256": "28a2fb9589eded0492b263e581a2f348f109d3310693740724a652a4226ea3fc",
+    "output_sha256": "1859f5a1c3cb4fed9c7c7088705153ba9315fd452d676cd4203e2dea10757c41",
+    "removed_members": [
+      "org/omonob/cpmap/ui/AnimationMenuMessages.class",
+      "org/omonob/cpmap/ui/AnimationSettings$State.class",
+      "org/omonob/cpmap/ui/AnimationSettings.class",
+      "org/omonob/cpmap/ui/InformationMenuMessages.class",
+      "org/omonob/cpmap/ui/ProjectionMenuViewBridge$Action.class",
+      "org/omonob/cpmap/ui/ProjectionMenuViewBridge.class"
+    ],
+    "runs": [
+      {
+        "name": "compile",
+        "rc": 0
+      },
+      {
+        "name": "test-compile",
+        "rc": 0
+      },
+      {
+        "name": "test-enums-and-model",
+        "rc": 0
+      }
+    ],
+    "native_skin_kept": true,
+    "real_panel_acceptance": false
+  },
+  {
+    "profile": "MU1440",
+    "sdk_sha256": "1e426d06b4936dc03cef3513e71e5c765d87edfa981cf6c91e026178090c4bbe",
+    "base_sha256": "28a2fb9589eded0492b263e581a2f348f109d3310693740724a652a4226ea3fc",
+    "output_sha256": "d823fa151662f45cb4be806f34a96ea670864911cb8d9167ccd459f016c77bdf",
+    "removed_members": [
+      "org/omonob/cpmap/ui/AnimationMenuMessages.class",
+      "org/omonob/cpmap/ui/AnimationSettings$State.class",
+      "org/omonob/cpmap/ui/AnimationSettings.class",
+      "org/omonob/cpmap/ui/InformationMenuMessages.class",
+      "org/omonob/cpmap/ui/ProjectionMenuViewBridge$Action.class",
+      "org/omonob/cpmap/ui/ProjectionMenuViewBridge.class"
+    ],
+    "runs": [
+      {
+        "name": "compile",
+        "rc": 0
+      },
+      {
+        "name": "test-compile",
+        "rc": 0
+      },
+      {
+        "name": "test-enums-and-model",
+        "rc": 0
+      }
+    ],
+    "native_skin_kept": true,
+    "real_panel_acceptance": false
+  },
+  {
+    "profile": "MU1433",
+    "sdk_sha256": "dfd6b678067a9f73f2942d6424d33d634c33a1d1d90d6c80fdaa107666ae2c75",
+    "base_sha256": "2f2382c10f786c87359c98c5d24873112cdeddce799ad64e8cc69d3d3c594845",
+    "output_sha256": "0a0e8d0502a55c4e4f067cb87ecb9014996a8abb6083861d4c3825290075b00f",
+    "removed_members": [
+      "org/omonob/cpmap/ui/AnimationMenuMessages.class",
+      "org/omonob/cpmap/ui/AnimationSettings$State.class",
+      "org/omonob/cpmap/ui/AnimationSettings.class",
+      "org/omonob/cpmap/ui/InformationMenuMessages.class",
+      "org/omonob/cpmap/ui/ProjectionMenuViewBridge$Action.class",
+      "org/omonob/cpmap/ui/ProjectionMenuViewBridge.class"
+    ],
+    "runs": [
+      {
+        "name": "compile",
+        "rc": 0
+      },
+      {
+        "name": "test-compile",
+        "rc": 0
+      },
+      {
+        "name": "test-enums-and-model",
+        "rc": 0
+      }
+    ],
+    "native_skin_kept": true,
+    "real_panel_acceptance": false
+  },
+  {
+    "profile": "MU1447",
+    "sdk_sha256": "062eef92824e4831dea2497fb44863b87e48775ad6aed012f355b0505ec5bf4e",
+    "base_sha256": "28a2fb9589eded0492b263e581a2f348f109d3310693740724a652a4226ea3fc",
+    "output_sha256": "189f886276019dda88413ec7c57112f7d746bdb7fe7fa597e3365842d8aefaf0",
+    "removed_members": [
+      "org/omonob/cpmap/ui/AnimationMenuMessages.class",
+      "org/omonob/cpmap/ui/AnimationSettings$State.class",
+      "org/omonob/cpmap/ui/AnimationSettings.class",
+      "org/omonob/cpmap/ui/InformationMenuMessages.class",
+      "org/omonob/cpmap/ui/ProjectionMenuViewBridge$Action.class",
+      "org/omonob/cpmap/ui/ProjectionMenuViewBridge.class"
+    ],
+    "runs": [
+      {
+        "name": "compile",
+        "rc": 0
+      },
+      {
+        "name": "test-compile",
+        "rc": 0
+      },
+      {
+        "name": "test-enums-and-model",
+        "rc": 0
+      }
+    ],
+    "native_skin_kept": true,
+    "real_panel_acceptance": false
+  }
+]

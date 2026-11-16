@@ -1,0 +1,43 @@
+{
+  "result": "OFFLINE_BOOT_BUILD_PASS",
+  "wrappers": [
+    {
+      "profile": "AID12.3",
+      "inputs": {
+        "OMONOB_RECEIVER_SHA": "f195665b0e9fb8a592618e64b7201ddfc536a9b082c6dd35db214b99d5e01de1",
+        "OMONOB_INTERFACE_SHA": "b40e381e0d8b9c56b55b797570fcafe8861b2f026b3125feb9efeceeadfa1fa7",
+        "OMONOB_TRANSPORT_SHA": "46a46b9bf2b60cba84c6d9ebeaac39ed56db8abe3b761a5d3c71f75458abbf3b",
+        "OMONOB_CLUSTER": "791"
+      },
+      "sha256": "07955ac794986416fa30122a5964eb8de35f3b93955b1d4d2cb7bc51f7dc3140",
+      "eabi": 5,
+      "interpreter": "/usr/lib/ldqnx.so.2"
+    },
+    {
+      "profile": "AID10.5-17PM",
+      "inputs": {
+        "OMONOB_RECEIVER_SHA": "396c73bcd7674483245776d0493552832f7ebbcefed399d7b9dd1182a5336c90",
+        "OMONOB_INTERFACE_SHA": "160d43f227dcdda27a11e4b8a8623c68a0aabe488ae18cc9766992fcd6dc5cfa",
+        "OMONOB_TRANSPORT_SHA": "46a46b9bf2b60cba84c6d9ebeaac39ed56db8abe3b761a5d3c71f75458abbf3b",
+        "OMONOB_CLUSTER": "790"
+      },
+      "sha256": "41d523d4f2456237e6ed99bd89a7a8777aff5c2641c2f1663df697934f821813",
+      "eabi": 5,
+      "interpreter": "/usr/lib/ldqnx.so.2"
+    },
+    {
+      "profile": "AID10.5-16e",
+      "inputs": {
+        "OMONOB_RECEIVER_SHA": "3f37c3a23808b7bbd08d5c5c6900d0b1c549b16645de93d17660d84d22192c84",
+        "OMONOB_INTERFACE_SHA": "160d43f227dcdda27a11e4b8a8623c68a0aabe488ae18cc9766992fcd6dc5cfa",
+        "OMONOB_TRANSPORT_SHA": "46a46b9bf2b60cba84c6d9ebeaac39ed56db8abe3b761a5d3c71f75458abbf3b",
+        "OMONOB_CLUSTER": "790"
+      },
+      "sha256": "4c927de66945bd6b89fd13b5d71f7e589dc8821e800ddc6eef69e828a7c994a2",
+      "eabi": 5,
+      "interpreter": "/usr/lib/ldqnx.so.2"
+    }
+  ],
+  "bootstrap_sha256": "4f497fe959707e5d1dae77e69a1b4cefcbcbd5264d6ce112c0bb44499e3220fe",
+  "vehicle_accessed": false
+}

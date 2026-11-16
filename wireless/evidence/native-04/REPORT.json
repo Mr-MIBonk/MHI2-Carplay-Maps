@@ -1,0 +1,59 @@
+{
+  "result": "OFFLINE_NATIVE_BUILD_AND_PRIMARY30_HOST_PASS",
+  "files": [
+    {
+      "file": "790/libomonob-wireless-maps.so",
+      "bytes": 34315,
+      "sha256": "160d43f227dcdda27a11e4b8a8623c68a0aabe488ae18cc9766992fcd6dc5cfa",
+      "needed": [
+        "libc.so.3",
+        "libsocket.so.3"
+      ]
+    },
+    {
+      "file": "791/libomonob-wireless-maps.so",
+      "bytes": 34315,
+      "sha256": "b40e381e0d8b9c56b55b797570fcafe8861b2f026b3125feb9efeceeadfa1fa7",
+      "needed": [
+        "libc.so.3",
+        "libsocket.so.3"
+      ]
+    },
+    {
+      "file": "file-check",
+      "bytes": 11240,
+      "sha256": "fe5e9adf66b87f27f01ba1607d5e7af9fab19d20bfe5e0cdef0d4f096d12327b",
+      "needed": [
+        "libc.so.3"
+      ]
+    },
+    {
+      "file": "libomonob-primary30.so",
+      "bytes": 9751,
+      "sha256": "d605804e6a68b075e773ce62a7a6bbe640164d2799b375bf650135d4f1efbfa2",
+      "needed": [
+        "libc.so.3"
+      ]
+    },
+    {
+      "file": "wireless-entry-idr180",
+      "bytes": 35963,
+      "sha256": "2886410dc9c52c2014565deb1e747f8e3119abefcd4b5a001c19be7346ce63da",
+      "needed": [
+        "libsocket.so.3",
+        "libc.so.3"
+      ]
+    },
+    {
+      "file": "wireless-entry-idr5",
+      "bytes": 35955,
+      "sha256": "1234821c3e6f7a3501cf224cd9eb77bdb2f0eadf49dbf08a2cd0bbcdfbe2a0c9",
+      "needed": [
+        "libsocket.so.3",
+        "libc.so.3"
+      ]
+    }
+  ],
+  "vehicle_accessed": false,
+  "native_loader_tested": false
+}

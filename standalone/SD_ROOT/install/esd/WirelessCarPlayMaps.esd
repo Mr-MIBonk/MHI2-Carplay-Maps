@@ -1,0 +1,46 @@
+# Standalone concept: Olli. Maintainer: omonob.
+screen wireless-carplay-maps Main
+
+keyValue
+    value String sys 0x00000000 0
+    label "Wireless CarPlay Maps - LOCAL CANDIDATE"
+    poll 0
+
+keyValue
+    value String sys 0x00000000 0
+    label "MU1102: wireless. Other supported exact profiles: wired only."
+    poll 0
+
+keyValue
+    value String sys 0x00000000 0
+    label "No metadata mapping, welcome sounds or cluster startup animation."
+    poll 0
+
+script
+    value sys 1 0x0100 "/eso/hmi/engdefs/scripts/wireless-carplay-maps/install-aid10.sh"
+    label "Install AID 10.5 - default iPhone 17 Pro Max"
+
+script
+    value sys 1 0x0100 "/eso/hmi/engdefs/scripts/wireless-carplay-maps/install-aid12.sh"
+    label "Install AID 12.3 - VW only"
+
+script
+    value sys 1 0x0100 "/eso/hmi/engdefs/scripts/wireless-carplay-maps/update-feature.sh"
+    label "Update installed Wireless CarPlay Maps"
+
+script
+    value sys 1 0x0100 "/eso/hmi/engdefs/scripts/wireless-carplay-maps/update-entry.sh"
+    label "Update this management entry only"
+
+script
+    value sys 1 0x0100 "/eso/hmi/engdefs/scripts/wireless-carplay-maps/status.sh"
+    label "Show status"
+
+script
+    value sys 1 0x0100 "/eso/hmi/engdefs/scripts/wireless-carplay-maps/restore-feature.sh"
+    label "Restore saved first baseline - keep this entry"
+
+script
+    value sys 1 0x0100 "/eso/hmi/engdefs/scripts/wireless-carplay-maps/uninstall.sh"
+    label "Restore baseline and remove this entry"
+

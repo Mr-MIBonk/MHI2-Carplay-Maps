@@ -1,118 +1,73 @@
-# CarPlay Maps VC for MHI2
+# VW MHI2 Wireless CarPlay Maps
 
-Free open-source CarPlay maps and screen mirroring for Volkswagen, Škoda and SEAT virtual cockpits. Author: [omonob 汽车大玩家](https://github.com/omonob).
+**Wireless CarPlay Maps v0.2.0-beta.1 — experimental prerelease / 试验预发布。**
 
-大众、斯柯达与西雅特 MHI2 的免费开源 CarPlay 地图和屏幕镜像项目。开源软件本身及 GPLv3 授予的权利不收费。
+Wireless CarPlay, phone-map video and screen mirroring for supported VW MHI2 platforms. Maintainer: [omonob](https://github.com/omonob).
 
-[Downloads 下载](https://github.com/omonob/MHI2-Carplay-Maps/releases/latest) · [2.0.1 release notes 中英文更新说明](releases/toolbox-plaintext-v2.0.1.md) · [GPLv3](LICENSE)
+大众 MHI2 无线 CarPlay、手机地图视频到仪表及屏幕镜像。**中控主屏申请 30 fps**，有线与无线采用同一主屏策略。仪表保留各自既定地图／镜像策略，申请值不等于实测消费帧率。
 
-**V2.1 试验预发布版 / Experimental prerelease:**
-[下载 2.1.0-rc.7 / Download](https://github.com/omonob/MHI2-Carplay-Maps/releases/tag/toolbox-plaintext-v2.1.0-rc.7) · [中英文说明 / Notes](releases/toolbox-plaintext-v2.1.0.md) · [离线检查与原厂界面截图 / Validation and native UI screenshots](docs/V2_1_VALIDATION.md)。新增西雅特专属卡片区域和 CarPlay 信息（试验）。**长时间虚拟机测试出现过多次 QNX 内核停止及一次媒体启动异常，原因未查清；真实手机／仪表验收未完成。仅供有备份与恢复能力的测试者，不是稳定版。** Long-running emulator tests encountered unresolved QNX kernel stops and a media-startup failure. Real phone/cluster acceptance is incomplete. This is for experienced testers with backups and recovery access, not a stability guarantee. Stable 2.0.1 remains unchanged.
+[Download independent SD package / 独立安装包](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/releases/tag/wireless-carplay-maps-v0.2.0-beta.1) · [开发历程](docs/WIRELESS_DEVELOPMENT.zh-CN.md) · [安装与兼容性](docs/WIRELESS_INSTALLATION.zh-CN.md) · [旧版升级检查](docs/WIRELESS_COMPATIBILITY.zh-CN.md) · [源码](wireless/) · [Credits](CREDITS.md)
 
-[开发进度、图片与帧率／延迟数据](docs/development/2026-10-28/README.md) · [Development report, images and measurements](docs/development/2026-10-28/README_EN.md)
+## 本版范围
 
-**社区特别致谢 / Special community thanks:**
-特别感谢 [olli991](https://github.com/olli991) 提供大量开发思路、实际建议和西雅特测试反馈；
-感谢 [octacon84](https://github.com/octacon84) 提交 MU1447 适配补丁及社区测试结果。
-Special thanks to **olli991** for extensive development ideas, practical suggestions
-and SEAT testing feedback, and to **octacon84** for the MU1447 adaptation and testing.
-[完整致谢与贡献边界 / Full acknowledgements and provenance](docs/COMMUNITY_V2_1_CREDITS.md).
+- MU1102 新增实际无线 CarPlay 接收服务；手机连接设置只提供本项目的“无线 CarPlay”开关。
+- 保留 CarPlay 地图、镜像、导航卡片和方向盘地图缩放。卡片是视频场景，与独立文字信息映射不同。
+- 只提供 iPhone 17 Pro Max 手机配置；790 和 791 保留必要的独立硬件适配。
+- 精简版不包含歌曲文字、封面及导航文字映射模块，不包含仪表启动动画或迎宾／离车声音。
+- 独立 SD 软件更新注册、独立绿色菜单管理，不再要求完整 MQB Toolbox。原车其他手机协议不被擅自删除。
+- 不改密码、SSH、设备密钥、FEC、仪表编码或其他项目的文件。
 
-**早期 G11 测试版 / Earlier G11 prerelease:** [2.1.0-g11-beta.1](https://github.com/omonob/MHI2-Carplay-Maps/releases/tag/toolbox-plaintext-v2.1.0-g11-beta.1) · [说明 / Notes](releases/toolbox-plaintext-v2.1.0-g11-beta.1.md)。V2.1 rc.7 包含该版支持的 Škoda MU1433 和 SEAT MU1447，仅 AID 10.5；MU0033 不支持。稳定版 2.0.1 不变。Only the traditional full MQB package is published; the standalone installer remains a local experiment.
+## 精确支持范围
 
-## 中文说明
+| 固件 | lsd.jxe 字节数 | 仪表 | 无线服务 |
+|---|---:|---|---|
+| MU1102 | 55915411 | 790／791 | 本版提供 |
+| MU1367 | 55840541 | 790／791 | 尚未移植，本版仅有线 |
+| MU1440 Škoda | 55840933 | 790 | 尚未移植，本版仅有线 |
+| MU1433 Škoda G11 | 52751492 | 790 | 尚未移植，本版仅有线 |
+| MU1447 SEAT G11 | 55712574 | 790 | 尚未移植，本版仅有线 |
 
-### 2.1 虚拟座舱设置
+其他台湾、欧洲及 Audi MHI2／MHI2Q 精确平台仍在适配，未列出即不支持，不以相近固件号推定兼容。新精简组合尚未完成全部真实手机／仪表／触屏验收；无线主屏与衍生功能的既有测试经验不等于所有组合均已验证。
 
-App-Connect 设置里增加独立的“虚拟座舱设置”入口，保留原厂 MirrorLink 页面。菜单使用原厂选项条和连续滚动列表，包含 31 种语言，设置在重启后保留。
+## 独立安装
 
-| 设置 | 功能 |
-| --- | --- |
-| 虚拟座舱地图 | CarPlay Maps 或原车地图 |
-| 虚拟座舱镜像 | CarPlay 屏幕镜像开启／关闭，地图优先，冲突项置灰 |
-| 无线 CarPlay | 测试状态接口，默认关闭；实际无线服务未发布 |
-| 导航卡片 | AID 10.5：中间、靠左、靠右、关闭；AID 12.3：开启、关闭 |
-| CarPlay 信息（试验） | 全部开启、关闭导航、关闭音乐、全部关闭；支持热切换和重启记忆 |
+1. 完整备份原系统，准备恢复通路。车辆停稳、稳定供电，完全断开 USB 与无线 CarPlay。
+2. 从本页试验预发布下载 `Wireless_CarPlay_Maps_Standalone_v0.2.0-beta.1.zip`，按 `SHA256SUMS.txt` 校验。
+3. 把 ZIP 内 **SD_ROOT 的内容**复制到 SD 卡根目录，让 `metainfo2.txt` 位于卡根。
+4. 从原车软件更新入口选择 SD，注册独立绿色菜单页。此步只安装管理入口，不刷整套固件。
+5. 打开绿色菜单 **Wireless CarPlay Maps**，按真实仪表选择安装项；等待 `WMAPS_FEATURE_COMMIT_OK` 和全部校验通过。
+6. 手动完整重启后再连接手机。失败时保留日志，不反复运行旧安装包。
 
-共用菜单保留 AA／CarLife 名称，但本包不包含对应引擎，相关选项不可选择。镜像缩放按键只调整画布，不改变仪表输出尺寸。V2.1 新增本地 V53 衍生的导航文字、音乐信息和封面实验适配，独立于地图／镜像开关；不包含启动动画。小屏 G11 的英文标签缩写为 `CP info (experimental)`，保留完整试验标记。适配细节与验收边界见 [信息模块说明](src/information/README.md)。
+首次安装前保存的基线用于恢复；若原本已有公开旧版，恢复的是该旧版，不冒称恢复原厂。新装后请使用新管理入口恢复，不使用旧 SD 卸载脚本。未知包装器、自定义启动文件、私人加密版本或缺少安装工具时会停止，不强制覆盖。
 
-### 支持范围
+## 离线验证与已知问题
 
-| 固件 | lsd.jxe 大小 | AID 12.3 | AID 10.5 |
-| --- | ---: | --- | --- |
-| MU1102 | 55,915,411 bytes | 800×480 | 1010×376 |
-| MU1367 | 55,840,541 bytes | 800×480 | 1010×376 |
-| MU1440 Škoda | 55,840,933 bytes | 不支持 | 1010×376，保留滑轮方向 |
-| MU1433 Škoda G11（测试版） | 52,751,492 bytes | 不支持 | 1010×376，原品牌 800×480 中控 UI |
-| MU1447 SEAT G11（测试版） | 55,712,574 bytes | 不支持 | 1010×376，原品牌 800×480 中控 UI |
+发布依据 R2 的 **49 个历史版本／机型升级组合、1,272 项离线断言**，覆盖 9 个历史公开版本、7 个当前机型配置以及安装、重复更新、失败回退、首次基线恢复和卸载。发布前另行复核主屏申请和最终归档完整性，记录见 [检查报告](wireless/evidence/)。
 
-AID 10.5 保留大众／斯柯达既有左／右／中间卡片安全区；SEAT MU1447 在 V2.1 改用社区提供的独立安全区，不能套用大众的上下裁切与 x=42 纯地图修正，见 [SEAT 适配说明](docs/SEAT_V2_1_ADAPTATION.md)。Waze 卡片仍有已知布局问题。大众／斯柯达的 2.0.1 iPhone 17 Pro Max 纯地图居中声明保留，输出仍为 1010×376；参数不保证适合所有手机。
+已修正旧 V2.1 升级时的媒体包装器残留、旧信息 JAR／类路径退出、旧 R1 手机配置迁移和备份完整性检查。原 R26、R1 交付及旧发布标签不改写。
 
-AID 12.3 使用实验安全区 `(220,65,360,348)`，底边保持 413；该最终参数尚待实车确认，不能当作已通过实车验证的黄金版。其原生核心在 2.0.1 中未变。完整包并未在所有车型上验证。
+仍需实机验证：个例首次无线断连、790 卡片位置、无线镜像实际流畅度、自定义网络策略共存。Home 后后台镜像暂停、静态页面返回中控延迟恢复及倒车影像到仪表仍暂缓；USB 仍插着时主动断开有线后再选无线仍有限制。仅供有完整备份与恢复能力的测试者使用。
 
-AID 12.3 保留 40 fps 协商声明与每 5 帧请求一次 IDR。AID 10.5 卡片基线声明上限为 60 fps；AID 10.5 CP 镜像模式将原厂 10 fps 编码请求改为 30 fps。协商／请求值不等于所有手机和应用的实测显示帧率。
+## 开发历程
 
-### 安装
+根据团队回顾：8 月 11 日立项、17 日取得进展、18 日早期跑通、25 日接手继续研究、29 日取得关键进展。早期由 CloudCode 辅助；“81 版”仅指另一路尚未成功的累计尝试，不是正式版本号或成功黄金基线。
 
-1. 保存本机系统备份，车辆停稳并持续供电，完全断开 CarPlay。
-2. 从 Releases 下载完整 MQB Toolbox ZIP，解压到 SD 卡根目录，用随包 SHA-256 文件校验。
-3. 进入 MQB Toolbox → Customization → CarPlay Maps VC，按真实仪表选择 AID 10.5 或 AID 12.3。
-4. 安装器精确识别固件，已有有效导航共存补丁直接保留；缺少或本项目副本损坏则自动补齐。
-5. 看到 `CPMAP_INSTALL_OK` 后，通过工具箱流程完整重启，再打开 App-Connect 设置 → 虚拟座舱设置。
+[详细开发说明](docs/WIRELESS_DEVELOPMENT.zh-CN.md)解释蓝牙引导、WLAN 接收、原厂 HMI 接入、主屏与仪表状态隔离、触控、会话所有权及切换恢复；介绍显示能力和位置声明的实现方法，不公布具体位置参数。源码页眉日期不是发行或验收日期。
 
-只提供 MQB 完整工具箱，不提供 M.I.B. 自动刷写。安装失败不要连接手机测试。原厂恢复入口恢复保存的启动文件和 JAR，独立保存的用户设置不删除。已有加密版本请使用其专用迁移工具，公共安装器不会拆除它。
+## Source and provenance
 
-七种固件／仪表组合的集成文件位于 [MU1102](MU1102/)、[MU1367](MU1367/)、[MU1440 Škoda](MU1440_SKODA/)、[MU1433 Škoda G11](MU1433_SKODA/) 和 [MU1447 SEAT G11](MU1447_SEAT/)，适用于自行集成工具箱的开发者，不是独立刷写实验包。
+Owned integration sources are in `wireless/`; the corresponding independent installer is in `standalone/SD_ROOT/`. The source archive is **not a complete C-source rebuild of the frozen wireless receiver or OEM/SDK dependencies**. See `DEPENDENCIES.json`, `SOURCE_BUILD.md` and component notices. The project's GPL-3.0 terms do not relabel OEM/SDK code or grant rights the project does not own.
 
-### 联系和可选支持
+特别感谢 **[olli991](https://github.com/olli991)** 提供大量开发思路、原车行为对照及测试反馈；感谢 **[octacon84](https://github.com/octacon84)** 提供 SEAT/MU1447 素材与布局工作。[完整致谢](CREDITS.md)。
 
-需要未适配固件的免费版本，可联系作者并提供系统备份；备份可能包含身份和授权数据，请私下发送，不要上传到公开 Issue。
+## Previous releases
 
-邮箱：[omonob@126.com](mailto:omonob@126.com) · Telegram：[omonob](https://t.me/omonob)。
+Stable [2.0.1](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/releases/tag/toolbox-plaintext-v2.0.1) and the earlier [2.1 rc.7](https://github.com/omonob/VW-MHI2-Wireless-Carplay-Maps/releases/tag/toolbox-plaintext-v2.1.0-rc.7) remain available. Their full-toolbox installation instructions apply to those releases, **not this independent wireless package**. [Historical introduction](docs/LEGACY_V2_1_README.md).
 
-额外启动 Logo、其他已验证适配与可选付费支持，和本仓库免费授权分开；V2.1 的信息实验模块不因此收费。[闲鱼付费选项](https://www.goofish.com/item?id=1076254792602)，原标价 ¥399 RMB；具体功能、固件和服务范围购买前联系确认。
+## English summary
 
-## English
+This experimental release adds an actual wireless CarPlay service on exact MU1102 targets, plus independent SD/GEM installation. Wired and wireless main-screen requests use 30 fps. Instrument-map/mirror policies remain profile-specific. Only the iPhone 17 Pro Max phone profile is offered. Other firmware rows are wired-only; this is not universal MHI2/MHI2Q support.
 
-### Version 2.1
+Song/cover/navigation-text mapping, instrument startup animations and welcome/exit sounds are outside this lean package. Back up the unit, disconnect the phone, install the independent manager, select the real cluster, and fully reboot only after all checks succeed. Use the new manager to restore the saved first baseline. Do not use an old uninstaller on the new runtime.
 
-An independent Virtual Cockpit settings page is added under App-Connect settings without repurposing MirrorLink. It uses native selector rows and continuous scrolling. CRC-checked preferences survive reboots, with a previous valid copy available for recovery. Labels cover 31 locales; rendering uses the firmware's installed fonts.
-
-The five selectors control VC Maps, VC Mirroring, CarPlay information (experimental), the unreleased Wireless CarPlay test interface, and Navigation Card. The information selector has All enabled, Navigation off, Music off and All off; its navigation/music policy is independent of video. On narrow G11 rows its localized title is shortened, e.g. `CP info (experimental)`, without dropping the experimental marker. Maps take priority over mirroring for the same source. Only the CarPlay engines are included; Android Auto and CarLife choices are disabled. The wireless switch is off by default and does not start a wireless service.
-
-AID 10.5 has Center, Left, Right and Off card choices and a fixed 1010×376 output. AID 12.3 has On and Off and an 800×480 output. Canvas zoom changes content size, never the encoder dimensions. Steering zoom is routed to the canvas in CP mirroring and to the phone map otherwise.
-
-MU1102 and MU1367 support both cluster profiles. MU1440 Škoda supports AID 10.5 only. Exact firmware sizes are listed above; unknown profiles are rejected before factory files are modified.
-
-The **2.1.0-rc.7 experimental prerelease** includes exact Škoda MU1433 and SEAT MU1447 G11 firmware from the earlier G11 beta, AID 10.5 only. Their native menus use their own 800×480 head-unit geometry, while cluster video remains 1010×376. API/host checks cover both; the [validation report](docs/V2_1_VALIDATION.md) distinguishes native-menu checks from long-running emulator and real-phone/cluster acceptance. Unresolved emulator kernel stops and a media-startup failure are disclosed; this is not a stable build. MU0033 is excluded. Existing stable 2.0.1 downloads remain unchanged.
-
-The existing Volkswagen/Škoda AID 10.5 Left, Right and Center card rectangles are retained; Waze still has a known card-layout issue. V2.1 uses a separate community-derived safe-area table for SEAT MU1447, without importing Volkswagen's x=42 pure-map correction; see the [SEAT adaptation notes](docs/SEAT_V2_1_ADAPTATION.md). The 2.0.1 iPhone 17 Pro Max pure-map view remains for Volkswagen/Škoda. Output stays 1010×376; these are not universal phone parameters.
-
-The final AID 12.3 safe area `(220,65,360,348)` is an offline-tested experimental parameter, not a vehicle-validated golden release. Both AID 12.3 native cores are unchanged in 2.0.1. The complete package has not been verified on every vehicle.
-
-AID 12.3 retains a 40 fps stream declaration and an IDR request every five frames. The AID 10.5 card baseline declares a 60 fps ceiling. Only in AID 10.5 CP-mirror mode, the original 10 fps encoder request becomes 30 fps. These are not universal measured-FPS guarantees.
-
-### Install and restore
-
-Back up the unit, maintain stable power with the vehicle stationary, and disconnect CarPlay completely. Extract the full MQB ZIP to the SD-card root. Open MQB Toolbox → Customization → CarPlay Maps VC and select the actual AID 10.5 or AID 12.3 instrument. The installer preserves an existing valid navigation coexistence patch and automatically installs or repairs this project's missing/incomplete copy.
-
-After `CPMAP_INSTALL_OK`, perform a complete head-unit reboot through the Toolbox procedure. Open App-Connect settings → Virtual Cockpit settings. Do not connect the phone after a failed install. Restore factory files restores the saved startup and JAR files, retaining separate user preferences.
-
-V2.1 adds an experimental V53-derived navigation/music/album-art adaptation with independent hot switches. No M.I.B. automatic flashing installer, password changes, device-bound ciphertext, paid watchdog or startup animation is included. Existing encrypted installations require their own migration tool. Information support is experimental, not a universal physical-vehicle compatibility guarantee.
-
-For an unsupported firmware, contact the author about a free adaptation and share the system backup privately, not in a public Issue. Contact [omonob@126.com](mailto:omonob@126.com) or [Telegram](https://t.me/omonob). Optional paid extensions are separate from the public software license; confirm the supported firmware and feature scope before purchasing.
-
-## Build and test
-
-Source is under `src/card-core`, `src/vc-menu`, `src/vc-runtime`, `src/information`, `src/toolbox` and `src/steering-mu1440`. Full OEM firmware, private credentials, device keys and proprietary fonts are not redistributed. Supply your own exact original firmware JARs to compile the minimal UI hooks. V2.1 information builds, provenance and tests are documented in [src/information/README.md](src/information/README.md).
-
-For V2.1, build the five exact menu targets and information targets, the G11 navigation adapter, G11 cores and native information helpers in fresh folders. See [the information build instructions](src/information/README.md). `Stage-V21Profiles.ps1` stages all seven combinations; `Build-V21MQBCandidate.py` creates only a **local validation candidate** from the exact published 2.0.1 full MQB archive. It never uploads or marks a build accepted. Run `test_v21_candidate_archive.py` against the candidate, and run the Linux installer regressions plus native firmware UI tests before publication. Physical phone/cluster acceptance remains separate.
-
-The commands below document the earlier V2.0/2.0.1 build flow, not the complete V2.1 information build:
-
-1. Run `tools/Build-V2Menu.ps1` with `-Mu1102Jar`, `-Mu1367Jar`, `-Mu1440Jar` and a fresh `-BuildRoot`. It compiles against each firmware API and runs host persistence, policy, locale and profile tests.
-2. Run `tools/Build-V2Native.sh` inside a compatible locally built QNX 6.5 ARMv7 GNU toolchain container with this repository mounted at `/src`. It builds five native cores, two fixed-resolution renderers and the shared runtime, and runs the actual declaration/async-transport tests under sanitizers.
-3. Run `tools/Stage-V2Profiles.ps1` with `-MenuBuild` and `-NativeBuild`, then `tools/Build-MQBRelease.ps1 -Version 2.0.1` with the unchanged published v2.0.0 (or v1.2.2) full MQB ZIP and a fresh `-BuildRoot`. For a limited AID 10.5 rebuild, `tools/Build-AID10CenterPatch.sh` builds the three cores and verifies that both AID 12.3 cores remain byte-identical.
-4. On a Linux host run `python3 tests/test_v2_install.py` and `python3 tests/test_navigation_repair.py` for fixture-only install, repeat, repair, rollback and restore tests. These scripts do not connect to a vehicle.
-
-[2.0.1 centering notes](releases/toolbox-plaintext-v2.0.1.md) and the [original 2.0 feature notes](releases/toolbox-plaintext-v2.0.0.md) give the validation boundaries. The project remains licensed under [GPLv3](LICENSE).
+Offline synthetic upgrade and rollback tests do not prove phone/GPU/touchscreen acceptance or long-term real-car stability. Known issues and frozen dependency boundaries are listed above. Old stable releases remain unchanged.

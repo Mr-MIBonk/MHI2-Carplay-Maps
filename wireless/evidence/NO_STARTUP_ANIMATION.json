@@ -1,0 +1,10 @@
+{
+  "user_explicitly_selected_no_animation": true,
+  "menu_field4_removed": true,
+  "runtime_payload_assets_to_exclude": [
+    "*.eft",
+    "intro-policy",
+    "intro.eft"
+  ],
+  "no_sound_assets": true
+}

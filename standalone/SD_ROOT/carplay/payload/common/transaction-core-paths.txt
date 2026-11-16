@@ -1,0 +1,11 @@
+/mnt/app/eso/bin/apps/dio_manager
+/mnt/app/eso/hmi/lsd/lsd.sh
+/mnt/app/eso/hmi/lsd/jars/CarPlayClusterControls.jar
+/mnt/app/eso/hmi/lsd/jars/CarPlayNavigationPatch.jar
+/mnt/app/eso/hmi/lsd/jars/CarPlayMapsG11Navigation.jar
+/mnt/app/eso/hmi/lsd/jars/VCMenu.jar
+/mnt/app/eso/hmi/lsd/jars/VCMirrorRate.jar
+/mnt/app/armle/usr/sbin/mm-ipod
+/mnt/app/eso/hmi/lsd/jars/VCInformation.jar
+/mnt/app/eso/hmi/engdefs/scripts/cpmapvc-local/entry.sh
+/mnt/app/eso/hmi/engdefs/CarPlayMapsVCStandalone.esd

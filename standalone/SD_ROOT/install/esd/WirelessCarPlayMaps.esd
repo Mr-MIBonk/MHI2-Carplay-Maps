@@ -3,12 +3,12 @@ screen wireless-carplay-maps Main
 
 keyValue
     value String sys 0x00000000 0
-    label "Wireless CarPlay Maps V3.0"
+    label "Wireless CarPlay Maps V3.1"
     poll 0
 
 keyValue
     value String sys 0x00000000 0
-    label "MU1102: wireless. Other supported exact profiles: wired only."
+    label "MU1102 / MU1367 / MU1440: wireless. New ports: hardware test pending."
     poll 0
 
 keyValue

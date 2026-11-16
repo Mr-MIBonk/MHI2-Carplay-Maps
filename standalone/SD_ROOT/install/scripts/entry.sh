@@ -55,10 +55,13 @@ case "$action" in
    case "$selected" in "$MU/790/17PM")cluster=790;variant=17PM;;"$MU/790/16e")cluster=790;variant=17PM;echo WMAPS_LEGACY_PHONE_PROFILE_UPGRADED_TO_17PM;;"$MU/791/791")cluster=791;variant=791;;"$MU/790/wired")cluster=790;variant=wired;;"$MU/791/wired")cluster=791;variant=wired;;*)entry_fail SAME_UNIT_PROFILE_MISMATCH;;esac
   else
    case "$action" in install-791)cluster=791;variant=791;;*)cluster=790;variant=17PM;;esac
-   if [ "$MU" != MU1102 ];then
-    variant=wired
-   fi
+   case "$MU" in MU1102|MU1367|MU1440);;*)variant=wired;;esac
   fi
+  # A saved wired-only predecessor becomes the exact new wireless profile.
+  case "$MU:$cluster:$variant" in
+   MU1367:790:wired|MU1440:790:wired)variant=17PM;echo WMAPS_WIRED_PROFILE_UPGRADED_TO_WIRELESS;;
+   MU1367:791:wired)variant=791;echo WMAPS_WIRED_PROFILE_UPGRADED_TO_WIRELESS;;
+  esac
   case "$MU:$cluster" in MU1433:791|MU1447:791|MU1440:791)entry_fail SKODA_SEAT_AID12_UNSUPPORTED;;esac
   ensure_app_writable
   run_feature_transaction "$MEDIA/carplay/payload/common/feature-transaction.sh" "$MEDIA/carplay/payload" "$MU" "$cluster" "$variant" install || entry_fail FEATURE_INSTALL_FAILED
@@ -67,7 +70,7 @@ case "$action" in
   detect_mu;echo "WMAPS_MU=$MU"
   if owned_entry;then echo ENTRY=installed;else echo ENTRY=absent;fi
   if [ -s "$ENTRY/INSTALLED_PROFILE" ];then echo "PROFILE=`cat "$ENTRY/INSTALLED_PROFILE"`";else echo FEATURE=absent;fi
-  echo "Wireless engine: MU1102 only. Other exact profiles: wired maps/mirror/cards.";;
+  echo "Wireless engine: exact MU1102, MU1367 and MU1440 profiles. New firmware ports require physical acceptance.";;
  restore-feature|uninstall)
   require_phone_off;detect_mu;require_public_runtime
   owned_entry || entry_fail OWNED_ENTRY_REQUIRED

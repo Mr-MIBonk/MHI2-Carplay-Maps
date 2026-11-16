@@ -31,6 +31,8 @@ seal_snapshot(){
 }
 line=`ls -ln "$P/ifs/lsd.jxe"`;set -- $line
 case "$MU:$5:$CLUSTER" in MU1102:55915411:790|MU1102:55915411:791|MU1367:55840541:790|MU1367:55840541:791|MU1440:55840933:790|MU1433:52751492:790|MU1447:55712574:790);;*)fail SAME_UNIT_PROFILE;;esac
+WIRELESS=no
+case "$MU" in MU1102|MU1367|MU1440)WIRELESS=yes;;esac
 test ! -e "$P/dev/ipod0" && test ! -e "$P/dev/shmem/wcp_cp_session" || fail DISCONNECT_PHONE_FIRST
 case "$ACTION" in install|restore);;*)fail UNKNOWN_ACTION;;esac
 for required in awk cat chmod cp expr grep ls mkdir mv rm rmdir touch;do
@@ -46,7 +48,7 @@ WRITING=no;STAGED=no;FIRST_SWAPPED=no;FIRST_MOVED=no;FIRST_CANDIDATE_OWNED=no;RE
 prepare_mounts(){
  test -z "$P" || return 0
  mounts=/mnt/app
- if test "$MU" = MU1102;then mounts="$mounts /mnt/ota /mnt/system /mnt/persist";fi
+ if test "$WIRELESS" = yes;then mounts="$mounts /mnt/ota /mnt/system /mnt/persist";fi
  for path in $mounts;do
   mode=`"$CHECK" --filesystem "$path"` || return 1
   case "$mode" in read-write);;read-only)mount -uw "$path" || return 1;READ_ONLY="$path $READ_ONLY";;*)return 1;;esac
@@ -96,7 +98,7 @@ validate_snapshot(){
   # Completed R2 and V3.0 journals are sealed. Never reinterpret a damaged
   # current journal as the historical unsealed R1 format.
   case "`cat "$ROOT/VERSION"`" in
-   WIRELESS-CARPLAY-MAPS-LOCAL-2|WIRELESS-CARPLAY-MAPS-3.0)return 1;;
+   WIRELESS-CARPLAY-MAPS-LOCAL-2|WIRELESS-CARPLAY-MAPS-3.0|WIRELESS-CARPLAY-MAPS-3.1)return 1;;
   esac
  fi
  # Validate the entire journal before restoring any destination.
@@ -198,7 +200,15 @@ if test "$ACTION" = restore;then
  echo WMAPS_FIRST_BASELINE_RESTORED
  exit 0
 fi
-case "$MU:$CLUSTER:$VARIANT" in MU1102:790:17PM|MU1102:791:791);;MU1102:*)fail UNKNOWN_WIRELESS_PROFILE;;*:790:wired|*:791:wired);;*)fail UNKNOWN_PROFILE;;esac
+case "$MU:$CLUSTER:$VARIANT" in MU1102:790:17PM|MU1102:791:791|MU1367:790:17PM|MU1367:791:791|MU1440:790:17PM);;MU1102:*|MU1367:*|MU1440:*)fail UNKNOWN_WIRELESS_PROFILE;;*:790:wired|*:791:wired);;*)fail UNKNOWN_PROFILE;;esac
+if test "$WIRELESS" = yes;then
+ native=`awk -F '\t' -v mu="$MU" '$1==mu{print $2 " " $3 " " $4;found++}END{if(found!=1)exit 1}' "$PAYLOAD/wireless/native-baselines.tsv"` || fail NATIVE_PROFILE_MISSING
+ set -- $native
+ test "$#" = 3 || fail NATIVE_PROFILE_INVALID
+ test "`hash "$P/mnt/app/eso/bin/apps/btstack"`" = "$1" || fail UNKNOWN_BTSTACK_PRESERVED
+ current_cm=`hash "$P/mnt/app/eso/bin/apps/connectionmanager"` || fail CONNECTIONMANAGER_UNREADABLE
+ test "$current_cm" = "$2" || test "$current_cm" = "$3" || fail UNKNOWN_CONNECTIONMANAGER_PRESERVED
+fi
 if test -d "$ROOT";then
  test -s "$ROOT/VERSION" && test -s "$ROOT/PROFILE" || fail FOREIGN_RUNTIME_PRESERVED
  grep -Fx "`cat "$ROOT/VERSION"`" "$PAYLOAD/common/known-public-versions.txt" >/dev/null 2>&1 || fail UNKNOWN_PUBLIC_OR_PRIVATE_VERSION_PRESERVED
@@ -217,7 +227,7 @@ fi
 for path in "$P/ramdisk" "$P/mnt/app";do
  free=`"$CHECK" --free-bytes "$path"`;test "$free" -ge 100000000 || fail INSUFFICIENT_HEADROOM
 done
-if test "$MU" = MU1102;then
+if test "$WIRELESS" = yes;then
  for path in "$P/mnt/ota" "$P/mnt/system" "$P/mnt/persist";do
   test -d "$path" || fail REQUIRED_PARTITION_MISSING
   free=`"$CHECK" --free-bytes "$path"`;test "$free" -ge 10000000 || fail INSUFFICIENT_HEADROOM
@@ -228,7 +238,7 @@ for name in installed.tsv INSTALLED_PROFILE;do
  test ! -e "$ENTRY/$name" || cp -p "$ENTRY/$name" "$S/$name.previous"
 done
 cp "$PAYLOAD/common/transaction-core-paths.txt" "$S/paths"
-if test "$MU" = MU1102;then cat "$PAYLOAD/wireless/transaction-paths.txt" >> "$S/paths";fi
+if test "$WIRELESS" = yes;then cat "$PAYLOAD/wireless/transaction-paths.txt" >> "$S/paths";fi
 : > "$S/seen";: > "$S/before/files.tsv";n=0
 while read -r path;do
  safe_target "$path" || fail UNSAFE_TARGET
@@ -251,7 +261,7 @@ seal_snapshot "$S/before"
 NAV="$PAYLOAD/common/cpmap-nav-check"
 test -z "$P" || NAV=${CPMAP_TEST_NAV_CHECK:-$NAV}
 sh "$PAYLOAD/common/prepare-legacy.sh" "$P" "$MU" "$PAYLOAD/common" "$ENTRY" "$S" "$CHECK" "$NAV"
-if test "$MU" = MU1102;then
+if test "$WIRELESS" = yes;then
  W="$PAYLOAD/wireless";C="$P/mnt/system/etc/eso/production"
  PATCH="$W/config-patch";test -z "$P" || PATCH=${CPMAP_TEST_CONFIG_PATCH:-$PATCH}
  "$PATCH" connectivity "$C/connectivity.json" "$S/generated/connectivity.json"
@@ -324,10 +334,11 @@ if test -f "$S/generated/retire-legacy-management";then
  copy_file "$PAYLOAD/common/legacy-management-disabled.sh" /mnt/app/eso/hmi/engdefs/scripts/cpmapvc-local/entry.sh 755
  copy_file "$PAYLOAD/common/legacy-management-disabled.esd" /mnt/app/eso/hmi/engdefs/CarPlayMapsVCStandalone.esd 644
 fi
-if test "$MU" = MU1102;then
+if test "$WIRELESS" = yes;then
  case "$CLUSTER:$VARIANT" in 791:791)PROFILE=AID12.3;;790:17PM)PROFILE=AID10.5-17PM;;esac
  sh "$PAYLOAD/common/merge-wireless.sh" lsd "$P/mnt/app/eso/hmi/lsd/lsd.sh" "$S/generated/lsd.sh"
  cat "$W/common-files.tsv" "$W/profiles/$PROFILE/files.tsv" > "$S/copies.tsv"
+ awk -F '\t' -v mu="$MU" '$1==mu{if($4!="preserve")print $2 "\t" $3 "\t" $4;else if($2!="-"||$3!="/mnt/app/eso/bin/apps/connectionmanager")exit 1;found++}END{if(found!=1)exit 1}' "$W/firmware-files.tsv" >> "$S/copies.tsv" || fail NATIVE_COPY_PROFILE_MISSING
  while IFS="$TAB" read -r source target mode;do
   case "$source" in common/*|profiles/*);;*)fail INVALID_SOURCE;;esac
   case "$source" in *..*)fail INVALID_SOURCE;;esac

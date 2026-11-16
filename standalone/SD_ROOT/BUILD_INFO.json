@@ -1,13 +1,15 @@
 {
   "product": "Wireless CarPlay Maps",
   "maintainer": "omonob",
-  "version": "3.0",
-  "build_time": "2026-11-16T16:51:18.022297+08:00",
+  "version": "3.1",
+  "build_time": "2026-11-16T19:40:17.572030+08:00",
   "wireless_source_date": "2026-08-29",
   "date_is_not_release_tag": true,
   "reference": "delivered R26 plus V2.1 rc7 cluster policy",
   "wireless_firmware": [
-    "MU1102"
+    "MU1102",
+    "MU1367",
+    "MU1440"
   ],
   "wired_profiles": [
     "MU1102/790",
@@ -24,12 +26,12 @@
   "native_locales": 31,
   "automatic_reboot": false,
   "headunit_accessed": false,
-  "physical_acceptance": "NOT PERFORMED FOR THIS LEAN BUILD",
+  "physical_acceptance": "Not performed for this V3.1 build; new MU1367/MU1440 ports require hardware acceptance",
   "source_coverage": "Implementation sources are maintained locally. Required installation scripts and runtime files are supplied; component provenance and applicable rights are retained.",
   "phone_profiles": [
     "iPhone 17 Pro Max"
   ],
   "legacy_phone_profiles": "Old saved selection is migrated; no second active declaration is shipped",
-  "release": "V3.0",
+  "release": "V3.1",
   "publication_scope": "Installer, installation instructions and engineering explanations"
 }

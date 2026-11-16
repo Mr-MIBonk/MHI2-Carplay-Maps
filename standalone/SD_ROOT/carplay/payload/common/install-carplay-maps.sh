@@ -3,7 +3,7 @@
 PAYLOAD="$1"
 EXPECTED_MU="$2"
 INSTRUMENT="$3"
-VERSION="WIRELESS-CARPLAY-MAPS-3.0"
+VERSION="WIRELESS-CARPLAY-MAPS-3.1"
 
 fail() {
     echo "CPMAP_INSTALL_FAIL=$1"
@@ -197,7 +197,7 @@ echo "Project integration and maintainer: omonob"
 echo "Detected firmware: $DETECTED_MU (lsd.jxe $JXE_SIZE bytes)"
 echo "Selected cluster: $INSTRUMENT"
 echo "Scope: VC settings, CarPlay map video, native mirroring and navigation cards"
-echo "Wireless engine is installed separately in this same transaction on exact MU1102 only"
+echo "Wireless engine is installed separately in this same transaction on exact MU1102, MU1367 and MU1440 profiles"
 echo "No music metadata, startup animation, device binding, or paid watchdog"
 
 if [ -n "${CPMAP_TEST_ROOT:-}" ]; then

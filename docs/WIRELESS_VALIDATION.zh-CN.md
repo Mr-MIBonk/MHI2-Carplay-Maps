@@ -1,38 +1,34 @@
-# Wireless CarPlay Maps V3.0 验证记录 / Validation
+# Wireless CarPlay Maps V3.1 验证记录 / Validation
 
-## 版本与文档 / Version and documentation
+V3.1 为试验预发布。新增 MU1367/790、MU1367/791、Škoda MU1440/790 的无线接口适配；MU1440/791 不支持。MU1102 的现有组合继续保留，MU1433 与 MU1447 仍在仅有线范围内。
 
-当前发行名称为 **V3.0**，标签为 `v3.0`。首页、下载文件名、安装器显示和包内当前版本一致。公开交付为安装包和说明，不附单独的实现源码包。历史兼容标记、备份格式、原厂／库版本及原始测试报告不冒改成新产品版本。
+V3.1 is an experimental prerelease. Wireless ports are added for MU1367/790, MU1367/791 and Škoda MU1440/790. MU1440/791 is unsupported. Existing MU1102 combinations remain; MU1433 and MU1447 remain wired-only.
 
-The current release is **V3.0**, tagged `v3.0`. Public names, archive filenames, installer display and current package version agree. The public delivery contains the installer and documentation without a separate implementation-source package. Historical compatibility markers, snapshot formats, vendor/library versions and original reports are not relabeled.
+## 最终离线检查 / Final offline checks
 
-首页直接展开项目时间线、接入分工、开发问题及处理；安装与目录说明中英文均提供。软件运行所需配置保持原有已核对策略，本文档修订不改变原生接收、显示、地图位置或按键程序。
+| 检查 / Check | 结果 / Result |
+|---|---|
+| 新装、重复更新、管理入口更新、恢复、卸载与拒绝未知改动 / Install, updates, restore, uninstall and unknown-change refusals | 396 项通过 / assertions passed |
+| 历史公开版升级 / Historical public-release upgrades | 1071 项通过；九个旧版本、四十九个版本／机型组合 / assertions passed; nine old releases and forty-nine combinations |
+| 已发布无线前代与 V3.0 升级 / Published wireless predecessor and V3.0 migration | 各七种配置，含重复更新、恢复与卸载 / seven profiles each, including repeated updates, restore and uninstall |
+| 三套原厂 HMI SDK / Three exact native HMI SDKs | 每套 296 项菜单契约与 92 项型号识别检查通过 / 296 menu-contract and 92 profile-identification checks per SDK |
+| 蓝牙接入兼容 / Bluetooth integration compatibility | 三种原始程序、39 项入口签名核对；1367／1440 的 15 个关键函数窗口一致 / 39 entry-signature checks across three originals and fifteen matching critical function windows |
+| 真实配置与启动文件 / Actual configuration and startup files | 36 项合并、重复合并及一致性检查通过 / 36 merge, repeated-merge and consistency checks |
 
-The README expands the timeline, architecture, problems and fixes. Installation and layout guidance are bilingual. This revision retains the established native receiver, display, geometry and control programs.
+1367、1440 的原厂连接管理程序与 1102 不同，本包保留各自原程序。关键原生程序按已知指纹核对，未知修改停止；没有通过改写固件名称来放宽匹配。MU1440 的生产配置检查使用保存的对应固件系统备份，MU1102、MU1367 使用原始固件映像中的配置。
 
-## 当前检查 / Current checks
+MU1367 and MU1440 retain their own stock connection manager rather than receiving the MU1102 program. Known native-program fingerprints are checked and unknown modifications stop installation. MU1440 production-configuration checks use a retained exact-firmware system backup; MU1102 and MU1367 configuration comes from original firmware images.
 
-- 当前七种机型配置：**355 项离线断言通过**，包含安装、管理入口更新、功能更新、恢复、卸载及故障处理。
-- 历史升级检查：**994 项离线断言通过**，覆盖九个旧公开版本的四十九种组合，并额外检查前一个已发布无线包的七种配置升级到 V3.0、重复更新和恢复。
-- 版本改动后的完整性清单及软件更新绑定重新计算、校验；最终 ZIP 逐文件回读并重新解压验证。
-- 原生可执行文件和库与前一个已核对包逐项比对，未因版本命名或说明文字而替换。
+安装器的配置合并辅助程序因原厂同名参数对象问题重新构建，ARM QNX ELF 格式已核对。已有无线接收、画面处理与地图原生程序未因此重新替换。最终安装与升级回归针对修订后的程序重新运行；安装包内容与受测载荷逐项比对，校验清单、软件更新绑定和 ZIP 回读另外验证。
 
-Seven current profiles pass **355 offline assertions**, including installation, manager/feature updates, restore, uninstall and fault handling. The historical suite passes **994 assertions** across forty-nine combinations from nine earlier public releases, plus seven migrations from the published wireless predecessor to V3.0.
+The configuration-merging helper is rebuilt for the same-named native settings-object fix and checked as an ARM QNX ELF executable. Existing wireless receiver, video and map native programs are not replaced by that fix. Full install/upgrade regression is rerun against the revised files. Tested runtime files, manifests, SWDL bindings and ZIP readback are checked separately.
 
-Manifests and SWDL bindings are regenerated and verified; final archives are read back and re-extracted. Native programs/libraries are compared with the previous checked package and are not replaced by this labeling/documentation revision.
+## 验收边界 / Acceptance boundary
 
-## 边界 / Limits
+没有连接、写入或重启车机；没有把主机模拟测试当作实际 QNX 加载或手机连接成功。新增机型的无线配对、音频、真实触控、仪表画面、重连、原车泊车功能与长期稳定性仍需实机分项验收。首次连接需要手动完成蓝牙配对和手机加入车机 Wi-Fi 热点。
 
-这些是隔离主机文件系统里的安装与代码检查，没有连接车机、重启车机或把不存在的真实手机和仪表接口当作成功。新精简组合的完整实机验收、网络、触屏及长期运行仍以现场结果为准。
+No head unit is connected, written or rebooted. Host-fixture checks are not actual QNX loading or successful phone connection. New targets still require separate hardware checks for pairing, audio, touch, cluster display, reconnection, factory parking functions and long-term stability. First use requires manual Bluetooth pairing and joining the head-unit Wi-Fi hotspot from the phone.
 
-These are isolated host-filesystem installation/code checks. No unit was connected or rebooted, and missing real phone/cluster interfaces were not counted as successes. Full hardware, radio, touch and long-term acceptance remain separate.
+公开交付只包含安装包、安装方法、开发过程和验证说明，不附实现源码包。原始交付、V3.0 及旧报告在本地保留，不改写为 V3.1 已完成实车验收。
 
-原始 R2 和早期报告保留当时的构建时间、版本及结论；本次记录单独存放，避免把历史证据改写成 V3.0 已实车验证。
-
-Original R2 and earlier reports keep their historical dates, versions and conclusions. Current V3.0 evidence is separate rather than rewriting those records as vehicle acceptance.
-
-## 菜单配置识别 / Menu profile identification
-
-MU1102 菜单改为读取独立 PROFILE，不再把产品版本号当仪表型号；实际交付的 Java 辅助类通过 92 项检查，覆盖当前、历史、缺失和冲突配置。本次只变更该 JAR 成员，原生接收与地图程序不变；以上完整安装回归已在更新后的包上重跑。
-
-The MU1102 helper reads the dedicated PROFILE rather than parsing product versions as hardware identity. The shipped class passes 92 cases; only this JAR member changes. Full installation regression above is rerun with the updated package. Native receiver/map binaries are unchanged.
+The public delivery contains the installer, installation instructions, engineering history and validation notes without a separate implementation-source package. Original handoffs, V3.0 and earlier reports remain historical, not relabeled as V3.1 vehicle acceptance.

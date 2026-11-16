@@ -135,8 +135,8 @@
     },
     {
       "path": "carplay/payload/profiles/MU1367/790/VCMenu.jar",
-      "sha256": "1859f5a1c3cb4fed9c7c7088705153ba9315fd452d676cd4203e2dea10757c41",
-      "bytes": 69032,
+      "sha256": "0c8507b3e330854a13993a92cf7a0314f83872965c4cbaf0e73118d88ee309c3",
+      "bytes": 102477,
       "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
@@ -159,8 +159,8 @@
     },
     {
       "path": "carplay/payload/profiles/MU1367/791/VCMenu.jar",
-      "sha256": "1859f5a1c3cb4fed9c7c7088705153ba9315fd452d676cd4203e2dea10757c41",
-      "bytes": 69032,
+      "sha256": "0c8507b3e330854a13993a92cf7a0314f83872965c4cbaf0e73118d88ee309c3",
+      "bytes": 102477,
       "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
@@ -213,8 +213,8 @@
     },
     {
       "path": "carplay/payload/profiles/MU1440/790/VCMenu.jar",
-      "sha256": "d823fa151662f45cb4be806f34a96ea670864911cb8d9167ccd459f016c77bdf",
-      "bytes": 69032,
+      "sha256": "0c8507b3e330854a13993a92cf7a0314f83872965c4cbaf0e73118d88ee309c3",
+      "bytes": 102477,
       "origin": "Owned public V2.1/R26 overlay plus required OEM API glue; see component provenance and exact profile."
     },
     {
@@ -327,8 +327,8 @@
     },
     {
       "path": "carplay/payload/wireless/config-patch",
-      "sha256": "15a8e6bf8293556c71df94610b0096ba6381ad8e0199664441e5c627ccc6e541",
-      "bytes": 11907,
+      "sha256": "00201913a82b00183ee6694a6723b816837cefc1c146e725710fa940eaa8fe26",
+      "bytes": 11876,
       "origin": "Public V2.1 or owned R26/new lean integration component; source coverage is partial where frozen dependencies are retained."
     },
     {
@@ -393,5 +393,13 @@
     "AID12.3",
     "AID10.5-17PM"
   ],
-  "publication_intent": "GitHub experimental prerelease; component provenance retained"
+  "publication_intent": "GitHub experimental prerelease; component provenance retained",
+  "active_wireless_firmware_profiles": [
+    "MU1102/790",
+    "MU1102/791",
+    "MU1367/790",
+    "MU1367/791",
+    "MU1440/790"
+  ],
+  "mu1367_mu1440_connectionmanager": "Preserve each exact original native program; never copy the MU1102 program to these ports"
 }

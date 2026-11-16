@@ -16,7 +16,6 @@ common/runtime/wcp_video_tap	/mnt/app/carplaymaps/wcp_video_tap	755
 common/runtime/wcp_video_stock	/mnt/app/carplaymaps/wcp_video_stock	755
 common/runtime/libv75-wireless-video-tap.so	/mnt/app/carplaymaps/libv75-wireless-video-tap.so	644
 common/runtime/start-wireless-maps.sh	/mnt/app/carplaymaps/start-wireless-maps.sh	755
-common/connectionmanager	/mnt/app/eso/bin/apps/connectionmanager	755
 common/config/btwcp_enable	/mnt/persist/btwcp_enable	644
 common/config/btwcp_present_target	/mnt/persist/btwcp_present_target	644
 common/config/wcp_autostart	/mnt/persist/wcp_autostart	644

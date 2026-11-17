@@ -1,5 +1,11 @@
 # Wireless CarPlay Maps V3.1 安装与目录说明 / Installation and layout
 
+## 已注册入口但功能安装失败 / Manager installed, feature absent
+
+若状态为 `ENTRY=installed / FEATURE=absent`，且日志在 `feature-transaction.sh[21]` 报 `syntax error: '(' unexpected`，请下载本次修订的完整介质文件。保持手机断开和稳定供电，在已经安装的 Wireless CarPlay Maps 菜单先选 **Update this management entry only**；成功后再选实际仪表对应的安装项。仅更新 SD 而不更新入口，会留下旧的恢复事务脚本。全部校验通过并出现 `WMAPS_FEATURE_COMMIT_OK` 后再手动重启。本问题无需卸载入口或反复重做原车软件更新注册；实机功能安装仍待复测。
+
+If status is `ENTRY=installed / FEATURE=absent` and `feature-transaction.sh[21]` reports an unexpected `(`, download the complete corrected media. Disconnect CarPlay and maintain power. In the existing Wireless CarPlay Maps manager choose **Update this management entry only**, then install the correct cluster profile. Updating only the SD files leaves the old restore transaction in the manager. Reboot manually only after all checks and `WMAPS_FEATURE_COMMIT_OK`. This script error does not require manager removal or repeated native SWDL registration. Hardware feature-installation acceptance remains pending.
+
 ## V3.1 安装包修订 / Installer repack
 
 本次采用作者提供的原始元信息文件，保留 Windows CRLF、收尾目录声明和带空格的下载组名；目录校验按 7-Zip 的 `SHA1 for data` 对脚本和 `hashes.txt` 一起计算，而不是只计算清单文件。包内清单及下载校验同步更新，运行和安装／恢复程序不变。请重新下载本页 Standalone ZIP 与 `SHA256SUMS.txt`，校验后完整替换本项目 SD 文件，勿混用旧包或只替换元信息。我们的原厂更新入口仍待实机复测。

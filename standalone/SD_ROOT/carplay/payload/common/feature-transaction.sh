@@ -18,14 +18,14 @@ FIRST_NEW="$ENTRY/.feature-backup-new";FIRST_OLD="$ENTRY/.feature-backup-old-$$"
 CHECK="$ENTRY/file-check"
 if test -n "$P";then CHECK=${CPMAP_TEST_FILE_CHECK:-$CHECK};fi
 test -x "$CHECK" || fail CHECKER_MISSING
-hash(){ "$CHECK" --hash "$1"; }
-same(){ test "`hash "$1"`" = "`hash "$2"`"; }
+wmaps_file_hash(){ "$CHECK" --hash "$1"; }
+same(){ test "`wmaps_file_hash "$1"`" = "`wmaps_file_hash "$2"`"; }
 seal_snapshot(){
  seal_dir=$1
  echo 2 > "$seal_dir/FORMAT"
  : > "$seal_dir/INDEX_SHA256"
  for seal_name in FORMAT files.tsv runtime.sha256;do
-  if test -f "$seal_dir/$seal_name";then echo "`hash "$seal_dir/$seal_name"`  $seal_name" >> "$seal_dir/INDEX_SHA256";fi
+  if test -f "$seal_dir/$seal_name";then echo "`wmaps_file_hash "$seal_dir/$seal_name"`  $seal_name" >> "$seal_dir/INDEX_SHA256";fi
  done
  "$CHECK" --manifest "$seal_dir" "$seal_dir/INDEX_SHA256"
 }
@@ -109,7 +109,7 @@ validate_snapshot(){
   grep -Fx "$id" "$S/validate-seen" >/dev/null 2>&1 && return 1
   grep -Fx "$path" "$S/validate-seen" >/dev/null 2>&1 && return 1
   echo "$id" >> "$S/validate-seen";echo "$path" >> "$S/validate-seen"
-  if test "$before" != MISSING;then test "`hash "$backup/$id"`" = "$before" || return 1;fi
+  if test "$before" != MISSING;then test "`wmaps_file_hash "$backup/$id"`" = "$before" || return 1;fi
  done < "$backup/files.tsv"
  test ! -e "$backup/runtime.sha256" || test -d "$backup/runtime" || return 1
  if test -d "$backup/runtime";then
@@ -131,7 +131,7 @@ restore_snapshot(){
   if test "$before" = MISSING;then rm -f "$P$path" || return 1
   else
    cp -p "$backup/$id" "$P$path.wmaps-restore" && mv -f "$P$path.wmaps-restore" "$P$path" || return 1
-   test "`hash "$P$path"`" = "$before" || return 1
+   test "`wmaps_file_hash "$P$path"`" = "$before" || return 1
   fi
  done < "$backup/files.tsv"
  # ROOT is a fixed project child, never a computed mount or workspace root.
@@ -171,14 +171,14 @@ if test "$ACTION" = restore;then
   safe_target "$path" || fail JOURNAL_PATH
   test ! -e "$P$path.wmaps-new" && test ! -L "$P$path.wmaps-new" && test ! -e "$P$path.wmaps-restore" && test ! -L "$P$path.wmaps-restore" || fail STALE_ACTIVATION_FILE
   if test "$wanted" = MISSING;then test ! -e "$P$path" && test ! -L "$P$path" || fail POST_INSTALL_CHANGED_PRESERVED
-  else test "`hash "$P$path"`" = "$wanted" || fail POST_INSTALL_CHANGED_PRESERVED;fi
+  else test "`wmaps_file_hash "$P$path"`" = "$wanted" || fail POST_INSTALL_CHANGED_PRESERVED;fi
  done < "$ENTRY/installed.tsv"
  mkdir -m 700 "$S";STAGED=yes;mkdir -m 700 "$S/before"
  validate_snapshot "$T" || fail FIRST_BACKUP_VALIDATION_FAILED
  cp "$T/files.tsv" "$S/before/files.tsv"
  : > "$S/before/current.tsv"
  while IFS="$TAB" read -r id path before;do
-  if test -e "$P$path";then cp -p "$P$path" "$S/before/$id";before=`hash "$P$path"`
+  if test -e "$P$path";then cp -p "$P$path" "$S/before/$id";before=`wmaps_file_hash "$P$path"`
   else before=MISSING;fi
   echo "$id$TAB$path$TAB$before" >> "$S/before/current.tsv"
  done < "$T/files.tsv"
@@ -205,8 +205,8 @@ if test "$WIRELESS" = yes;then
  native=`awk -F '\t' -v mu="$MU" '$1==mu{print $2 " " $3 " " $4;found++}END{if(found!=1)exit 1}' "$PAYLOAD/wireless/native-baselines.tsv"` || fail NATIVE_PROFILE_MISSING
  set -- $native
  test "$#" = 3 || fail NATIVE_PROFILE_INVALID
- test "`hash "$P/mnt/app/eso/bin/apps/btstack"`" = "$1" || fail UNKNOWN_BTSTACK_PRESERVED
- current_cm=`hash "$P/mnt/app/eso/bin/apps/connectionmanager"` || fail CONNECTIONMANAGER_UNREADABLE
+ test "`wmaps_file_hash "$P/mnt/app/eso/bin/apps/btstack"`" = "$1" || fail UNKNOWN_BTSTACK_PRESERVED
+ current_cm=`wmaps_file_hash "$P/mnt/app/eso/bin/apps/connectionmanager"` || fail CONNECTIONMANAGER_UNREADABLE
  test "$current_cm" = "$2" || test "$current_cm" = "$3" || fail UNKNOWN_CONNECTIONMANAGER_PRESERVED
 fi
 if test -d "$ROOT";then
@@ -220,7 +220,7 @@ if test -s "$ENTRY/installed.tsv";then
  while IFS="$TAB" read -r path wanted;do
   safe_target "$path" || fail PRIOR_RECEIPT_SCOPE
   if test "$wanted" = MISSING;then test ! -e "$P$path" && test ! -L "$P$path" || fail PREVIOUS_INSTALL_CHANGED_PRESERVED
-  else test "`hash "$P$path"`" = "$wanted" || fail PREVIOUS_INSTALL_CHANGED_PRESERVED;fi
+  else test "`wmaps_file_hash "$P$path"`" = "$wanted" || fail PREVIOUS_INSTALL_CHANGED_PRESERVED;fi
  done < "$ENTRY/installed.tsv"
 fi
 # Check conservative RAM and partition headroom before stopping project children.
@@ -247,8 +247,8 @@ while read -r path;do
  echo "$path" >> "$S/seen";n=`expr "$n" + 1`;id=`awk -v n="$n" 'BEGIN{printf "f%03d",n}'`
  if test -e "$P$path";then
   test -f "$P$path" || fail TARGET_NOT_REGULAR
-  cp -p "$P$path" "$S/before/$id";before=`hash "$P$path"`
-  test "`hash "$S/before/$id"`" = "$before" || fail BACKUP_COMPARE
+  cp -p "$P$path" "$S/before/$id";before=`wmaps_file_hash "$P$path"`
+  test "`wmaps_file_hash "$S/before/$id"`" = "$before" || fail BACKUP_COMPARE
  else before=MISSING;fi
  echo "$id$TAB$path$TAB$before" >> "$S/before/files.tsv"
 done < "$S/paths"
@@ -291,7 +291,7 @@ if test -d "$T";then
   echo "$old_id" >> "$S/first-seen"
   if test "$old_proof" != MISSING;then
    test -f "$FIRST_NEW/$old_id" && test ! -L "$FIRST_NEW/$old_id" || fail FIRST_BACKUP_NOT_REGULAR
-   test "`hash "$FIRST_NEW/$old_id"`" = "$old_proof" || fail FIRST_BACKUP_CORRUPT
+   test "`wmaps_file_hash "$FIRST_NEW/$old_id"`" = "$old_proof" || fail FIRST_BACKUP_CORRUPT
   fi
   numeric=`awk -v id="$old_id" 'BEGIN{sub(/^f/,"",id);print id+0}'`
   test "$count" -ge "$numeric" || count=$numeric
@@ -314,7 +314,7 @@ prepare_mounts || fail REMOUNT_FAILED
 # Detect another writer after staging, before changing a single target.
 while IFS="$TAB" read -r id path before;do
  if test "$before" = MISSING;then test ! -e "$P$path" && test ! -L "$P$path" || fail PREIMAGE_CHANGED
- else test "`hash "$P$path"`" = "$before" || fail PREIMAGE_CHANGED;fi
+ else test "`wmaps_file_hash "$P$path"`" = "$before" || fail PREIMAGE_CHANGED;fi
 done < "$S/before/files.tsv"
 copy_file(){
  source=$1;target=$2;mode=$3
@@ -353,7 +353,7 @@ if test "$WIRELESS" = yes;then
 else echo WMAPS_WIRED_ONLY_WIRELESS_PORT_PENDING;fi
 : > "$S/installed.tsv"
 while read -r path;do
- if test -e "$P$path";then echo "$path$TAB`hash "$P$path"`" >> "$S/installed.tsv"
+ if test -e "$P$path";then echo "$path$TAB`wmaps_file_hash "$P$path"`" >> "$S/installed.tsv"
  else echo "$path${TAB}MISSING" >> "$S/installed.tsv";fi
 done < "$S/paths"
 cp "$S/installed.tsv" "$ENTRY/installed.tsv.new";mv "$ENTRY/installed.tsv.new" "$ENTRY/installed.tsv"

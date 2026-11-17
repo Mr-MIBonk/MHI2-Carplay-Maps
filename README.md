@@ -2,6 +2,10 @@
 
 **Wireless CarPlay Maps V3.1 — 试验预发布 / Experimental prerelease**
 
+**功能安装兼容修订：**修正功能脚本的 `hash` 函数名与 QNX ksh 默认别名冲突。已能进入本菜单、但状态为 `ENTRY=installed / FEATURE=absent` 的用户，请用新完整 SD 先选 **Update this management entry only**，再选对应仪表的安装项；不必卸载菜单或反复执行原车软件更新。作者元信息、原生程序、地图和音视频载荷保持不变；本轮实机功能安装仍待复测。
+
+**Feature-installation compatibility fix:** the transaction helper no longer uses the name `hash`, which conflicts with a default QNX ksh alias. If the manager already opens but reports `ENTRY=installed / FEATURE=absent`, use the new complete SD media, choose **Update this management entry only**, then install the correct cluster profile. Do not uninstall the manager or repeat native SWDL for this script error. The author's metadata and native/map/media payloads are unchanged; a hardware feature-installation retest remains pending.
+
 **V3.1 安装包校正：**采用作者提供的原始元信息文件，保留 Windows CRLF 换行、原定收尾目录及下载组名。目录校验按 7-Zip 的 `SHA1 for data` 对整个收尾目录计算，包含脚本与 `hashes.txt`，不再误用清单文件本身的哈希。请重新下载 Standalone 安装包和校验清单，完整替换本项目 SD 文件。无线、地图和菜单程序未改动；我们的原车更新入口仍待实机复测。
 
 **V3.1 installer correction:** the author's metadata file is preserved byte-for-byte, including Windows CRLF and the supplied final-directory and download-group declarations. The directory checksum is verified against 7-Zip's `SHA1 for data` over both the script and `hashes.txt`, not the hash-list file alone. Download the Standalone installer and checksums again and replace the project's complete SD contents. Wireless, map and menu programs are unchanged; our hardware retest remains pending.

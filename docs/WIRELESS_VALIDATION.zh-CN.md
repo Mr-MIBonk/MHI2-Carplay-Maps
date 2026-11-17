@@ -1,5 +1,15 @@
 # Wireless CarPlay Maps V3.1 验证记录 / Validation
 
+## QNX 功能脚本兼容修订 / QNX feature-script correction
+
+MU1367 实机已确认管理入口注册成功及 `LOCAL_MANIFEST_PASS files=129`，但功能脚本第 21 行的 `hash(){...}` 在 QNX ksh 默认别名环境下解析失败。QNX 6.5 SDK 自带 PD KSH 重现了相同的行号和错误；此前 Linux sh 事务测试未覆盖这项解析行为。本次仅为该函数及其全部调用增加专用前缀，作者元信息原字节不动；全部其他安装脚本、原生程序和菜单载荷不变。隔离测试改用 SDK PD KSH 作为 `/bin/sh` 执行事务，仍不等于实机 QNX ARM 安装验收。
+
+MU1367 hardware confirms manager registration and a valid manifest, but the line-21 `hash(){...}` definition fails under the default QNX ksh alias environment. The QNX 6.5 SDK's PD KSH reproduces the same line/error. Earlier Linux-sh transaction tests missed this parser behavior. Only the function and its calls gain a project prefix; author metadata and every other installer/native/menu payload remain unchanged. Isolated regressions now use SDK PD KSH as `/bin/sh`; this is still not QNX ARM hardware-installation acceptance.
+
+历史状态构造与候选执行分开：旧 R1／R2／V3.0 包也含同名函数，直接用 SDK ksh 执行会在构造旧状态时失败。因此历史输入只沿用原来的 Linux sh 生成模拟旧状态，不把旧包因此认定为 QNX 可安装；当前候选的入口、功能安装、更新、恢复与卸载继续使用 SDK ksh。未跳过候选用例，也未修改历史归档文件。
+
+Historical state construction is separate from candidate execution. Old R1/R2/V3.0 packages share the alias collision, so their original Linux-sh fixtures seed synthetic prior states; that is not QNX-installability evidence for those packages. Candidate/current-manager install, update, restore and uninstall still use SDK ksh. Candidate cases are not skipped and historical archives are not modified.
+
 ## 安装包装修订说明 / Installer-metadata correction
 
 上一轮检查错误地把“与旧包一致”当作签名头有效的证明，也误把 `hashes.txt` 单文件 SHA-1 当成这套安装目录的校验。作者补充说明使用 7-Zip 对整个收尾目录计算 `SHA1 for data`，包含脚本和清单；本地独立复算已得到完全一致的 `f98e4c9162f089363b6a8d6c92cd40112ba902a1`。不能用之前的目录路径／组名推导覆盖作者提供的原文件。本次保留作者元信息的全部原始字节，并重新核对 CRLF、头部实际校验、目录计算、文件内容、完整清单及打包结果；我们的原车更新入口仍待实机复测。
@@ -14,8 +24,9 @@ V3.1 is an experimental prerelease. Wireless ports are added for MU1367/790, MU1
 
 | 检查 / Check | 结果 / Result |
 |---|---|
-| 安装元信息、路径、完整清单与归档 / Installer metadata, paths, complete manifest and archive | 130 个文件、129 项清单逐项检查；安装／运行载荷与前包逐字节一致 / 130 files, 129 manifest entries; install/runtime payloads byte-identical |
-| 错误注入拒绝 / Negative fault-injection tests | 20 种错误拒绝测试，包含 LF／混合换行、错误签名头、清单单文件哈希误用和目录／标签误改 / 20 fault-injection rejection tests, including line endings, signed headers, the wrong hash algorithm and altered descriptors/labels |
+| 安装元信息、路径、完整清单与归档 / Installer metadata, paths, complete manifest and archive | 130 个文件、129 项清单逐项检查；仅功能事务脚本作函数重命名，其他载荷逐字节一致 / 130 files, 129 manifest entries; only the feature-transaction function name/calls change |
+| 错误注入拒绝 / Negative fault-injection tests | 21 种错误拒绝测试，包含 QNX 别名冲突回归、LF／混合换行、错误签名头和错误目录算法 / 21 rejection cases including alias regression, line endings, signed headers and directory algorithm |
+| QNX SDK ksh 语法检查 / QNX SDK ksh parser | 旧第 21 行错误可重现，候选脚本逐项解析；不是原车执行验收 / old line-21 error reproduced; candidate scripts parsed individually; not on-unit execution acceptance |
 | 7-Zip 与独立实现交叉检查 / 7-Zip and independent calculation | 两文件合计 516 字节；目录 data 校验与作者一致；不是 data-and-names，也不是 hashes.txt 本身的值 / two files, 516 bytes; data hash matches the author, not data-and-names or hashes.txt alone |
 | 新装、重复更新、管理入口更新、恢复、卸载与拒绝未知改动 / Install, updates, restore, uninstall and unknown-change refusals | 396 项通过 / assertions passed |
 | 历史公开版升级 / Historical public-release upgrades | 1071 项通过；九个旧版本、四十九个版本／机型组合 / assertions passed; nine old releases and forty-nine combinations |

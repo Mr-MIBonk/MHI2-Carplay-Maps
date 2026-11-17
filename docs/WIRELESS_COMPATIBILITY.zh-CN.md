@@ -1,4 +1,49 @@
-# Wireless CarPlay Maps：旧版兼容与隐患排查
+# Wireless CarPlay Maps V3.2：固件与旧版兼容 / Compatibility
+
+## 当前结论 / Current findings
+
+本轮用户报告：MU1367 通过 SD 软件更新注册及功能安装。随后读取的管理入口和运行版本均为 V3.2。这个结果不等于 MU1367 所有仪表、所有功能和长期运行均完成验收，也不能替代 MU1102／MU1440 的本版实机复测。
+
+The user reports successful MU1367 SD registration and feature installation. Read-only manager/runtime version checks identify V3.2. This does not certify every MU1367 cluster, function or long-duration case, nor replace a fresh V3.2 hardware retest on MU1102/MU1440.
+
+| 精确固件 / Firmware | 组合 / Profile | V3.2 状态 / Status |
+|---|---|---|
+| MU1367 | 790 / AID 10.5 | 用户 SD 安装通过，离线验证通过 / User SD installation accepted; offline pass |
+| MU1367 | 791 / AID 12.3 | 离线验证通过；此组合待实机验收 / Offline pass; hardware acceptance pending |
+| MU1102 | 790、791 | 离线验证通过；本轮未实机复测 / Offline pass; no fresh hardware retest |
+| MU1440 Škoda | 790 | 离线验证通过；本轮未实机复测 / Offline pass; no fresh hardware retest |
+| MU1440 Škoda | 791 | 不支持 / Unsupported |
+
+1367 与 1440 的连接管理程序保留为本机原程序；1102 只采用它自己已匹配的配置。检查固件识别、原生程序散列、仪表组合与配置生成，不能按相近版本号直接放行。未知修改必须保留并停止。
+
+MU1367/MU1440 preserve the unit's own connection manager; MU1102 uses its separately matched profile. Firmware identity, native-program hashes, cluster and configuration generation are checked rather than allowing neighboring version numbers. Unknown changes remain stop-and-preserve cases.
+
+## 安装修订覆盖 / Installation revision coverage
+
+V3.2 将管理入口的 17 个关键组件作为完整清单核对，兼容旧入口发现并衔接新 SD；入口替换与功能提交分开记录。原厂更新收尾、完整节点名路径、开发者模式保存、系统可选工具缺失、实际小分区空间、中断后的可靠恢复、重复安装及首次基线保留分别检查。
+
+V3.2 checks 17 critical manager components as a bundle. Legacy discovery/handoff, manager replacement, native finalization, qualified-node paths, saved green-menu access, optional-tool absence, realistic partition sizes, interruption recovery, repeated installation and first-baseline preservation are covered separately.
+
+离线记录包含 419 项基本生命周期断言、49 个历史组合的 1127 项断言、29 个管理入口及旧恢复状态场景、36 个功能中断场景、16 个 RCC/MMX 收尾场景，以及三组小分区／缺少系统工具的检查。这些是合成文件系统或主机辅助程序测试，不是在三个真实车机上执行 ARM 业务运行的证明。
+
+Offline records cover 419 basic assertions, 1127 assertions across 49 historical combinations, 29 manager/legacy-recovery cases, 36 feature-interruption cases, 16 RCC/MMX finalization cases and three constrained-partition/tool profiles. They model installation logic, not ARM media execution on three physical head units.
+
+新版使用完整 V3.2 介质先注册或更新管理组件，再安装功能。已封存且可核验的中断记录可以先恢复；无可靠历史记录、损坏备份或外部改动不能自动猜测修复。首次基线不是必然原厂，不能丢弃旧恢复档或使用旧卸载器拆除新版。
+
+Use complete V3.2 media to register/update the manager before features. Sealed, verifiable interrupted state can be recovered first. Unknown historical state, corruption or external changes are not guessed away. Preserve the first baseline and older recovery archives; do not run an older uninstaller against the new runtime.
+
+## 当前已知显示问题 / Known display issue
+
+VW 原厂返回图标可能不显示 `Volkswagen` 名称；用户要求留待 V3.3／V3.4，V3.2 不包含该项未验收的修改。首次无线连接个例、特定地图／卡片位置及其他车型的长期运行，仍按下面历史记录中的边界分别追踪，不能因安装成功就写成全部解决。
+
+The VW return icon may lack its caption; this is explicitly deferred to V3.3/V3.4. Isolated first-connection behavior, specific map/card layouts and other targets' long-duration behavior remain separate acceptance items, not automatically solved by successful installation.
+
+## 历史排查记录（截至 V3.1）/ Retained history through V3.1
+
+以下保留此前的问题与验证方法；其中旧版的“本轮”“新增”“待复测”指当时记录。当前 V3.2 的状态以上方为准，不能把历史离线记录读成当前所有机型的实机结论。
+
+The retained record below describes its original stage. Current V3.2 evidence is summarized above; historical offline claims are not current universal hardware acceptance.
+
 
 状态：试验预发布的离线兼容性记录。此次验证未连接或操作车机。离线验证范围与实车验证范围分别记录，本文不承诺“没有任何未知问题”。
 

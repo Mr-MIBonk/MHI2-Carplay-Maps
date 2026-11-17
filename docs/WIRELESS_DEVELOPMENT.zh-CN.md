@@ -1,10 +1,10 @@
 # MHI2 无线 CarPlay：开发历程与实现说明
 
-当前独立发行：**Wireless CarPlay Maps V3.1**。
+当前独立发行：**Wireless CarPlay Maps V3.2**。
 
 维护与后续集成：omonob
 
-本文说明我们怎样把无线 CarPlay 接入既有 MHI2，以及后续怎样解决连接、画面、原厂界面和交付中的问题。本文不公开具体帧率档位、关键帧间隔、画面坐标、分辨率或物理尺寸参数，也不包含车机地址、密码、配对密钥和 SDK 许可。
+本文说明我们怎样把无线 CarPlay 接入既有 MHI2，以及后续怎样解决连接、画面、原厂界面和交付中的问题。本文不公开具体性能档位及画面位置、编码和物理显示参数，也不包含车机地址、密码、配对密钥和 SDK 许可。
 
 时间线根据团队提供的项目回顾整理；技术章节依据最终保留的代码、交付材料和测试记录说明。章节顺序是实现依赖关系，不表示每一个后续修订都发生在某个早期日期。
 
@@ -280,3 +280,49 @@ omonob 负责本阶段后续研究、集成、修订与交付维护。特别感�
 本次仍是离线固件适配。无线配对、声音、真实触控、仪表画面、重连及长期运行需要相应机型实测，不能把编译和安装事务通过写成实车已经验收。
 
 首次连接的使用条件也补入公开说明：用户需要先手动配对蓝牙，再让 iPhone 加入车机 Wi-Fi 热点，两项连接完成后无线 CarPlay 才能启动。发现手机、启用开关与会话真正就绪不能混为一谈。
+
+## V3.2：把“能复制文件”收敛为完整 SD 交付流程
+
+本阶段的研究重点是安装和更新可靠性，不是趁发布再替换一套未经验证的无线、地图或菜单程序。以用户实际通过 SD 卡测试的安装包作为发布输入；测试包与发布包保持同一下载散列。用户报告 MU1367 的完整 SD 安装正常，后续只读核对看到 V3.2 管理及运行标记。尚未完成本轮实机复测的 MU1102、MU1440 单独保留验收边界。
+
+### 入口成功与功能成功必须分开
+
+原车软件更新首先注册独立绿色菜单定义与管理入口。它显示项目 `OK`，只能说明这一阶段完成。进入绿色菜单后的地图安装、无线配置和运行文件提交属于后续事务。旧程序曾在地图阶段先输出完整成功及重启提示；用户此时拔卡，会把中间结果误当成最终结果。现在中间阶段只报告本阶段完成，只有整套功能提交后才给出最终成功标志。
+
+这并非把所有失败都延迟隐藏。未完成复制、校验或恢复时仍以失败退出；保留明确阶段和现场，避免用户依靠一句绿色提示判断全部功能已装好。
+
+### 新 SD 与旧管理入口不能按单个助手文件补洞
+
+真实反馈显示，新卡的文件清单已通过，功能脚本仍在读取已安装目录中的恢复助手时停止。原因链不是简单的“卡里少了一个文件”：旧管理入口仍在运行，而新介质与旧入口对依赖集合的认识不同。只补一个助手，下一次升级仍可能混用校验器、事务模块和恢复逻辑。
+
+V3.2 因此给关键管理组件建立独立清单和产品版本校验，先在本地暂存完整组件，逐项比对，再整体替换。旧入口识别介质所用的协议标记保留兼容，新产品版本另行检查。旧入口遇到新版安装请求，会先衔接新版完整入口，而不是在旧目录上继续执行新依赖。
+
+### 管理入口更新自身也要能恢复
+
+入口文件替换和功能文件提交是两种事务。入口替换保留自己的准备、可提交、替换中、已提交阶段，并保存旧组件快照；互斥对象放在不会随入口目录替换的位置。进程异常结束后，不能仅凭旧 PID 就删除现场，也不能让另一个更新在新旧目录之间穿插。
+
+验证覆盖暂存中断、旧目录移动、新目录生效、菜单定义切换、最终提交以及并发更新。恢复时核对旧快照和当前文件，只处理本项目能够证明来源的状态；出现外部编辑或损坏旧快照时停止，保留用户的数据。
+
+### 功能中断恢复要跨过 RAM 丢失
+
+旧故障还包含：地图阶段已改写部分目标，但首次备份尚未完整提交；重启后临时内存已经清空，再次安装只能看到一个不能解释的残留目录。可靠恢复不能依赖上次进程的变量或 RAM 中的副本。
+
+功能事务把恢复所需身份、阶段、前镜像、预期变化与首次基线材料放在持久位置，并建立校验索引。输入文件完整暂存后再写目标，恢复时先证明备份可信，再核对当前内容仍属于已知的前后状态。能够确认的中断先恢复再继续；不能确认的旧状态要求人工复核，不为“二次安装必过”而删除唯一的恢复材料。
+
+### 从主机脚本检查回到真实精简系统约束
+
+实机曾揭示主机环境没有暴露的问题：QNX ksh 的默认别名会与函数名冲突，可选命令在精简镜像里缺失，固定空间下限甚至超过真实分区容量，RCC 调用 MMX 文件时还需要正确选择执行节点。
+
+此后增加 QNX 6.5 SDK shell 检查、限定的原生安装辅助程序、按实际快照与暂存需求计算空间，以及带完整节点名称路径的收尾测试。元信息保持所需换行和原签名前缀，脚本及目录校验按最终文件核对。软件更新完成回执仅在入口完整、开发者开关保存并回读成功后写入。
+
+### 发布验收仍不能混为一谈
+
+离线回归覆盖历史安装器、重复更新、首次基线保存、故意中断、拔除介质、外部修改、空间不足和缺少系统命令。主机夹具不证明真实 ARM 媒体程序已在每个机型上跑通；网络部署成功也不证明 SD 软件更新流程成功。
+
+因此最终安装验收由用户通过 SD 执行；V3.2 发布的正是该原包，不用网络部署替代这条流程。本阶段用户另外发现 VW 返回原厂图标下方缺少 `Volkswagen` 名称，明确留待 V3.3／V3.4 处理，没有临时改入已经测试通过的 V3.2。
+
+### English summary
+
+V3.2 focuses on repeatable SD delivery. Native registration and later feature commit are separate phases. A complete 17-component manager bundle replaces piecemeal helper repair, with legacy-media discovery retained independently from product versioning. Manager replacement has its own persistent phases, verified preimage and stable mutual exclusion. Feature recovery persists beyond RAM loss and refuses corrupt or externally modified state.
+
+QNX SDK-shell tests, explicit native helper use, realistic partition budgets and RCC/MMX path handling supplement host tests. Finalization acknowledges success only after complete manager verification and saved developer-mode readback. Offline checks remain distinct from ARM runtime and vehicle acceptance. The published archive is the same one the user tested through SD on MU1367. The missing VW caption is a known issue deferred to later releases.
